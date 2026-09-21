@@ -11,9 +11,11 @@ import { PRODUCTS } from '../data/products';
 import { ProductCategory } from '../types/shop';
 import { ProductCard } from './ProductCard';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ProductCatalog: React.FC = () => {
   const { isB2BMode, setIsCalculatorOpen } = useShop();
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -34,13 +36,13 @@ export const ProductCatalog: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-100/80 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
               <Layers className="w-3.5 h-3.5" />
-              Katalog Fabryczny Oplast Garden
+              {t.catalog.badge}
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 font-heading">
-              Kratki Trawnikowo-Parkingowe i Obrzeża
+              {t.catalog.title}
             </h2>
             <p className="text-slate-600 text-sm sm:text-base mt-1 max-w-2xl">
-              Sprawdzone rozwiązania inżynierii drogowej i ogrodowej z certyfikatem GOZ. Dostępne natychmiast prosto z linii produkcyjnej.
+              {t.catalog.subtitle}
             </p>
           </div>
 
@@ -49,7 +51,7 @@ export const ProductCatalog: React.FC = () => {
             className="self-start md:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer"
           >
             <Calculator className="w-4 h-4" />
-            <span>Nie wiesz ile zamówić? Uruchom kalkulator m²</span>
+            <span>{t.catalog.notSureCta}</span>
           </button>
         </div>
 
@@ -66,7 +68,7 @@ export const ProductCatalog: React.FC = () => {
                   : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
               }`}
             >
-              Wszystkie ({PRODUCTS.length})
+              {t.catalog.all} ({PRODUCTS.length})
             </button>
 
             <button
@@ -79,7 +81,7 @@ export const ProductCatalog: React.FC = () => {
               }`}
             >
               <Grid className="w-4 h-4" />
-              Kratki Parkingowe & Drogowe (H30 / H40 / H50)
+              {t.catalog.grids}
             </button>
 
             <button
@@ -92,7 +94,7 @@ export const ProductCatalog: React.FC = () => {
               }`}
             >
               <Layers className="w-4 h-4" />
-              Obrzeża Trawnikowe Eko-Bord
+              {t.catalog.borders}
             </button>
 
             <button
@@ -105,7 +107,7 @@ export const ProductCatalog: React.FC = () => {
               }`}
             >
               <Box className="w-4 h-4" />
-              Akcesoria (Kotwy, Znaczniki, Geowłóknina)
+              {t.catalog.accessories}
             </button>
           </div>
 
@@ -114,7 +116,7 @@ export const ProductCatalog: React.FC = () => {
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Szukaj produktu lub modelu..."
+              placeholder={t.catalog.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-emerald-500 text-slate-800 placeholder-slate-400"
@@ -131,14 +133,14 @@ export const ProductCatalog: React.FC = () => {
                 <Building2 className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-900">Aktywny tryb B2B – Ceny hurtowe netto</p>
+                <p className="text-sm font-bold text-slate-900">{t.catalog.b2bBannerTitle}</p>
                 <p className="text-xs text-slate-600">
-                  Wyświetlane ceny uwzględniają rabaty paletowe. W koszyku możesz wygenerować zapytanie o dostawę FTL z rozładunkiem HDS.
+                  {t.catalog.b2bBannerDesc}
                 </p>
               </div>
             </div>
             <span className="text-xs font-bold text-emerald-900 bg-white px-3.5 py-1.5 rounded-lg border border-emerald-300 shadow-xs">
-              Ceny Fabryczne Oplast Winduga
+              {t.catalog.b2bBannerBadge}
             </span>
           </div>
         )}
@@ -152,12 +154,12 @@ export const ProductCatalog: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-12 bg-white rounded-2xl border border-slate-200">
-            <p className="text-slate-500 text-sm">Nie znaleziono produktów odpowiadających zapytaniu "{searchQuery}".</p>
+            <p className="text-slate-500 text-sm">{t.catalog.noResults} "{searchQuery}".</p>
             <button
               onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}
               className="mt-3 text-xs font-bold text-emerald-700 hover:underline"
             >
-              Wyczyść filtry
+              {t.catalog.clearFilters}
             </button>
           </div>
         )}

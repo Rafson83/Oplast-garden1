@@ -6,8 +6,10 @@ import {
   Building2 
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 import { PRODUCTS } from '../data/products';
 import { Product } from '../types/shop';
+import { getLocalizedProduct } from '../i18n/productTranslations';
 
 export const CalculatorModal: React.FC = () => {
   const { 
@@ -19,6 +21,7 @@ export const CalculatorModal: React.FC = () => {
     setIsInquiryOpen,
     setInquiryPreselectedProduct 
   } = useShop();
+  const { language, t } = useLanguage();
 
   // Mode: direct m2 or length x width
   const [inputMode, setInputMode] = useState<'m2' | 'dimensions'>('m2');
@@ -57,60 +60,71 @@ export const CalculatorModal: React.FC = () => {
     return PRODUCTS.find(p => p.id === 'oplast-h40') || PRODUCTS[0];
   }, [usageType]);
 
+  const localizedRecProduct = getLocalizedProduct(recommendedProduct, language);
+
   // Calculations
   const calculations = useMemo(() => {
-    // 4.4 pcs per m2 + 5% reserve for cutting
     const rawPieces = totalM2 * 4.4;
     const piecesWithReserve = Math.ceil(rawPieces * 1.05);
 
     const pcsPerPallet = recommendedProduct.piecesPerPallet || 200;
     const palletsNeeded = Math.ceil(piecesWithReserve / pcsPerPallet);
 
-    // Filler volume: m2 * height in meters * ~0.9 internal volume
     const heightM = recommendedProduct.heightMm / 1000;
-    const fillerVolumeM3 = Math.round(totalM2 * heightM * 0.9 * 10) / 10;
-    const fillerWeightTonnes = Math.round(fillerVolumeM3 * 1.6 * 10) / 10; // ~1.6 t/m3 for aggregate
+    const fillerVolumeM3 = Math.round(totalM2 * heightM * 0.92 * 10) / 10;
+    const fillerWeightTonnes = fillerType === 'gravel' 
+      ? Math.round(fillerVolumeM3 * 1.6 * 10) / 10 
+      : Math.round(fillerVolumeM3 * 1.2 * 10) / 10;
 
-    // Borders & Anchors
-    const bordersNeeded = includeBorders ? Math.ceil(perimeterM || Math.sqrt(totalM2) * 4) : 0;
-    // 3-4 anchors per border meter, or 2 per m2 on slopes
-    const anchorsNeeded = includeAnchors 
-      ? (usageType === 'slope' ? Math.ceil(totalM2 * 2 + bordersNeeded * 3) : Math.ceil(bordersNeeded * 3))
-      : 0;
-
-    // Geotextile: totalM2 + 10% overlap
-    const geotextileM2 = includeGeotextile ? Math.ceil(totalM2 * 1.1) : 0;
-    const geotextileRolls = includeGeotextile ? Math.ceil(geotextileM2 / 50) : 0;
-
-    // Total weight
-    const gridWeight = piecesWithReserve * recommendedProduct.weightKg;
-    const bordersWeight = bordersNeeded * 0.4;
-    const totalWeightKg = Math.round(gridWeight + bordersWeight + (geotextileRolls * 7.5));
-
-    // Pricing
-    const unitPriceNetto = recommendedProduct.priceNettoUnit;
-    const unitPriceBrutto = recommendedProduct.priceBruttoUnit;
-    const gridCostNetto = piecesWithReserve * unitPriceNetto;
-    const gridCostBrutto = piecesWithReserve * unitPriceBrutto;
-
-    // Borders cost (Oplast Eko-Bord 45)
-    const borderProduct = PRODUCTS.find(p => p.id === 'obrzeze-eko-45');
-    const borderCostNetto = borderProduct ? bordersNeeded * borderProduct.priceNettoUnit : 0;
-    const borderCostBrutto = borderProduct ? bordersNeeded * borderProduct.priceBruttoUnit : 0;
-
-    // Anchors cost (Kotwy 18cm)
-    const anchorProduct = PRODUCTS.find(p => p.id === 'kotwy-oplast-18');
+    const bordersNeeded = includeBorders ? perimeterM : 0;
+    const anchorsNeeded = (includeBorders ? perimeterM * 3 : 0) + (includeAnchors ? Math.ceil(totalM2 * 1.5) : 0);
     const anchorPacks = Math.ceil(anchorsNeeded / 50);
-    const anchorCostNetto = anchorProduct ? anchorPacks * anchorProduct.priceNettoUnit : 0;
-    const anchorCostBrutto = anchorProduct ? anchorPacks * anchorProduct.priceBruttoUnit : 0;
 
-    // Geotextile cost
-    const geoProduct = PRODUCTS.find(p => p.id === 'geowłóknina-150');
-    const geoCostNetto = geoProduct ? geotextileRolls * geoProduct.priceNettoUnit : 0;
-    const geoCostBrutto = geoProduct ? geotextileRolls * geoProduct.priceBruttoUnit : 0;
+    const geotextileRolls = includeGeotextile ? Math.ceil(totalM2 / 50) : 0;
 
-    const totalEstimateNetto = gridCostNetto + borderCostNetto + anchorCostNetto + geoCostNetto;
-    const totalEstimateBrutto = gridCostBrutto + borderCostBrutto + anchorCostBrutto + geoCostBrutto;
+    const totalWeightKg = Math.round(
+      (piecesWithReserve * recommendedProduct.weightKg) +
+      (bordersNeeded * 0.4) +
+      (anchorPacks * 1.5) +
+      (geotextileRolls * 7.5)
+    );
+
+    let totalEstimateNetto = 0;
+    let totalEstimateBrutto = 0;
+
+    if (palletsNeeded >= 1 && recommendedProduct.priceNettoPallet && recommendedProduct.priceBruttoPallet) {
+      const fullPalletCount = Math.floor(piecesWithReserve / pcsPerPallet);
+      const remainingPcs = piecesWithReserve % pcsPerPallet;
+      totalEstimateNetto += (fullPalletCount * recommendedProduct.priceNettoPallet) + (remainingPcs * recommendedProduct.priceNettoUnit);
+      totalEstimateBrutto += (fullPalletCount * recommendedProduct.priceBruttoPallet) + (remainingPcs * recommendedProduct.priceBruttoUnit);
+    } else {
+      totalEstimateNetto += piecesWithReserve * recommendedProduct.priceNettoUnit;
+      totalEstimateBrutto += piecesWithReserve * recommendedProduct.priceBruttoUnit;
+    }
+
+    if (includeBorders && bordersNeeded > 0) {
+      const borderProduct = PRODUCTS.find(p => p.id === 'obrzeze-eko-45');
+      if (borderProduct) {
+        totalEstimateNetto += bordersNeeded * borderProduct.priceNettoUnit;
+        totalEstimateBrutto += bordersNeeded * borderProduct.priceBruttoUnit;
+      }
+    }
+
+    if (includeAnchors && anchorPacks > 0) {
+      const anchorProduct = PRODUCTS.find(p => p.id === 'kotwy-oplast-18');
+      if (anchorProduct) {
+        totalEstimateNetto += anchorPacks * anchorProduct.priceNettoUnit;
+        totalEstimateBrutto += anchorPacks * anchorProduct.priceBruttoUnit;
+      }
+    }
+
+    if (includeGeotextile && geotextileRolls > 0) {
+      const geoProduct = PRODUCTS.find(p => p.id === 'geowłóknina-150');
+      if (geoProduct) {
+        totalEstimateNetto += geotextileRolls * geoProduct.priceNettoUnit;
+        totalEstimateBrutto += geotextileRolls * geoProduct.priceBruttoUnit;
+      }
+    }
 
     return {
       piecesWithReserve,
@@ -123,32 +137,34 @@ export const CalculatorModal: React.FC = () => {
       geotextileRolls,
       totalWeightKg,
       totalEstimateNetto,
-      totalEstimateBrutto,
-      borderProduct,
-      anchorProduct,
-      geoProduct,
+      totalEstimateBrutto
     };
-  }, [totalM2, recommendedProduct, includeBorders, perimeterM, includeAnchors, includeGeotextile, usageType]);
+  }, [totalM2, recommendedProduct, perimeterM, includeBorders, includeAnchors, includeGeotextile, fillerType]);
 
   if (!isCalculatorOpen) return null;
 
   const handleAddAllToCart = () => {
-    // 1. Add Grids
     addToCart(recommendedProduct, recommendedProduct.colors[0], 'piece', calculations.piecesWithReserve);
 
-    // 2. Add Borders if selected
-    if (includeBorders && calculations.bordersNeeded > 0 && calculations.borderProduct) {
-      addToCart(calculations.borderProduct, calculations.borderProduct.colors[0], 'piece', calculations.bordersNeeded);
+    if (includeBorders && calculations.bordersNeeded > 0) {
+      const borderProd = PRODUCTS.find(p => p.id === 'obrzeze-eko-45');
+      if (borderProd) {
+        addToCart(borderProd, borderProd.colors[0], 'piece', calculations.bordersNeeded);
+      }
     }
 
-    // 3. Add Anchors if selected
-    if (includeAnchors && calculations.anchorPacks > 0 && calculations.anchorProduct) {
-      addToCart(calculations.anchorProduct, calculations.anchorProduct.colors[0], 'piece', calculations.anchorPacks);
+    if (includeAnchors && calculations.anchorPacks > 0) {
+      const anchorProd = PRODUCTS.find(p => p.id === 'kotwy-oplast-18');
+      if (anchorProd) {
+        addToCart(anchorProd, anchorProd.colors[0], 'piece', calculations.anchorPacks);
+      }
     }
 
-    // 4. Add Geotextile if selected
-    if (includeGeotextile && calculations.geotextileRolls > 0 && calculations.geoProduct) {
-      addToCart(calculations.geoProduct, calculations.geoProduct.colors[0], 'piece', calculations.geotextileRolls);
+    if (includeGeotextile && calculations.geotextileRolls > 0) {
+      const geoProd = PRODUCTS.find(p => p.id === 'geowłóknina-150');
+      if (geoProd) {
+        addToCart(geoProd, geoProd.colors[0], 'piece', calculations.geotextileRolls);
+      }
     }
 
     setIsCalculatorOpen(false);
@@ -156,62 +172,62 @@ export const CalculatorModal: React.FC = () => {
   };
 
   const handleOpenB2BQuote = () => {
-    setInquiryPreselectedProduct(`${recommendedProduct.name} (${calculations.piecesWithReserve} szt. / ${totalM2} m²)`);
+    setInquiryPreselectedProduct(`Zestaw kalkulatora: ${localizedRecProduct.name} - ${totalM2} m² (${calculations.piecesWithReserve} szt.)`);
     setIsCalculatorOpen(false);
     setIsInquiryOpen(true);
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden my-8">
         
-        {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-800 to-green-900 text-white p-5 sm:p-6 flex items-center justify-between">
+        {/* Modal Header */}
+        <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50/50 p-6 border-b border-emerald-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-white/10 text-white border border-white/10">
-              <Calculator className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs">
+              <Calculator className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold font-heading">
-                Kalkulator Powierzchni i Podbudowy Oplast
+              <h2 className="text-xl font-bold text-slate-900 font-heading">
+                {t.calculator.title}
               </h2>
-              <p className="text-emerald-200 text-xs sm:text-sm">
-                Precyzyjny dobór modelu kratki, liczby palet, kruszywa i akcesoriów
+              <p className="text-xs text-slate-600">
+                {t.calculator.subtitle}
               </p>
             </div>
           </div>
           <button
             onClick={() => setIsCalculatorOpen(false)}
-            className="p-2 rounded-xl text-emerald-100 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-white/80 transition-colors"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 sm:p-6 max-h-[80vh] overflow-y-auto grid md:grid-cols-12 gap-6">
+        <div className="p-6 grid md:grid-cols-12 gap-8">
           
-          {/* Left Column: Form Controls */}
-          <div className="md:col-span-7 space-y-5">
+          {/* Left Column: Form Inputs */}
+          <div className="md:col-span-7 space-y-6">
             
-            {/* 1. Surface Input */}
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <div className="flex items-center justify-between mb-3">
+            {/* 1. Dimensions input */}
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+              <div className="flex items-center justify-between">
                 <label className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                  <span>1. Wymiary powierzchni</span>
+                  <span>1. {t.calculator.dimLabel}</span>
                 </label>
                 <div className="flex text-xs bg-slate-200 p-0.5 rounded-lg font-medium">
                   <button
                     onClick={() => setInputMode('m2')}
                     className={`px-2.5 py-1 rounded-md transition-colors ${inputMode === 'm2' ? 'bg-white shadow-xs font-bold text-emerald-800' : 'text-slate-600'}`}
                   >
-                    Podaj w m²
+                    {t.calculator.m2Mode}
                   </button>
                   <button
                     onClick={() => setInputMode('dimensions')}
                     className={`px-2.5 py-1 rounded-md transition-colors ${inputMode === 'dimensions' ? 'bg-white shadow-xs font-bold text-emerald-800' : 'text-slate-600'}`}
                   >
-                    Długość × Szerokość
+                    {t.calculator.dimMode}
                   </button>
                 </div>
               </div>
@@ -227,7 +243,7 @@ export const CalculatorModal: React.FC = () => {
                       onChange={(e) => setSurfaceM2Input(Number(e.target.value))}
                       className="w-32 px-3 py-2 text-lg font-bold bg-white border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
                     />
-                    <span className="text-slate-600 font-semibold">m² powierzchni</span>
+                    <span className="text-slate-600 font-semibold">m²</span>
                   </div>
                   {/* Preset buttons */}
                   <div className="flex flex-wrap gap-1.5 mt-2.5 text-xs">
@@ -249,7 +265,7 @@ export const CalculatorModal: React.FC = () => {
               ) : (
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Długość (m):</label>
+                    <label className="text-xs text-slate-500 mb-1 block">{t.calculator.length}:</label>
                     <input
                       type="number"
                       min="1"
@@ -259,7 +275,7 @@ export const CalculatorModal: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500 mb-1 block">Szerokość (m):</label>
+                    <label className="text-xs text-slate-500 mb-1 block">{t.calculator.width}:</label>
                     <input
                       type="number"
                       min="1"
@@ -269,7 +285,7 @@ export const CalculatorModal: React.FC = () => {
                     />
                   </div>
                   <p className="col-span-2 text-xs text-emerald-700 font-semibold">
-                    Obliczona powierzchnia: <strong>{totalM2} m²</strong> (obwód: ~{Math.round((lengthM + widthM) * 2)} mb)
+                    {t.calculator.calcSurface}: <strong>{totalM2} m²</strong> (~{Math.round((lengthM + widthM) * 2)} mb)
                   </p>
                 </div>
               )}
@@ -278,7 +294,7 @@ export const CalculatorModal: React.FC = () => {
             {/* 2. Usage Type */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-slate-900 block">
-                2. Przeznaczenie i obciążenie nawierzchni:
+                2. {t.calculator.usageTitle}
               </label>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <button
@@ -290,8 +306,8 @@ export const CalculatorModal: React.FC = () => {
                       : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                   }`}
                 >
-                  <p className="font-bold text-slate-900">Podjazd & Parking Osobowy</p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Ruch aut do 3.5t (Oplast H40)</p>
+                  <p className="font-bold text-slate-900">{t.calculator.parkingPassenger}</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">{t.calculator.parkingPassengerSub}</p>
                 </button>
 
                 <button
@@ -303,8 +319,8 @@ export const CalculatorModal: React.FC = () => {
                       : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                   }`}
                 >
-                  <p className="font-bold text-slate-900">Transport Ciężki / Straż</p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Droga pożarowa, TIR (Oplast H50)</p>
+                  <p className="font-bold text-slate-900">{t.calculator.heavyTruck}</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">{t.calculator.heavyTruckSub}</p>
                 </button>
 
                 <button
@@ -316,8 +332,8 @@ export const CalculatorModal: React.FC = () => {
                       : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                   }`}
                 >
-                  <p className="font-bold text-slate-900">Ścieżki & Ogrody</p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Ruch pieszy, rowerowy (Oplast H30)</p>
+                  <p className="font-bold text-slate-900">{t.calculator.lightGarden}</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">{t.calculator.lightGardenSub}</p>
                 </button>
 
                 <button
@@ -329,8 +345,8 @@ export const CalculatorModal: React.FC = () => {
                       : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
                   }`}
                 >
-                  <p className="font-bold text-slate-900">Skarpy i Zbocza</p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Stabilizacja przed erozją</p>
+                  <p className="font-bold text-slate-900">{t.calculator.slope}</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">{t.calculator.slopeSub}</p>
                 </button>
               </div>
             </div>
@@ -338,7 +354,7 @@ export const CalculatorModal: React.FC = () => {
             {/* 3. Filler Type */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-slate-900 block">
-                3. Planowane wypełnienie oczek kratki:
+                3. {t.calculator.fillerTitle}
               </label>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <button
@@ -350,7 +366,7 @@ export const CalculatorModal: React.FC = () => {
                       : 'border-slate-200 bg-white text-slate-700'
                   }`}
                 >
-                  Kruszywo / Grys (8-16 mm)
+                  {t.calculator.gravelFiller}
                 </button>
                 <button
                   type="button"
@@ -361,14 +377,14 @@ export const CalculatorModal: React.FC = () => {
                       : 'border-slate-200 bg-white text-slate-700'
                   }`}
                 >
-                  Trawnik (Ziemia + Nasiona)
+                  {t.calculator.grassFiller}
                 </button>
               </div>
             </div>
 
             {/* 4. Accessories checkboxes */}
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs">
-              <p className="font-bold text-slate-900 text-sm">4. Akcesoria montażowe i obrzeża:</p>
+              <p className="font-bold text-slate-900 text-sm">4. {t.calculator.accTitle}</p>
 
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
@@ -378,7 +394,7 @@ export const CalculatorModal: React.FC = () => {
                   className="w-4 h-4 text-emerald-600 rounded-sm focus:ring-emerald-500"
                 />
                 <span className="text-slate-800 font-medium">
-                  Dołącz elastyczne obrzeża Oplast Eko-Bord (np. obwód: 
+                  {t.calculator.borderCheckbox}
                 </span>
                 <input
                   type="number"
@@ -398,7 +414,7 @@ export const CalculatorModal: React.FC = () => {
                   className="w-4 h-4 text-emerald-600 rounded-sm focus:ring-emerald-500"
                 />
                 <span className="text-slate-800 font-medium">
-                  Dołącz kotwy mocujące z tworzywa Oplast (szpilki stabilizujące)
+                  {t.calculator.anchorCheckbox}
                 </span>
               </label>
 
@@ -410,7 +426,7 @@ export const CalculatorModal: React.FC = () => {
                   className="w-4 h-4 text-emerald-600 rounded-sm focus:ring-emerald-500"
                 />
                 <span className="text-slate-800 font-medium">
-                  Dołącz rolki geowłókniny drenażowo-separacyjnej 150g/m²
+                  {t.calculator.geotextileCheckbox}
                 </span>
               </label>
             </div>
@@ -423,62 +439,62 @@ export const CalculatorModal: React.FC = () => {
               
               <div>
                 <span className="text-[10px] uppercase font-extrabold tracking-wider text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-md">
-                  Rekomendowany Produkt
+                  {t.calculator.recommendedProduct}
                 </span>
                 <h3 className="text-lg font-bold font-heading text-slate-900 mt-1.5">
-                  {recommendedProduct.name}
+                  {localizedRecProduct.name}
                 </h3>
                 <p className="text-xs text-slate-600">
-                  Nośność: <strong>{recommendedProduct.loadCapacityTonnes} t/m²</strong> • Wysokość: <strong>{recommendedProduct.heightMm} mm</strong>
+                  {t.calculator.capacityLabel}: <strong>{recommendedProduct.loadCapacityTonnes} t/m²</strong> • {t.calculator.heightLabel}: <strong>{recommendedProduct.heightMm} mm</strong>
                 </p>
               </div>
 
               {/* Specification Grid */}
               <div className="space-y-2.5 border-y border-emerald-200/80 py-3 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">Powierzchnia:</span>
+                  <span className="text-slate-500">{t.calculator.surfaceLabel}:</span>
                   <span className="font-bold text-slate-900">{totalM2} m²</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">Liczba kratek (z 5% zapasem):</span>
+                  <span className="text-slate-500">{t.calculator.piecesLabel}:</span>
                   <span className="font-extrabold text-emerald-700 text-sm">
-                    {calculations.piecesWithReserve} szt.
+                    {calculations.piecesWithReserve} {t.catalog.piece.toLowerCase()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">Wymiar logistyczny:</span>
+                  <span className="text-slate-500">{t.calculator.logisticLabel}:</span>
                   <span className="font-semibold text-slate-800">
-                    {calculations.palletsNeeded} {calculations.palletsNeeded === 1 ? 'paleta' : 'palet'} (~{calculations.totalWeightKg} kg)
+                    {calculations.palletsNeeded} {t.catalog.pallet.toLowerCase()} (~{calculations.totalWeightKg} kg)
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-500">Wypełnienie ({fillerType === 'gravel' ? 'grys' : 'ziemia'}):</span>
+                  <span className="text-slate-500">{t.calculator.fillerVolLabel}:</span>
                   <span className="font-semibold text-slate-800">
-                    ok. {calculations.fillerVolumeM3} m³ (~{calculations.fillerWeightTonnes} t)
+                    ~{calculations.fillerVolumeM3} m³ (~{calculations.fillerWeightTonnes} t)
                   </span>
                 </div>
 
                 {includeBorders && (
                   <div className="flex justify-between items-center pt-1 border-t border-emerald-200/60">
-                    <span className="text-slate-500">Obrzeża Eko-Bord:</span>
+                    <span className="text-slate-500">{t.calculator.bordersLabel}:</span>
                     <span className="font-semibold text-slate-900">{calculations.bordersNeeded} mb</span>
                   </div>
                 )}
 
                 {includeAnchors && (
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-500">Kotwy mocujące:</span>
+                    <span className="text-slate-500">{t.calculator.anchorsLabel}:</span>
                     <span className="font-semibold text-slate-900">
-                      {calculations.anchorsNeeded} szt. ({calculations.anchorPacks} paczek)
+                      {calculations.anchorsNeeded} szt. ({calculations.anchorPacks} op.)
                     </span>
                   </div>
                 )}
 
                 {includeGeotextile && (
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-500">Geowłóknina 150g/m²:</span>
+                    <span className="text-slate-500">{t.calculator.geoLabel}:</span>
                     <span className="font-semibold text-slate-900">
-                      {calculations.geotextileRolls} {calculations.geotextileRolls === 1 ? 'rolka (50m²)' : 'rolek'}
+                      {calculations.geotextileRolls} rol. (50m²)
                     </span>
                   </div>
                 )}
@@ -487,7 +503,7 @@ export const CalculatorModal: React.FC = () => {
               {/* Price Estimate */}
               <div className="p-4 bg-white rounded-xl border border-emerald-300/90 shadow-xs">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-slate-600 font-medium">Szacowany koszt zestawu:</span>
+                  <span className="text-xs text-slate-600 font-medium">{t.calculator.totalCostEst}:</span>
                   <span className="text-xl font-extrabold text-emerald-700 font-heading">
                     {isB2BMode 
                       ? `${calculations.totalEstimateNetto.toFixed(2)} zł netto`
@@ -497,8 +513,8 @@ export const CalculatorModal: React.FC = () => {
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1">
                   {isB2BMode 
-                    ? '* Ceny hurtowe netto. Transport wyliczany w koszyku.' 
-                    : '* Ceny zawierają 23% VAT. Dostawa z windą rozładunkową.'
+                    ? t.calculator.vatNoticeB2B 
+                    : t.calculator.vatNoticeB2C
                   }
                 </p>
               </div>
@@ -512,7 +528,7 @@ export const CalculatorModal: React.FC = () => {
                 className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Dodaj kompletny zestaw do koszyka</span>
+                <span>{t.calculator.addAllToCart}</span>
               </button>
 
               <button
@@ -520,7 +536,7 @@ export const CalculatorModal: React.FC = () => {
                 className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold py-2.5 px-4 rounded-xl border border-slate-300 transition-colors cursor-pointer text-xs shadow-xs"
               >
                 <Building2 className="w-4 h-4 text-emerald-700" />
-                <span>Poproś o indywidualną wycenę FTL / NIP</span>
+                <span>{t.calculator.requestB2BQuote}</span>
               </button>
             </div>
 

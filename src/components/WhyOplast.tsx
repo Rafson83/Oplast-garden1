@@ -5,8 +5,11 @@ import {
   ShieldCheck, 
   Truck
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const WhyOplast: React.FC = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-16 bg-slate-50 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -15,13 +18,13 @@ export const WhyOplast: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
             <Factory className="w-3.5 h-3.5" />
-            Produkcja w Polsce • Winduga 6, Bobrowniki
+            {t.why.badge}
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 font-heading">
-            Dlaczego warto wybrać kratki Oplast Garden?
+            {t.why.title}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Łączymy ponad 25 lat doświadczenia w przetwórstwie tworzyw sztucznych z nowoczesnym parkiem wtryskarek i własnym surowcem z certyfikowanego recyklingu.
+            {t.why.subtitle}
           </p>
         </div>
 
@@ -32,9 +35,9 @@ export const WhyOplast: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <Factory className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 font-heading">Prosto od Producenta</h3>
+            <h3 className="text-lg font-bold text-slate-900 font-heading">{t.why.p1Title}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Kupujesz bezpośrednio w fabryce w Windudze bez marż pośredników. Gwarancja natychmiastowej dostępności tysięcy metrów kwadratowych na placu.
+              {t.why.p1Desc}
             </p>
           </div>
 
@@ -42,9 +45,9 @@ export const WhyOplast: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <Recycle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 font-heading">100% Recykling & GOZ</h3>
+            <h3 className="text-lg font-bold text-slate-900 font-heading">{t.why.p2Title}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Nasze kratki i obrzeża powstają ze starannie wyselekcjonowanego regranulatu PP/PE o wysokiej elastyczności, odpornego na pękanie pod naciskiem mrozowym.
+              {t.why.p2Desc}
             </p>
           </div>
 
@@ -52,9 +55,9 @@ export const WhyOplast: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 font-heading">Atesty & Certyfikaty ITB</h3>
+            <h3 className="text-lg font-bold text-slate-900 font-heading">{t.why.p3Title}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Posiadamy Krajową Deklarację Właściwości Użytkowych (KDWU), badania wytrzymałościowe oraz atest PZH. Pełna zgodność z wymogami odbiorów budowlanych.
+              {t.why.p3Desc}
             </p>
           </div>
 
@@ -62,9 +65,9 @@ export const WhyOplast: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <Truck className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 font-heading">Sprawna Logistyka 24-48h</h3>
+            <h3 className="text-lg font-bold text-slate-900 font-heading">{t.why.p4Title}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Zapewniamy dostawy paletowe autami z windą hydrauliczną na terenie całego kraju oraz własne naczepy firanki 24t dla kontraktów całopojazdowych.
+              {t.why.p4Desc}
             </p>
           </div>
 
@@ -76,37 +79,37 @@ export const WhyOplast: React.FC = () => {
             
             <div className="pt-4 lg:pt-0">
               <p className="text-3xl sm:text-5xl font-extrabold text-emerald-700 font-heading">
-                450 t/m²
+                {t.why.stat1Val}
               </p>
               <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
-                Maksymalna nośność z wypełnieniem
+                {t.why.stat1Label}
               </p>
             </div>
 
             <div className="pt-4 lg:pt-0">
               <p className="text-3xl sm:text-5xl font-extrabold text-slate-900 font-heading">
-                88%
+                {t.why.stat2Val}
               </p>
               <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
-                Powierzchni biologicznie czynnej
+                {t.why.stat2Label}
               </p>
             </div>
 
             <div className="pt-4 lg:pt-0">
               <p className="text-3xl sm:text-5xl font-extrabold text-emerald-700 font-heading">
-                1500 t
+                {t.why.stat3Val}
               </p>
               <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
-                Miesięczne moce przerobowe tworzyw
+                {t.why.stat3Label}
               </p>
             </div>
 
             <div className="pt-4 lg:pt-0">
               <p className="text-3xl sm:text-5xl font-extrabold text-slate-900 font-heading">
-                25+ lat
+                {t.why.stat4Val}
               </p>
               <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
-                Gwarantowanej trwałości w gruncie
+                {t.why.stat4Label}
               </p>
             </div>
 

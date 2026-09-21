@@ -9,7 +9,9 @@ import {
   Printer 
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 import { DeliveryMethod } from '../types/shop';
+import { getLocalizedProduct } from '../i18n/productTranslations';
 
 export const CartDrawer: React.FC = () => {
   const { 
@@ -26,6 +28,7 @@ export const CartDrawer: React.FC = () => {
     totalWeightKg,
     totalPallets
   } = useShop();
+  const { language, t } = useLanguage();
 
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('pallet');
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'checkout' | 'success'>('cart');
@@ -52,10 +55,9 @@ export const CartDrawer: React.FC = () => {
   } else if (deliveryMethod === 'courier') {
     deliveryCostNetto = 25.00;
   } else if (deliveryMethod === 'pallet') {
-    // ~190 zł netto per pallet
     deliveryCostNetto = Math.max(1, Math.ceil(totalPallets || 1)) * 190.00;
   } else if (deliveryMethod === 'ftl') {
-    deliveryCostNetto = 1800.00; // szacunkowy koszt dedykowanego transportu 24t
+    deliveryCostNetto = 1800.00;
   }
   const deliveryCostBrutto = deliveryCostNetto * 1.23;
 
@@ -94,10 +96,10 @@ export const CartDrawer: React.FC = () => {
             </div>
             <div>
               <h2 className="text-lg font-bold font-heading text-white">
-                {checkoutStep === 'checkout' ? 'Dane do zamówienia' : 'Koszyk Zakupowy'}
+                {checkoutStep === 'checkout' ? t.cart.checkoutTitle : t.cart.title}
               </h2>
               <p className="text-xs text-emerald-100">
-                {cart.length} {cart.length === 1 ? 'pozycja' : 'pozycji'} w zamówieniu
+                {cart.length} {t.cart.itemsCount}
               </p>
             </div>
           </div>
@@ -108,7 +110,7 @@ export const CartDrawer: React.FC = () => {
               onClick={() => setIsB2BMode(!isB2BMode)}
               className="text-xs font-bold px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-white border border-white/25 transition-colors cursor-pointer"
             >
-              Widok: {isB2BMode ? 'HURT NETTO' : 'DETAL BRUTTO'}
+              {isB2BMode ? t.cart.viewNetto : t.cart.viewBrutto}
             </button>
             <button
               onClick={handleClose}
@@ -129,17 +131,17 @@ export const CartDrawer: React.FC = () => {
                 <Check className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 font-heading">
-                Zamówienie #{orderNumber} przyjęte do realizacji!
+                {t.cart.orderSuccessTitle} #{orderNumber}
               </h3>
               <p className="text-slate-600 max-w-sm mx-auto text-xs sm:text-sm">
-                Potwierdzenie wraz ze specyfikacją lub fakturą proforma zostało wysłane na adres: <strong>{email}</strong>.
+                {t.cart.orderSuccessDesc}: <strong>{email}</strong>.
               </p>
 
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-left space-y-1.5 max-w-sm mx-auto">
-                <p className="font-bold text-slate-800">Zakład Produkcyjny Oplast:</p>
-                <p className="text-slate-600">Winduga 6, 87-617 Bobrowniki</p>
+                <p className="font-bold text-slate-800">Oplast-Recykling Sp. z o.o.:</p>
+                <p className="text-slate-600">Winduga 6, 87-617 Bobrowniki, Polska</p>
                 <p className="text-emerald-700 font-semibold pt-1">
-                  Infolinia ds. wysyłek: +48 537 200 630
+                  Infolinia: +48 537 200 630
                 </p>
               </div>
 
@@ -148,7 +150,7 @@ export const CartDrawer: React.FC = () => {
                   onClick={handleClose}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors cursor-pointer"
                 >
-                  Kontynuuj zakupy
+                  {t.cart.continueShopping}
                 </button>
               </div>
             </div>
@@ -157,13 +159,13 @@ export const CartDrawer: React.FC = () => {
             <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-4">
               
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                <p className="font-bold text-slate-900 mb-2">1. Dane zamawiającego / Faktura VAT:</p>
+                <p className="font-bold text-slate-900 mb-2">1. {t.cart.customerData}:</p>
                 
                 <div className="space-y-2.5">
                   {isB2BMode && (
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-slate-600 block mb-0.5">NIP firmy:</label>
+                        <label className="text-slate-600 block mb-0.5">{t.inquiry.nipLabel}:</label>
                         <input
                           type="text"
                           value={nip}
@@ -173,7 +175,7 @@ export const CartDrawer: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <label className="text-slate-600 block mb-0.5">Nazwa firmy:</label>
+                        <label className="text-slate-600 block mb-0.5">{t.inquiry.companyLabel}:</label>
                         <input
                           type="text"
                           value={companyName}
@@ -186,7 +188,7 @@ export const CartDrawer: React.FC = () => {
                   )}
 
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Imię i nazwisko osoby do odbioru *:</label>
+                    <label className="text-slate-600 block mb-0.5">{t.sampleBox.recipientLabel} *:</label>
                     <input
                       type="text"
                       required
@@ -199,7 +201,7 @@ export const CartDrawer: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-slate-600 block mb-0.5">Telefon kontaktowy *:</label>
+                      <label className="text-slate-600 block mb-0.5">{t.inquiry.phoneLabel} *:</label>
                       <input
                         type="tel"
                         required
@@ -210,7 +212,7 @@ export const CartDrawer: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-slate-600 block mb-0.5">Adres E-mail *:</label>
+                      <label className="text-slate-600 block mb-0.5">{t.inquiry.emailLabel} *:</label>
                       <input
                         type="email"
                         required
@@ -226,10 +228,10 @@ export const CartDrawer: React.FC = () => {
 
               {/* Delivery Address */}
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                <p className="font-bold text-slate-900 mb-2">2. Adres rozładunku / dostawy:</p>
+                <p className="font-bold text-slate-900 mb-2">2. {t.cart.addressData}:</p>
                 <div className="space-y-2">
                   <div>
-                    <label className="text-slate-600 block mb-0.5">Ulica i numer *:</label>
+                    <label className="text-slate-600 block mb-0.5">{t.sampleBox.streetLabel} *:</label>
                     <input
                       type="text"
                       required
@@ -241,7 +243,7 @@ export const CartDrawer: React.FC = () => {
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <label className="text-slate-600 block mb-0.5">Kod pocztowy *:</label>
+                      <label className="text-slate-600 block mb-0.5">{t.sampleBox.postalLabel} *:</label>
                       <input
                         type="text"
                         required
@@ -252,7 +254,7 @@ export const CartDrawer: React.FC = () => {
                       />
                     </div>
                     <div className="col-span-2">
-                      <label className="text-slate-600 block mb-0.5">Miejscowość *:</label>
+                      <label className="text-slate-600 block mb-0.5">{t.sampleBox.cityLabel} *:</label>
                       <input
                         type="text"
                         required
@@ -268,7 +270,7 @@ export const CartDrawer: React.FC = () => {
 
               {/* Payment Method */}
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                <p className="font-bold text-slate-900 mb-2">3. Forma rozliczenia:</p>
+                <p className="font-bold text-slate-900 mb-2">3. {t.cart.paymentData}:</p>
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">
                     <input
@@ -278,7 +280,7 @@ export const CartDrawer: React.FC = () => {
                       onChange={() => setPaymentMethod('proforma')}
                       className="text-emerald-600"
                     />
-                    <span>Faktura proforma (tradycyjny przelew bankowy)</span>
+                    <span>{t.cart.proformaPay}</span>
                   </label>
                   <label className="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">
                     <input
@@ -288,7 +290,7 @@ export const CartDrawer: React.FC = () => {
                       onChange={() => setPaymentMethod('cod')}
                       className="text-emerald-600"
                     />
-                    <span>Płatność przy odbiorze (kurier / kierowca z terminalem)</span>
+                    <span>{t.cart.codPay}</span>
                   </label>
                   {isB2BMode && (
                     <label className="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">
@@ -299,14 +301,14 @@ export const CartDrawer: React.FC = () => {
                         onChange={() => setPaymentMethod('term_14d')}
                         className="text-emerald-600"
                       />
-                      <span className="font-semibold text-emerald-800">Odroczony termin płatności 14 dni (dla stałych firm B2B)</span>
+                      <span className="font-semibold text-emerald-800">{t.cart.termPay}</span>
                     </label>
                   )}
                 </div>
               </div>
 
               <div>
-                <label className="text-slate-600 block mb-0.5">Instrukcje dla kierowcy (np. dojazd wąską drogą):</label>
+                <label className="text-slate-600 block mb-0.5">{t.cart.driverNotes}:</label>
                 <textarea
                   rows={2}
                   value={notes}
@@ -325,35 +327,36 @@ export const CartDrawer: React.FC = () => {
                   <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
                     <ShoppingBag className="w-6 h-6" />
                   </div>
-                  <p className="text-slate-500 font-medium">Twój koszyk jest pusty.</p>
-                  <p className="text-slate-400 text-[11px]">Dodaj kratki lub skorzystaj z kalkulatora powierzchni.</p>
+                  <p className="text-slate-500 font-medium">{t.cart.emptyCart}</p>
+                  <p className="text-slate-400 text-[11px]">{t.cart.emptyDesc}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {cart.map(item => {
                     const price = isB2BMode ? item.effectiveUnitPriceNetto : item.effectiveUnitPriceBrutto;
                     const itemTotal = price * item.quantity;
+                    const localizedItem = getLocalizedProduct(item.product, language);
 
                     return (
                       <div key={item.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                         <div className="flex justify-between items-start gap-2">
                           <div>
                             <h4 className="font-bold text-slate-900 text-sm leading-tight">
-                              {item.product.name}
+                              {localizedItem.name}
                             </h4>
                             <p className="text-[11px] text-slate-500 mt-0.5">
-                              Kolor: <span className="font-semibold text-slate-700">{item.selectedColor.name.split(' ')[0]}</span> • Jednostka: <span className="font-semibold text-slate-700">{item.unitType === 'pallet' ? 'Paleta' : (item.unitType === 'm2' ? '1 m²' : 'Sztuka')}</span>
+                              {t.catalog.colorLabel}: <span className="font-semibold text-slate-700">{item.selectedColor.name.split(' ')[0]}</span> • <span className="font-semibold text-slate-700">{item.unitType === 'pallet' ? t.catalog.pallet : (item.unitType === 'm2' ? '1 m²' : t.catalog.piece)}</span>
                             </p>
                             {item.totalPieces > item.quantity && (
                               <p className="text-[10px] text-emerald-700 font-bold mt-0.5">
-                                Razem sztuk: {item.totalPieces} szt. (~{(item.totalPieces * item.product.weightKg).toFixed(0)} kg)
+                                ~{item.totalPieces} {t.catalog.piece.toLowerCase()} (~{(item.totalPieces * item.product.weightKg).toFixed(0)} kg)
                               </p>
                             )}
                           </div>
                           <button
                             onClick={() => removeFromCart(item.id)}
                             className="text-slate-400 hover:text-red-600 transition-colors p-1"
-                            title="Usuń pozycję"
+                            title="Usuń"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -384,7 +387,7 @@ export const CartDrawer: React.FC = () => {
                               {itemTotal.toFixed(2)} zł
                             </span>
                             <p className="text-[10px] text-slate-500">
-                              {price.toFixed(2)} zł {isB2BMode ? 'netto' : 'brutto'} / jedn.
+                              {price.toFixed(2)} zł {isB2BMode ? 'netto' : 'brutto'}
                             </p>
                           </div>
                         </div>
@@ -396,16 +399,16 @@ export const CartDrawer: React.FC = () => {
                   <div className="p-3 bg-emerald-50/80 rounded-xl border border-emerald-200/80 flex items-center justify-between text-xs text-emerald-950">
                     <div className="flex items-center gap-2">
                       <Truck className="w-4 h-4 text-emerald-700" />
-                      <span>Łączna waga zamówienia:</span>
+                      <span>{t.cart.weightTracker}:</span>
                     </div>
                     <span className="font-bold">
-                      ~{totalWeightKg} kg ({totalPallets} {totalPallets === 1 ? 'paleta' : 'palet'})
+                      ~{totalWeightKg} kg ({totalPallets} {t.catalog.pallet.toLowerCase()})
                     </span>
                   </div>
 
                   {/* Delivery Selection */}
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                    <p className="font-bold text-slate-900">Wybierz sposób dostawy:</p>
+                    <p className="font-bold text-slate-900">{t.cart.deliveryTitle}:</p>
                     <div className="space-y-1.5 text-xs">
                       
                       <label className={`p-2 rounded-lg border flex items-center justify-between cursor-pointer ${deliveryMethod === 'pallet' ? 'border-emerald-600 bg-white font-bold text-slate-900' : 'border-slate-200 bg-white text-slate-700'}`}>
@@ -417,7 +420,7 @@ export const CartDrawer: React.FC = () => {
                             onChange={() => setDeliveryMethod('pallet')}
                             className="text-emerald-600"
                           />
-                          <span>Dostawa paletowa z windą i rozładunkiem</span>
+                          <span>{t.cart.deliveryPallet}</span>
                         </div>
                         <span>{(isB2BMode ? deliveryCostNetto : deliveryCostBrutto).toFixed(2)} zł</span>
                       </label>
@@ -431,7 +434,7 @@ export const CartDrawer: React.FC = () => {
                             onChange={() => setDeliveryMethod('pickup')}
                             className="text-emerald-600"
                           />
-                          <span>Odbiór osobisty: Fabryka Winduga 6 (Bobrowniki)</span>
+                          <span>{t.cart.deliveryPickup}</span>
                         </div>
                         <span className="text-emerald-700 font-extrabold">0.00 zł</span>
                       </label>
@@ -446,7 +449,7 @@ export const CartDrawer: React.FC = () => {
                               onChange={() => setDeliveryMethod('ftl')}
                               className="text-emerald-600"
                             />
-                            <span>Transport dedykowany FTL (naczepa firanka)</span>
+                            <span>{t.cart.deliveryFtl}</span>
                           </div>
                           <span>1 800.00 zł netto</span>
                         </label>
@@ -468,22 +471,22 @@ export const CartDrawer: React.FC = () => {
             {/* Price breakdown */}
             <div className="space-y-1 text-xs">
               <div className="flex justify-between text-slate-500">
-                <span>Wartość produktów netto:</span>
+                <span>{t.cart.summaryNetto}:</span>
                 <span className="font-semibold text-slate-800">{totalCartNetto.toFixed(2)} zł</span>
               </div>
               <div className="flex justify-between text-slate-500">
-                <span>Podatek VAT (23%):</span>
+                <span>{t.cart.summaryVat}:</span>
                 <span className="font-semibold text-slate-800">{(totalCartBrutto - totalCartNetto).toFixed(2)} zł</span>
               </div>
               <div className="flex justify-between text-slate-500">
-                <span>Koszt transportu:</span>
+                <span>{t.cart.summaryShipping}:</span>
                 <span className="font-semibold text-slate-800">
                   {isB2BMode ? `${deliveryCostNetto.toFixed(2)} zł netto` : `${deliveryCostBrutto.toFixed(2)} zł brutto`}
                 </span>
               </div>
               <div className="flex justify-between items-baseline pt-2 border-t border-slate-200 text-sm">
                 <span className="font-bold text-slate-900">
-                  Łącznie do zapłaty ({isB2BMode ? 'netto' : 'brutto'}):
+                  {t.cart.summaryTotal} ({isB2BMode ? 'netto' : 'brutto'}):
                 </span>
                 <span className="text-xl font-extrabold text-emerald-700 font-heading">
                   {isB2BMode 
@@ -501,7 +504,7 @@ export const CartDrawer: React.FC = () => {
                   onClick={() => setCheckoutStep('checkout')}
                   className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors cursor-pointer text-sm"
                 >
-                  <span>Przejdź do kasy i danych dostawy</span>
+                  <span>{t.cart.checkoutBtn}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <div className="flex gap-2">
@@ -510,13 +513,13 @@ export const CartDrawer: React.FC = () => {
                     className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-white text-xs font-semibold"
                   >
                     <Printer className="w-3.5 h-3.5" />
-                    Drukuj specyfikację
+                    {t.cart.printBtn}
                   </button>
                   <button
                     onClick={clearCart}
                     className="py-2 px-3 rounded-lg text-slate-500 hover:text-red-600 text-xs font-semibold"
                   >
-                    Wyczyść koszyk
+                    {t.cart.clearBtn}
                   </button>
                 </div>
               </div>
@@ -527,7 +530,7 @@ export const CartDrawer: React.FC = () => {
                   onClick={() => setCheckoutStep('cart')}
                   className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-white text-xs cursor-pointer"
                 >
-                  Wróć do koszyka
+                  {t.cart.backToCart}
                 </button>
                 <button
                   type="submit"
@@ -535,7 +538,7 @@ export const CartDrawer: React.FC = () => {
                   className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl shadow-md transition-colors cursor-pointer text-xs"
                 >
                   <Check className="w-4 h-4" />
-                  <span>Potwierdź zamówienie z obowiązkiem zapłaty</span>
+                  <span>{t.cart.submitOrder}</span>
                 </button>
               </div>
             )}

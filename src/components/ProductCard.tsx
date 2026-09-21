@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import { Product, ProductColor, UnitType } from '../types/shop';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
+import { getLocalizedProduct } from '../i18n/productTranslations';
 
 interface ProductCardProps {
   product: Product;
@@ -19,6 +21,9 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { isB2BMode, addToCart, setIsInquiryOpen, setInquiryPreselectedProduct } = useShop();
+  const { language, t } = useLanguage();
+
+  const localized = getLocalizedProduct(product, language);
 
   const [selectedColor, setSelectedColor] = useState<ProductColor>(product.colors[0]);
   const [unitType, setUnitType] = useState<UnitType>(isB2BMode && product.priceNettoPallet ? 'pallet' : 'piece');
@@ -29,12 +34,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   // Price calculations
   let basePriceNetto = product.priceNettoUnit;
   let basePriceBrutto = product.priceBruttoUnit;
-  let unitLabel = 'szt.';
+  let unitLabel = t.catalog.piece;
 
   if (unitType === 'pallet' && product.priceNettoPallet && product.priceBruttoPallet) {
     basePriceNetto = product.priceNettoPallet;
     basePriceBrutto = product.priceBruttoPallet;
-    unitLabel = `paleta (${product.piecesPerPallet} szt.)`;
+    unitLabel = `${t.catalog.pallet} (${product.piecesPerPallet} ${t.catalog.piece.toLowerCase()})`;
   } else if (unitType === 'm2') {
     const mult = product.coveragePerM2 || 4.4;
     basePriceNetto = product.priceNettoUnit * mult;
@@ -62,7 +67,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleB2BInquiry = () => {
-    setInquiryPreselectedProduct(`${product.name} - ${quantity} ${unitLabel}`);
+    setInquiryPreselectedProduct(`${localized.name} - ${quantity} ${unitLabel}`);
     setIsInquiryOpen(true);
   };
 
@@ -78,9 +83,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="flex items-start justify-between gap-2">
             {/* Badges */}
             <div className="flex flex-wrap gap-1.5">
-              {product.badge && (
+              {localized.badge && (
                 <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-600 text-white tracking-wide shadow-xs">
-                  {product.badge}
+                  {localized.badge}
                 </span>
               )}
               {product.loadCapacityTonnes && (
@@ -92,7 +97,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             {/* Recycled Tag */}
             <span className="text-[10px] font-bold uppercase text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-md">
-              100% Recykling
+              100% Recykling PP/PE
             </span>
           </div>
 
@@ -129,7 +134,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   <circle cx="100" cy="24" r="3" fill="#cbd5e1" />
                 </svg>
                 <div className="absolute -bottom-1 bg-slate-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
-                  100 cm • Wysokość {product.heightMm} mm
+                  100 cm • H: {product.heightMm} mm
                 </div>
               </div>
             ) : (
@@ -143,7 +148,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Color Switcher */}
           <div className="flex items-center justify-between text-xs pt-1">
-            <span className="text-[11px] font-semibold text-slate-500">Kolor:</span>
+            <span className="text-[11px] font-semibold text-slate-500">{t.catalog.colorLabel}:</span>
             <div className="flex items-center gap-2">
               {product.colors.map(color => (
                 <button
@@ -172,10 +177,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           
           <div>
             <h3 className="text-lg font-bold text-slate-900 font-heading leading-snug group-hover:text-emerald-700 transition-colors">
-              {product.name}
+              {localized.name}
             </h3>
             <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-              {product.subtitle}
+              {localized.subtitle}
             </p>
           </div>
 
@@ -187,7 +192,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 unitType === 'piece' ? 'bg-white shadow-xs font-bold text-slate-900' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Sztuka
+              {t.catalog.piece}
             </button>
             {product.coveragePerM2 && (
               <button
@@ -196,7 +201,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   unitType === 'm2' ? 'bg-white shadow-xs font-bold text-slate-900' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                1 m² ({product.coveragePerM2} szt.)
+                1 m² ({product.coveragePerM2} {t.catalog.piece.toLowerCase()})
               </button>
             )}
             {product.priceNettoPallet && (
@@ -209,7 +214,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 }`}
               >
                 <Package className="w-3 h-3" />
-                Paleta
+                {t.catalog.pallet}
               </button>
             )}
           </div>
@@ -245,7 +250,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </span>
               {product.piecesPerPallet && unitType === 'pallet' && (
                 <span className="text-emerald-700 font-medium">
-                  ~{(effectivePriceNetto / product.piecesPerPallet).toFixed(2)} zł netto/szt.
+                  ~{(effectivePriceNetto / product.piecesPerPallet).toFixed(2)} zł netto/{t.catalog.piece.toLowerCase()}
                 </span>
               )}
             </div>
@@ -256,7 +261,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <div className="text-[11px] bg-emerald-50/60 rounded-xl p-2.5 border border-emerald-200/60 space-y-1">
               <p className="font-bold text-emerald-900 flex items-center gap-1">
                 <Building2 className="w-3 h-3 text-emerald-700" />
-                <span>Rabaty ilościowe B2B dla wykonawców:</span>
+                <span>{t.catalog.tierHeading}</span>
               </p>
               <div className="space-y-0.5 text-slate-600">
                 {product.b2bDiscountTiers.map((tier, idx) => (
@@ -277,7 +282,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             >
               <span className="flex items-center gap-1">
                 <FileText className="w-3.5 h-3.5" />
-                Specyfikacja i parametry techniczne
+                {t.catalog.viewSpecs}
               </span>
               {showSpecs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
@@ -337,12 +342,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {isAddedAnimation ? (
               <>
                 <Check className="w-4 h-4" />
-                <span>Dodano do koszyka!</span>
+                <span>{t.catalog.addedToCart}</span>
               </>
             ) : (
               <>
                 <ShoppingBag className="w-4 h-4" />
-                <span>Dodaj do koszyka</span>
+                <span>{t.catalog.addToCart}</span>
               </>
             )}
           </button>
@@ -355,7 +360,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onClick={handleB2BInquiry}
             className="w-full text-center text-xs text-slate-600 hover:text-emerald-700 font-semibold py-1 transition-colors cursor-pointer"
           >
-            Potrzebujesz dostawy całopojazdowej FTL (24t)? Poproś o ofertę hurtową &rarr;
+            {t.catalog.ftlPrompt}
           </button>
         )}
       </div>

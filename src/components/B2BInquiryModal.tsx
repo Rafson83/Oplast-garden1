@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check, FileSpreadsheet, Phone, ShieldCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const B2BInquiryModal: React.FC = () => {
   const { 
@@ -9,6 +10,7 @@ export const B2BInquiryModal: React.FC = () => {
     inquiryPreselectedProduct,
     addB2BInquiry 
   } = useShop();
+  const { t } = useLanguage();
 
   const [companyName, setCompanyName] = useState('');
   const [nip, setNip] = useState('');
@@ -79,10 +81,10 @@ export const B2BInquiryModal: React.FC = () => {
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold font-heading">
-                Zapytanie Ofertowe B2B / Przetargi / FTL 24t
+                {t.inquiry.title}
               </h2>
               <p className="text-emerald-100 text-xs sm:text-sm">
-                Indywidualna kalkulacja kosztów z dostawą całopojazdową bezpośrednio na plac budowy
+                {t.inquiry.subtitle}
               </p>
             </div>
           </div>
@@ -101,18 +103,17 @@ export const B2BInquiryModal: React.FC = () => {
               <Check className="w-8 h-8" />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 font-heading">
-              Zapytanie ofertowe zostało zarejestrowane!
+              {t.inquiry.successTitle}
             </h3>
             <p className="text-sm font-semibold text-emerald-800 bg-emerald-50 py-1.5 px-4 rounded-lg inline-block">
-              Numer oferty: #{generatedId}
+              Numer: #{generatedId}
             </p>
             <p className="text-sm text-slate-600 max-w-lg mx-auto">
-              Nasz doradca techniczno-handlowy ds. inwestycji skontaktuje się z Państwem telefonicznie lub mailowo pod adresem <strong>{email}</strong> w ciągu 2-4 godzin roboczych z kompletną ofertą cenową i harmonogramem dostaw.
+              {t.inquiry.successDesc}: <strong>{email}</strong>
             </p>
 
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl max-w-md mx-auto text-xs text-left space-y-1.5">
-              <p className="font-bold text-slate-800">Potrzebujesz wyceny natychmiast?</p>
-              <p className="text-slate-600">Zadzwoń bezpośrednio do działu inwestycyjnego:</p>
+              <p className="font-bold text-slate-800">{t.inquiry.immediateContact}</p>
               <p className="font-bold text-emerald-700 text-sm flex items-center gap-1.5 pt-1">
                 <Phone className="w-4 h-4" /> +48 537 200 630 (Dział B2B Winduga)
               </p>
@@ -123,7 +124,7 @@ export const B2BInquiryModal: React.FC = () => {
                 onClick={handleClose}
                 className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-colors cursor-pointer"
               >
-                Zamknij okno
+                {t.inquiry.close}
               </button>
             </div>
           </div>
@@ -134,7 +135,7 @@ export const B2BInquiryModal: React.FC = () => {
             <div className="grid sm:grid-cols-2 gap-3.5">
               
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Nazwa firmy / Wykonawcy *</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.companyLabel} *</label>
                 <input
                   type="text"
                   required
@@ -146,7 +147,7 @@ export const B2BInquiryModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">NIP spółki / działalności</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.nipLabel}</label>
                 <input
                   type="text"
                   value={nip}
@@ -157,7 +158,7 @@ export const B2BInquiryModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Osoba kontaktowa (Kierownik budowy / Kupiec) *</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.contactLabel} *</label>
                 <input
                   type="text"
                   required
@@ -169,7 +170,7 @@ export const B2BInquiryModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Telefon bezpośredni *</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.phoneLabel} *</label>
                 <input
                   type="tel"
                   required
@@ -181,7 +182,7 @@ export const B2BInquiryModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Adres E-mail do oferty *</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.emailLabel} *</label>
                 <input
                   type="email"
                   required
@@ -193,13 +194,13 @@ export const B2BInquiryModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Miejscowość realizacji inwestycji *</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.cityLabel} *</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={postalCode}
                     onChange={e => setPostalCode(e.target.value)}
-                    placeholder="Kod"
+                    placeholder={t.inquiry.postalLabel}
                     className="w-20 px-2 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-xs text-center"
                   />
                   <input
@@ -207,7 +208,7 @@ export const B2BInquiryModal: React.FC = () => {
                     required
                     value={city}
                     onChange={e => setCity(e.target.value)}
-                    placeholder="np. Warszawa / Poznań"
+                    placeholder="np. Warszawa / Berlin"
                     className="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-xs"
                   />
                 </div>
@@ -218,7 +219,7 @@ export const B2BInquiryModal: React.FC = () => {
             {/* Scope of Investment */}
             <div className="pt-3 border-t border-slate-200 grid sm:grid-cols-3 gap-3">
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Rodzaj inwestycji:</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.investTypeLabel}:</label>
                 <select
                   value={investmentType}
                   onChange={e => setInvestmentType(e.target.value)}
@@ -234,7 +235,7 @@ export const B2BInquiryModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Szacowany metraż (m²):</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.estM2Label}:</label>
                 <input
                   type="number"
                   min="50"
@@ -246,7 +247,7 @@ export const B2BInquiryModal: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-bold text-slate-700 block mb-1">Wybór asortymentu:</label>
+                <label className="font-bold text-slate-700 block mb-1">{t.inquiry.prodSelectLabel}:</label>
                 <select
                   value={preferredProduct}
                   onChange={e => setPreferredProduct(e.target.value)}
@@ -263,7 +264,7 @@ export const B2BInquiryModal: React.FC = () => {
 
             {/* Logistics & Delivery Selection */}
             <div className="pt-3 border-t border-slate-200">
-              <label className="font-bold text-slate-700 block mb-2">Preferowana forma logistyki i rozładunku:</label>
+              <label className="font-bold text-slate-700 block mb-2">{t.inquiry.transportLabel}:</label>
               <div className="grid sm:grid-cols-3 gap-2">
                 <label className={`p-2.5 rounded-xl border flex items-center gap-2 cursor-pointer ${transportType === 'ftl_24t' ? 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold' : 'border-slate-200 bg-slate-50'}`}>
                   <input
@@ -273,7 +274,7 @@ export const B2BInquiryModal: React.FC = () => {
                     onChange={() => setTransportType('ftl_24t')}
                     className="text-emerald-600"
                   />
-                  <span>Dostawa całopojazdowa FTL 24t</span>
+                  <span>{t.inquiry.ftlTransport}</span>
                 </label>
 
                 <label className={`p-2.5 rounded-xl border flex items-center gap-2 cursor-pointer ${transportType === 'hds' ? 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold' : 'border-slate-200 bg-slate-50'}`}>
@@ -284,7 +285,7 @@ export const B2BInquiryModal: React.FC = () => {
                     onChange={() => setTransportType('hds')}
                     className="text-emerald-600"
                   />
-                  <span>Dostawa z rozładunkiem HDS</span>
+                  <span>{t.inquiry.hdsTransport}</span>
                 </label>
 
                 <label className={`p-2.5 rounded-xl border flex items-center gap-2 cursor-pointer ${transportType === 'pickup_winduga' ? 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold' : 'border-slate-200 bg-slate-50'}`}>
@@ -295,14 +296,14 @@ export const B2BInquiryModal: React.FC = () => {
                     onChange={() => setTransportType('pickup_winduga')}
                     className="text-emerald-600"
                   />
-                  <span>Odbiór własny: Zakład Winduga</span>
+                  <span>{t.inquiry.pickupTransport}</span>
                 </label>
               </div>
             </div>
 
             {/* Notes */}
             <div>
-              <label className="text-slate-600 block mb-1">Dodatkowe wytyczne projektowe / numer SIWZ / harmonogram etapów:</label>
+              <label className="text-slate-600 block mb-1">{t.inquiry.notesLabel}:</label>
               <textarea
                 rows={2}
                 value={notes}
@@ -325,14 +326,14 @@ export const B2BInquiryModal: React.FC = () => {
                   onClick={handleClose}
                   className="px-4 py-2 text-slate-600 hover:text-slate-900 font-semibold"
                 >
-                  Anuluj
+                  {t.sampleBox.cancel}
                 </button>
                 <button
                   type="submit"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors cursor-pointer text-xs flex items-center gap-2"
                 >
                   <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
-                  <span>Wyślij zapytanie ofertowe</span>
+                  <span>{t.inquiry.submit}</span>
                 </button>
               </div>
             </div>

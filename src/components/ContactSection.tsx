@@ -10,9 +10,11 @@ import {
   Truck
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ContactSection: React.FC = () => {
   const { addB2BInquiry } = useShop();
+  const { t } = useLanguage();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -59,13 +61,13 @@ export const ContactSection: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
             <Phone className="w-3.5 h-3.5" />
-            Kontakt z Producentem
+            {t.contact.badge}
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 font-heading">
-            Dział Handlowy i Zakład Produkcyjny
+            {t.contact.title}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Chętnie doradzimy w doborze kratek i obrzeży, przygotujemy wycenę paletową lub FTL oraz odpowiemy na pytania techniczne.
+            {t.contact.subtitle}
           </p>
         </div>
 
@@ -81,7 +83,7 @@ export const ContactSection: React.FC = () => {
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 font-heading">Siedziba i Zakład Produkcyjny</h3>
+                  <h3 className="font-bold text-slate-900 font-heading">{t.contact.addressTitle}</h3>
                   <p className="text-xs text-slate-500">Oplast-Recykling Sp. z o.o. • Marka Oplast Garden</p>
                 </div>
               </div>
@@ -91,25 +93,25 @@ export const ContactSection: React.FC = () => {
                   Winduga 6, 87-617 Bobrowniki
                 </p>
                 <p className="text-slate-500">
-                  woj. kujawsko-pomorskie (k. Włocławka, zjazd z autostrady A1)
+                  {t.contact.plantLabel}
                 </p>
                 <div className="flex items-center gap-2 text-slate-600 pt-1">
                   <Clock className="w-4 h-4 text-emerald-600" />
-                  <span>Biuro i magazyn: Pon – Pt: 07:00 – 16:00</span>
+                  <span>{t.contact.hoursLabel}</span>
                 </div>
               </div>
             </div>
 
             <div className="p-6 bg-white rounded-2xl border border-slate-200/90 shadow-sm space-y-4">
               <h3 className="font-bold text-slate-900 font-heading border-b border-slate-100 pb-3">
-                Numery telefonów i Infolinia:
+                {t.contact.phonesTitle}
               </h3>
 
               <div className="space-y-3 text-xs">
                 <div className="flex items-start gap-3">
                   <Phone className="w-4 h-4 text-emerald-600 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 block">Dział Handlowy & Sprzedaż Hurtowa B2B:</span>
+                    <span className="text-slate-500 block">{t.contact.b2bSalesLabel}:</span>
                     <a href="tel:+48537200630" className="text-sm font-bold text-slate-900 hover:text-emerald-700 transition-colors">
                       +48 537 200 630
                     </a>
@@ -119,7 +121,7 @@ export const ContactSection: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <Phone className="w-4 h-4 text-emerald-600 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 block">Biuro Obsługi Klienta & Zamówienia Detaliczne:</span>
+                    <span className="text-slate-500 block">{t.contact.retailLabel}:</span>
                     <a href="tel:+48542371298" className="text-sm font-bold text-slate-900 hover:text-emerald-700 transition-colors">
                       +48 54 237 12 98
                     </a>
@@ -129,7 +131,7 @@ export const ContactSection: React.FC = () => {
                 <div className="flex items-start gap-3">
                   <Mail className="w-4 h-4 text-emerald-600 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 block">Kontakt E-mail:</span>
+                    <span className="text-slate-500 block">{t.contact.emailLabel}:</span>
                     <a href="mailto:biuro@oplast-garden.pl" className="text-sm font-bold text-slate-900 hover:text-emerald-700 transition-colors">
                       biuro@oplast-garden.pl
                     </a>
@@ -142,10 +144,10 @@ export const ContactSection: React.FC = () => {
             <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200/80 text-xs text-emerald-950 space-y-1">
               <p className="font-bold flex items-center gap-1.5">
                 <Truck className="w-4 h-4 text-emerald-700" />
-                Dojazd dla samochodów ciężarowych (FTL / TIR):
+                {t.contact.tirAccessTitle}:
               </p>
               <p className="text-slate-700 leading-relaxed">
-                Zakład posiada utwardzony plac manewrowy przystosowany do wjazdu i sprawnego załadunku ciągników siodłowych z naczepami 13.6m.
+                {t.contact.tirAccessDesc}
               </p>
             </div>
 
@@ -156,10 +158,10 @@ export const ContactSection: React.FC = () => {
             <div>
               <div className="flex items-center gap-2 text-slate-900 font-bold font-heading text-lg mb-1">
                 <MessageSquare className="w-5 h-5 text-emerald-600" />
-                <span>Napisz bezpośrednio do producenta</span>
+                <span>{t.contact.formTitle}</span>
               </div>
               <p className="text-xs text-slate-500 mb-6">
-                Wypełnij poniższy formularz – odpowiemy w ciągu maksymalnie 24 godzin roboczych.
+                {t.contact.formSubtitle}
               </p>
 
               {isSent ? (
@@ -167,16 +169,16 @@ export const ContactSection: React.FC = () => {
                   <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                     <Check className="w-6 h-6" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-base">Wiadomość została wysłana!</h4>
+                  <h4 className="font-bold text-slate-900 text-base">{t.contact.formSentTitle}</h4>
                   <p className="text-xs text-slate-600">
-                    Dziękujemy za kontakt. Nasz zespół handlowy wkrótce się odezwie.
+                    {t.contact.formSentDesc}
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                   <div className="grid sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="font-bold text-slate-700 block mb-1">Imię i Nazwisko / Firma *</label>
+                      <label className="font-bold text-slate-700 block mb-1">{t.contact.formName} *</label>
                       <input
                         type="text"
                         required
@@ -187,7 +189,7 @@ export const ContactSection: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="font-bold text-slate-700 block mb-1">Numer telefonu</label>
+                      <label className="font-bold text-slate-700 block mb-1">{t.contact.formPhone}</label>
                       <input
                         type="tel"
                         value={phone}
@@ -200,7 +202,7 @@ export const ContactSection: React.FC = () => {
 
                   <div className="grid sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="font-bold text-slate-700 block mb-1">Adres E-mail *</label>
+                      <label className="font-bold text-slate-700 block mb-1">{t.contact.formEmail} *</label>
                       <input
                         type="email"
                         required
@@ -211,25 +213,25 @@ export const ContactSection: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="font-bold text-slate-700 block mb-1">Temat zapytania</label>
+                      <label className="font-bold text-slate-700 block mb-1">{t.contact.formSubject}</label>
                       <input
                         type="text"
                         value={subject}
                         onChange={e => setSubject(e.target.value)}
-                        placeholder="np. Wycena kratki H40 500m2 z transportem"
+                        placeholder="Wycena / Inquiry / Anfrage"
                         className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="font-bold text-slate-700 block mb-1">Treść wiadomości *</label>
+                    <label className="font-bold text-slate-700 block mb-1">{t.contact.formMsg} *</label>
                     <textarea
                       required
                       rows={4}
                       value={message}
                       onChange={e => setMessage(e.target.value)}
-                      placeholder="Opisz swoje zapytanie, lokalizację inwestycji lub oczekiwany termin realizacji..."
+                      placeholder="..."
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-hidden"
                     />
                   </div>
@@ -240,7 +242,7 @@ export const ContactSection: React.FC = () => {
                       className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer text-xs"
                     >
                       <Send className="w-4 h-4" />
-                      <span>Wyślij wiadomość</span>
+                      <span>{t.contact.formSend}</span>
                     </button>
                   </div>
                 </form>
@@ -248,8 +250,8 @@ export const ContactSection: React.FC = () => {
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-              <span>* Administratorem danych jest Oplast-Recykling Sp. z o.o.</span>
-              <span className="text-emerald-700 font-semibold">Certyfikat RODO / BDO</span>
+              <span>{t.contact.adminNotice}</span>
+              <span className="text-emerald-700 font-semibold">RODO / BDO: 000014298</span>
             </div>
 
           </div>

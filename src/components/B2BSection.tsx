@@ -11,9 +11,11 @@ import {
   Store
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const B2BSection: React.FC = () => {
   const { setIsSampleBoxOpen, setIsInquiryOpen, setIsB2BMode } = useShop();
+  const { t } = useLanguage();
 
   return (
     <section id="b2b" className="py-20 bg-gradient-to-b from-slate-50 via-white to-emerald-50/40 text-slate-900 border-b border-slate-200/80 relative overflow-hidden">
@@ -27,13 +29,13 @@ export const B2BSection: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-xs sm:text-sm font-bold shadow-xs">
             <Building2 className="w-4 h-4 text-emerald-700" />
-            <span>Strefa Hurtowa i Inwestycyjna Oplast Garden</span>
+            <span>{t.b2b.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight font-heading text-slate-900">
-            Dedykowane warunki dla branży budowlanej i projektowej
+            {t.b2b.title}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            Współpracujemy z generalnymi wykonawcami, składami budowlanymi, brukarzami oraz biurami architektonicznymi w Polsce i całej Europie. Oferujemy niezawodne łańcuchy dostaw prosto z fabryki w Windudze.
+            {t.b2b.subtitle}
           </p>
         </div>
 
@@ -47,23 +49,23 @@ export const B2BSection: React.FC = () => {
                 <HardHat className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 font-heading">Generalni Wykonawcy</h3>
+                <h3 className="text-lg font-bold text-slate-900 font-heading">{t.b2b.contractorTitle}</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Inwestycje komercyjne, hale logistyczne, osiedla deweloperskie i drogi pożarowe.
+                  {t.b2b.contractorDesc}
                 </p>
               </div>
               <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Dostawy FTL 24t just-in-time</span>
+                  <span>{t.b2b.contractorPoint1}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Komplet dokumentacji KDWU & ITB</span>
+                  <span>{t.b2b.contractorPoint2}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Faktury z odroczonym terminem</span>
+                  <span>{t.b2b.contractorPoint3}</span>
                 </li>
               </ul>
             </div>
@@ -71,7 +73,7 @@ export const B2BSection: React.FC = () => {
               onClick={() => { setIsB2BMode(true); setIsInquiryOpen(true); }}
               className="mt-6 w-full text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer"
             >
-              <span>Wycena inwestycji</span>
+              <span>{t.b2b.contractorCta}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -83,23 +85,23 @@ export const B2BSection: React.FC = () => {
                 <Store className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 font-heading">Hurtownie i Składy</h3>
+                <h3 className="text-lg font-bold text-slate-900 font-heading">{t.b2b.wholesaleTitle}</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Materiały budowlane, centra ogrodnicze i dystrybutorzy kruszywa.
+                  {t.b2b.wholesaleDesc}
                 </p>
               </div>
               <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Maksymalne rabaty dystrybutorskie</span>
+                  <span>{t.b2b.wholesalePoint1}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Ekspozytory i stojaki próbek</span>
+                  <span>{t.b2b.wholesalePoint2}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Stała dostępność stanów magazynowych</span>
+                  <span>{t.b2b.wholesalePoint3}</span>
                 </li>
               </ul>
             </div>
@@ -107,7 +109,7 @@ export const B2BSection: React.FC = () => {
               onClick={() => { setIsB2BMode(true); setIsInquiryOpen(true); }}
               className="mt-6 w-full text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer"
             >
-              <span>Zostań dystrybutorem</span>
+              <span>{t.b2b.wholesaleCta}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -119,23 +121,23 @@ export const B2BSection: React.FC = () => {
                 <Truck className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 font-heading">Brukarze i Instalatorzy</h3>
+                <h3 className="text-lg font-bold text-slate-900 font-heading">{t.b2b.paverTitle}</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Firmy wykonawcze układające podjazdy, parkingi i stabilizacje gruntu.
+                  {t.b2b.paverDesc}
                 </p>
               </div>
               <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Program lojalnościowy wykonawców</span>
+                  <span>{t.b2b.paverPoint1}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Szybki montaż na zaczepy Quick-Lock</span>
+                  <span>{t.b2b.paverPoint2}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Komplety: kratki + obrzeża + kotwy</span>
+                  <span>{t.b2b.paverPoint3}</span>
                 </li>
               </ul>
             </div>
@@ -143,7 +145,7 @@ export const B2BSection: React.FC = () => {
               onClick={() => { setIsB2BMode(true); setIsInquiryOpen(true); }}
               className="mt-6 w-full text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer"
             >
-              <span>Program wykonawcy</span>
+              <span>{t.b2b.paverCta}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -155,23 +157,23 @@ export const B2BSection: React.FC = () => {
                 <Compass className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 font-heading">Biura Projektowe</h3>
+                <h3 className="text-lg font-bold text-slate-900 font-heading">{t.b2b.architectTitle}</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Architekci krajobrazu, projektanci dróg, specjaliści retencji wód.
+                  {t.b2b.architectDesc}
                 </p>
               </div>
               <ul className="text-xs text-slate-700 space-y-2 pt-2 border-t border-slate-100">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>88% pow. biologicznie czynnej</span>
+                  <span>{t.b2b.architectPoint1}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Modele CAD (DWG) i przekroje PDF</span>
+                  <span>{t.b2b.architectPoint2}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Darmowy próbnik do biura projektowego</span>
+                  <span>{t.b2b.architectPoint3}</span>
                 </li>
               </ul>
             </div>
@@ -179,7 +181,7 @@ export const B2BSection: React.FC = () => {
               onClick={() => setIsSampleBoxOpen(true)}
               className="mt-6 w-full text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer"
             >
-              <span>Zamów Box Próbek</span>
+              <span>{t.b2b.architectCta}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -192,13 +194,13 @@ export const B2BSection: React.FC = () => {
             
             <div className="lg:col-span-8 space-y-4">
               <span className="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider border border-white/30 backdrop-blur-xs">
-                Dla Firm & Projektantów
+                {t.b2b.sampleBoxBadge}
               </span>
               <h3 className="text-2xl sm:text-4xl font-extrabold font-heading text-white">
-                Zamów Bezpłatny „Oplast Box” z Próbkami Kratek
+                {t.b2b.sampleBoxTitle}
               </h3>
               <p className="text-emerald-50 text-sm sm:text-base leading-relaxed max-w-2xl font-normal">
-                Otrzymaj bezpłatny zestaw demonstracyjny zawierający fizyczne próbki kratek H30, H40, H50, obrzeża Eko-Bord, kotwy oraz katalog techniczny z aprobatami. Wysyłamy kurierem w 24h na koszt fabryki!
+                {t.b2b.sampleBoxDesc}
               </p>
             </div>
 
@@ -208,7 +210,7 @@ export const B2BSection: React.FC = () => {
                 className="flex items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-emerald-900 font-extrabold py-4 px-6 rounded-xl shadow-lg transition-all hover:scale-105 cursor-pointer text-sm"
               >
                 <Box className="w-5 h-5 text-emerald-700" />
-                <span>Zamów Bezpłatny Box</span>
+                <span>{t.b2b.sampleBoxCta}</span>
               </button>
 
               <button
@@ -216,7 +218,7 @@ export const B2BSection: React.FC = () => {
                 className="flex items-center justify-center gap-2 bg-emerald-800/80 hover:bg-emerald-900 text-white font-bold py-4 px-6 rounded-xl border border-emerald-400/40 transition-colors cursor-pointer text-sm"
               >
                 <FileSpreadsheet className="w-5 h-5 text-emerald-200" />
-                <span>Zapytanie Ofertowe</span>
+                <span>{t.b2b.quoteCta}</span>
               </button>
             </div>
 

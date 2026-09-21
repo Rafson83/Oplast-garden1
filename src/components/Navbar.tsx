@@ -13,6 +13,8 @@ import {
   FileSpreadsheet
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const Navbar: React.FC = () => {
   const { 
@@ -27,6 +29,7 @@ export const Navbar: React.FC = () => {
     totalCartNetto
   } = useShop();
 
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -37,12 +40,12 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-4 text-xs font-semibold">
             <span className="flex items-center gap-1.5 text-emerald-800">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              Polski Producent • Zakład Winduga (woj. kujawsko-pomorskie)
+              {t.nav.topBannerProducer}
             </span>
             <span className="hidden md:inline text-emerald-300">•</span>
             <span className="hidden md:flex items-center gap-1 text-emerald-800">
               <Truck className="w-3.5 h-3.5 text-emerald-600" />
-              Wysyłka paletowa 24-48h | Dostawy całopojazdowe FTL
+              {t.nav.topBannerShipping}
             </span>
           </div>
 
@@ -52,7 +55,7 @@ export const Navbar: React.FC = () => {
               className="flex items-center gap-1.5 text-emerald-900 hover:text-emerald-700 transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Dział Handlowy: <strong>+48 537 200 630</strong></span>
+              <span>{t.nav.technicalSupport}: <strong>+48 537 200 630</strong></span>
             </a>
             <span className="text-emerald-200">|</span>
             <button
@@ -60,7 +63,7 @@ export const Navbar: React.FC = () => {
               className="flex items-center gap-1 text-emerald-700 hover:text-emerald-800 font-bold cursor-pointer"
             >
               <Box className="w-3.5 h-3.5" />
-              <span>Zamów Box Próbek (dla firm)</span>
+              <span>{t.nav.orderSampleBox}</span>
             </button>
           </div>
         </div>
@@ -93,58 +96,63 @@ export const Navbar: React.FC = () => {
           {/* Desktop Links */}
           <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-700">
             <a href="#kratki" className="hover:text-emerald-600 transition-colors py-1">
-              Kratki Trawnikowe
+              {t.nav.lawnGrids}
             </a>
             <a href="#obrzeza" className="hover:text-emerald-600 transition-colors py-1">
-              Obrzeża Eko-Bord
+              {t.nav.gardenBorders}
             </a>
             <a href="#akcesoria" className="hover:text-emerald-600 transition-colors py-1">
-              Akcesoria
+              {t.nav.accessories}
             </a>
             <button 
               onClick={() => setIsCalculatorOpen(true)}
               className="flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100/80 px-3 py-1.5 rounded-lg border border-emerald-200/80 transition-all cursor-pointer"
             >
               <Calculator className="w-4 h-4 text-emerald-600" />
-              <span>Kalkulator m²</span>
+              <span>{t.nav.m2Calculator}</span>
             </button>
             <a href="#montaz" className="hover:text-emerald-600 transition-colors py-1">
-              Instrukcja Montażu
+              {t.nav.installGuide}
             </a>
             <a href="#b2b" className="hover:text-emerald-600 transition-colors py-1 flex items-center gap-1">
               <Building2 className="w-3.5 h-3.5 text-slate-400" />
-              Dla Firm & B2B
+              {t.nav.forB2B}
             </a>
             <a href="#kontakt" className="hover:text-emerald-600 transition-colors py-1">
-              Kontakt
+              {t.nav.contact}
             </a>
           </nav>
 
-          {/* Action Area: B2C / B2B Switcher & Cart */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Action Area: Language Switcher, B2C / B2B Switcher & Cart */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
             
+            {/* Language Switcher (Desktop) */}
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
+
             {/* Dual Mode Switcher B2C / B2B */}
             <div className="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center shadow-inner">
               <button
                 onClick={() => setIsB2BMode(false)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   !isB2BMode
                     ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                Detal (Brutto)
+                {t.nav.b2cMode}
               </button>
               <button
                 onClick={() => setIsB2BMode(true)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
                   isB2BMode
                     ? 'bg-emerald-700 text-white shadow-xs'
                     : 'text-slate-600 hover:text-emerald-800'
                 }`}
               >
                 <Building2 className="w-3.5 h-3.5" />
-                Hurt B2B (Netto)
+                {t.nav.b2bMode}
               </button>
             </div>
 
@@ -156,14 +164,14 @@ export const Navbar: React.FC = () => {
               className="hidden xl:flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-xs"
             >
               <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
-              <span>Wycena Inwestycji</span>
+              <span>{t.nav.investmentQuote}</span>
             </button>
 
             {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 transition-all flex items-center gap-2 cursor-pointer group"
-              title="Otwórz koszyk"
+              title={t.nav.cart}
             >
               <ShoppingBag className="w-5 h-5 text-emerald-700 group-hover:scale-110 transition-transform" />
               {cartCount > 0 && (
@@ -193,8 +201,15 @@ export const Navbar: React.FC = () => {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 animate-in slide-in-from-top duration-200">
+          
+          {/* Language Switcher in Mobile Drawer */}
+          <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+            <span className="text-xs font-bold text-slate-700">Język / Language / Sprache:</span>
+            <LanguageSwitcher compact />
+          </div>
+
           <div className="p-3 bg-emerald-50/70 rounded-xl border border-emerald-200/80 mb-4">
-            <p className="text-xs text-emerald-900 font-semibold mb-2">Tryb wyświetlania cen i oferty:</p>
+            <p className="text-xs text-emerald-900 font-semibold mb-2">Tryb cen / Pricing mode:</p>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setIsB2BMode(false)}
@@ -202,7 +217,7 @@ export const Navbar: React.FC = () => {
                   !isB2BMode ? 'bg-white border-emerald-600 text-emerald-900 shadow-xs' : 'bg-slate-100 text-slate-600 border-transparent'
                 }`}
               >
-                Klient Indywidualny (Brutto)
+                {t.nav.b2cMode}
               </button>
               <button
                 onClick={() => setIsB2BMode(true)}
@@ -210,7 +225,7 @@ export const Navbar: React.FC = () => {
                   isB2BMode ? 'bg-emerald-700 border-emerald-700 text-white shadow-xs' : 'bg-slate-100 text-slate-600 border-transparent'
                 }`}
               >
-                Firma / Hurt B2B (Netto)
+                {t.nav.b2bMode}
               </button>
             </div>
           </div>
@@ -221,21 +236,21 @@ export const Navbar: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg hover:bg-slate-100"
             >
-              Kratki Trawnikowo-Parkingowe
+              {t.nav.lawnGrids}
             </a>
             <a 
               href="#obrzeza" 
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg hover:bg-slate-100"
             >
-              Obrzeża Trawnikowe Eko-Bord
+              {t.nav.gardenBorders}
             </a>
             <a 
               href="#akcesoria" 
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg hover:bg-slate-100"
             >
-              Kotwy & Znaczniki
+              {t.nav.accessories}
             </a>
             <button
               onClick={() => {
@@ -245,29 +260,29 @@ export const Navbar: React.FC = () => {
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 font-bold"
             >
               <Calculator className="w-5 h-5 text-emerald-600" />
-              <span>Kalkulator Zapotrzebowania m²</span>
+              <span>{t.nav.m2Calculator}</span>
             </button>
             <a 
               href="#montaz" 
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg hover:bg-slate-100"
             >
-              Instrukcja Montażu Podbudowy
+              {t.nav.installGuide}
             </a>
             <a 
               href="#b2b" 
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg hover:bg-slate-100 flex items-center justify-between"
             >
-              <span>Strefa Hurtowa B2B & Przetargi</span>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">HURT</span>
+              <span>{t.nav.forB2B}</span>
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">B2B</span>
             </a>
             <a 
               href="#kontakt" 
               onClick={() => setMobileMenuOpen(false)}
               className="px-3 py-2 rounded-lg hover:bg-slate-100"
             >
-              Kontakt z Producentem
+              {t.nav.contact}
             </a>
           </div>
 
@@ -280,7 +295,7 @@ export const Navbar: React.FC = () => {
               className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border border-emerald-600 text-emerald-800 text-xs font-bold bg-white"
             >
               <Box className="w-4 h-4 text-emerald-600" />
-              Box Próbek
+              {t.nav.orderSampleBox}
             </button>
             <button
               onClick={() => {
@@ -290,7 +305,7 @@ export const Navbar: React.FC = () => {
               className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-700 text-white text-xs font-bold"
             >
               <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
-              Wycena B2B
+              {t.nav.investmentQuote}
             </button>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { LanguageProvider } from './context/LanguageContext';
 import { ShopProvider } from './context/ShopContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -43,9 +44,11 @@ export const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <ShopProvider>
-      <AppContent />
-    </ShopProvider>
+    <LanguageProvider>
+      <ShopProvider>
+        <AppContent />
+      </ShopProvider>
+    </LanguageProvider>
   );
 };
 

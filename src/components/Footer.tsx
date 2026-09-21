@@ -1,9 +1,11 @@
 import React from 'react';
 import { Layers, ArrowUp } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Footer: React.FC = () => {
   const { setIsCalculatorOpen, setIsSampleBoxOpen, setIsInquiryOpen, setIsB2BMode } = useShop();
+  const { t } = useLanguage();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -27,13 +29,13 @@ export const Footer: React.FC = () => {
                   OPLAST <span className="text-emerald-600">GARDEN</span>
                 </span>
                 <p className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">
-                  Producent Kratek & Obrzeży Ogrodowych
+                  {t.footer.legalName}
                 </p>
               </div>
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed max-w-sm">
-              Bezpośredni producent ekologicznych kratek trawnikowo-parkingowych (ekokratek) i elastycznych obrzeży ogrodowych z tworzywa pochodzącego w 100% z polskiego recyklingu.
+              {t.footer.desc}
             </p>
 
             <div className="pt-2 text-xs text-slate-600 space-y-1 border-t border-slate-200">
@@ -49,7 +51,7 @@ export const Footer: React.FC = () => {
           {/* Col 3: Asortyment */}
           <div className="space-y-3 text-xs">
             <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wider font-heading">
-              Asortyment
+              {t.footer.assortment}
             </h4>
             <ul className="space-y-2">
               <li>
@@ -93,7 +95,7 @@ export const Footer: React.FC = () => {
           {/* Col 4: Narzędzia & B2B */}
           <div className="space-y-3 text-xs">
             <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wider font-heading">
-              Strefa Klienta & B2B
+              {t.footer.clientZone}
             </h4>
             <ul className="space-y-2">
               <li>
@@ -101,7 +103,7 @@ export const Footer: React.FC = () => {
                   onClick={() => setIsCalculatorOpen(true)}
                   className="hover:text-emerald-700 transition-colors text-left cursor-pointer"
                 >
-                  Kalkulator Powierzchni m²
+                  {t.nav.m2Calculator}
                 </button>
               </li>
               <li>
@@ -109,7 +111,7 @@ export const Footer: React.FC = () => {
                   onClick={() => setIsSampleBoxOpen(true)}
                   className="hover:text-emerald-700 transition-colors text-left cursor-pointer"
                 >
-                  Darmowy Box Próbek dla Firm
+                  {t.nav.orderSampleBox}
                 </button>
               </li>
               <li>
@@ -117,17 +119,17 @@ export const Footer: React.FC = () => {
                   onClick={() => { setIsB2BMode(true); setIsInquiryOpen(true); }}
                   className="hover:text-emerald-700 transition-colors text-left cursor-pointer"
                 >
-                  Zapytanie o Wycenę FTL (24t)
+                  {t.nav.investmentQuote}
                 </button>
               </li>
               <li>
                 <a href="#montaz" className="hover:text-emerald-700 transition-colors">
-                  Instrukcja Montażu Podbudowy
+                  {t.nav.installGuide}
                 </a>
               </li>
               <li>
                 <a href="#b2b" className="hover:text-emerald-700 transition-colors">
-                  Warunki Współpracy Hurtowej
+                  {t.nav.forB2B}
                 </a>
               </li>
               <li>
@@ -135,7 +137,7 @@ export const Footer: React.FC = () => {
                   onClick={() => setIsB2BMode(true)}
                   className="text-emerald-700 font-bold hover:underline cursor-pointer"
                 >
-                  Przełącz na Ceny Netto (Hurt B2B)
+                  {t.nav.b2bMode}
                 </button>
               </li>
             </ul>
@@ -144,29 +146,29 @@ export const Footer: React.FC = () => {
           {/* Col 5: Kontakt & Godziny */}
           <div className="space-y-3 text-xs">
             <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wider font-heading">
-              Dział Handlowy
+              {t.footer.salesDept}
             </h4>
             <div className="space-y-2 text-slate-600">
               <p>
-                <span className="block text-slate-500">Infolinia Inwestycyjna:</span>
+                <span className="block text-slate-500">Infolinia:</span>
                 <a href="tel:+48537200630" className="text-slate-900 font-bold hover:text-emerald-700 transition-colors">
                   +48 537 200 630
                 </a>
               </p>
               <p>
-                <span className="block text-slate-500">Biuro Obsługi / Detal:</span>
+                <span className="block text-slate-500">Biuro Obsługi:</span>
                 <a href="tel:+48542371298" className="text-slate-900 font-bold hover:text-emerald-700 transition-colors">
                   +48 54 237 12 98
                 </a>
               </p>
               <p>
-                <span className="block text-slate-500">Adres E-mail:</span>
+                <span className="block text-slate-500">E-mail:</span>
                 <a href="mailto:biuro@oplast-garden.pl" className="text-emerald-700 font-semibold hover:underline">
                   biuro@oplast-garden.pl
                 </a>
               </p>
               <p className="text-[11px] text-slate-500 pt-1">
-                Wysyłki realizujemy z magazynu głównego: Winduga 6 (Bobrowniki).
+                Magazyn i wysyłki: Winduga 6 (Bobrowniki).
               </p>
             </div>
           </div>
@@ -176,15 +178,15 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            &copy; {new Date().getFullYear()} <strong>Oplast-Recykling Sp. z o.o.</strong> Wszelkie prawa zastrzeżone. Marka <strong>Oplast Garden</strong>.
+            &copy; {new Date().getFullYear()} <strong>Oplast-Recykling Sp. z o.o.</strong> {t.footer.allRights}. Marka <strong>Oplast Garden</strong>.
           </div>
 
           <div className="flex items-center gap-4">
-            <span>Ekologiczne rozwiązania dla budownictwa</span>
+            <span>{t.footer.tagline}</span>
             <button
               onClick={scrollToTop}
               className="p-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-700 border border-slate-300 transition-colors cursor-pointer shadow-xs"
-              title="Przewiń do góry"
+              title="Top"
             >
               <ArrowUp className="w-4 h-4" />
             </button>
