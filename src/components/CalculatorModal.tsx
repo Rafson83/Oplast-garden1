@@ -417,58 +417,58 @@ export const CalculatorModal: React.FC = () => {
 
           </div>
 
-          {/* Right Column: Calculation Summary */}
-          <div className="md:col-span-5 bg-gradient-to-b from-slate-900 to-slate-950 text-white p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          {/* Right Column: Calculation Summary (Light Theme) */}
+          <div className="md:col-span-5 bg-gradient-to-b from-emerald-50 via-emerald-50/60 to-white text-slate-900 p-5 rounded-2xl border border-emerald-200 shadow-xs flex flex-col justify-between">
             <div className="space-y-4">
               
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-400">
+                <span className="text-[10px] uppercase font-extrabold tracking-wider text-emerald-800 bg-emerald-100/90 px-2 py-0.5 rounded-md">
                   Rekomendowany Produkt
                 </span>
-                <h3 className="text-lg font-bold font-heading text-white">
+                <h3 className="text-lg font-bold font-heading text-slate-900 mt-1.5">
                   {recommendedProduct.name}
                 </h3>
-                <p className="text-xs text-slate-300">
-                  Nośność: {recommendedProduct.loadCapacityTonnes} t/m² • Wysokość: {recommendedProduct.heightMm} mm
+                <p className="text-xs text-slate-600">
+                  Nośność: <strong>{recommendedProduct.loadCapacityTonnes} t/m²</strong> • Wysokość: <strong>{recommendedProduct.heightMm} mm</strong>
                 </p>
               </div>
 
               {/* Specification Grid */}
-              <div className="space-y-2.5 border-y border-slate-800 py-3 text-xs">
+              <div className="space-y-2.5 border-y border-emerald-200/80 py-3 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Powierzchnia:</span>
-                  <span className="font-bold text-white">{totalM2} m²</span>
+                  <span className="text-slate-500">Powierzchnia:</span>
+                  <span className="font-bold text-slate-900">{totalM2} m²</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Liczba kratek (z 5% zapasem):</span>
-                  <span className="font-bold text-emerald-400 text-sm">
+                  <span className="text-slate-500">Liczba kratek (z 5% zapasem):</span>
+                  <span className="font-extrabold text-emerald-700 text-sm">
                     {calculations.piecesWithReserve} szt.
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Wymiar logistyczny:</span>
-                  <span className="font-medium text-slate-200">
+                  <span className="text-slate-500">Wymiar logistyczny:</span>
+                  <span className="font-semibold text-slate-800">
                     {calculations.palletsNeeded} {calculations.palletsNeeded === 1 ? 'paleta' : 'palet'} (~{calculations.totalWeightKg} kg)
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Wypełnienie ({fillerType === 'gravel' ? 'grys' : 'ziemia'}):</span>
-                  <span className="font-medium text-slate-200">
+                  <span className="text-slate-500">Wypełnienie ({fillerType === 'gravel' ? 'grys' : 'ziemia'}):</span>
+                  <span className="font-semibold text-slate-800">
                     ok. {calculations.fillerVolumeM3} m³ (~{calculations.fillerWeightTonnes} t)
                   </span>
                 </div>
 
                 {includeBorders && (
-                  <div className="flex justify-between items-center pt-1 border-t border-slate-800/60">
-                    <span className="text-slate-400">Obrzeża Eko-Bord:</span>
-                    <span className="font-medium text-white">{calculations.bordersNeeded} mb</span>
+                  <div className="flex justify-between items-center pt-1 border-t border-emerald-200/60">
+                    <span className="text-slate-500">Obrzeża Eko-Bord:</span>
+                    <span className="font-semibold text-slate-900">{calculations.bordersNeeded} mb</span>
                   </div>
                 )}
 
                 {includeAnchors && (
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">Kotwy mocujące:</span>
-                    <span className="font-medium text-white">
+                    <span className="text-slate-500">Kotwy mocujące:</span>
+                    <span className="font-semibold text-slate-900">
                       {calculations.anchorsNeeded} szt. ({calculations.anchorPacks} paczek)
                     </span>
                   </div>
@@ -476,8 +476,8 @@ export const CalculatorModal: React.FC = () => {
 
                 {includeGeotextile && (
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">Geowłóknina 150g/m²:</span>
-                    <span className="font-medium text-white">
+                    <span className="text-slate-500">Geowłóknina 150g/m²:</span>
+                    <span className="font-semibold text-slate-900">
                       {calculations.geotextileRolls} {calculations.geotextileRolls === 1 ? 'rolka (50m²)' : 'rolek'}
                     </span>
                   </div>
@@ -485,17 +485,17 @@ export const CalculatorModal: React.FC = () => {
               </div>
 
               {/* Price Estimate */}
-              <div className="p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/80">
+              <div className="p-4 bg-white rounded-xl border border-emerald-300/90 shadow-xs">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-slate-400">Szacowany koszt zestawu:</span>
-                  <span className="text-xl font-extrabold text-emerald-400 font-heading">
+                  <span className="text-xs text-slate-600 font-medium">Szacowany koszt zestawu:</span>
+                  <span className="text-xl font-extrabold text-emerald-700 font-heading">
                     {isB2BMode 
                       ? `${calculations.totalEstimateNetto.toFixed(2)} zł netto`
                       : `${calculations.totalEstimateBrutto.toFixed(2)} zł brutto`
                     }
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-[11px] text-slate-500 mt-1">
                   {isB2BMode 
                     ? '* Ceny hurtowe netto. Transport wyliczany w koszyku.' 
                     : '* Ceny zawierają 23% VAT. Dostawa z windą rozładunkową.'
@@ -509,7 +509,7 @@ export const CalculatorModal: React.FC = () => {
             <div className="space-y-2 pt-4">
               <button
                 onClick={handleAddAllToCart}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all cursor-pointer text-sm"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Dodaj kompletny zestaw do koszyka</span>
@@ -517,9 +517,9 @@ export const CalculatorModal: React.FC = () => {
 
               <button
                 onClick={handleOpenB2BQuote}
-                className="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold py-2.5 px-4 rounded-xl border border-slate-700 transition-colors cursor-pointer text-xs"
+                className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold py-2.5 px-4 rounded-xl border border-slate-300 transition-colors cursor-pointer text-xs shadow-xs"
               >
-                <Building2 className="w-4 h-4 text-emerald-400" />
+                <Building2 className="w-4 h-4 text-emerald-700" />
                 <span>Poproś o indywidualną wycenę FTL / NIP</span>
               </button>
             </div>

@@ -62,7 +62,7 @@ export const ProductCatalog: React.FC = () => {
               onClick={() => setActiveCategory('all')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 activeCategory === 'all'
-                  ? 'bg-slate-900 text-white shadow-xs'
+                  ? 'bg-emerald-800 text-white shadow-xs'
                   : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
               }`}
             >
@@ -123,21 +123,21 @@ export const ProductCatalog: React.FC = () => {
 
         </div>
 
-        {/* B2B In-Catalog Advisory Box */}
+        {/* B2B In-Catalog Advisory Box - Light & High Contrast */}
         {isB2BMode && (
-          <div className="bg-gradient-to-r from-slate-900 to-emerald-950 text-white p-4 rounded-2xl border border-emerald-800 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-100/60 text-slate-900 p-4 rounded-2xl border border-emerald-300 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400">
+              <div className="p-2.5 rounded-xl bg-emerald-600 text-white shadow-xs">
                 <Building2 className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Aktywny tryb B2B – Ceny hurtowe netto</p>
-                <p className="text-xs text-slate-300">
+                <p className="text-sm font-bold text-slate-900">Aktywny tryb B2B – Ceny hurtowe netto</p>
+                <p className="text-xs text-slate-600">
                   Wyświetlane ceny uwzględniają rabaty paletowe. W koszyku możesz wygenerować zapytanie o dostawę FTL z rozładunkiem HDS.
                 </p>
               </div>
             </div>
-            <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-3 py-1.5 rounded-lg border border-emerald-700/50">
+            <span className="text-xs font-bold text-emerald-900 bg-white px-3.5 py-1.5 rounded-lg border border-emerald-300 shadow-xs">
               Ceny Fabryczne Oplast Winduga
             </span>
           </div>

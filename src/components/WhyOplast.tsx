@@ -70,42 +70,42 @@ export const WhyOplast: React.FC = () => {
 
         </div>
 
-        {/* Big Numbers Banner */}
-        <div className="bg-gradient-to-r from-slate-900 to-emerald-950 text-white p-8 sm:p-10 rounded-3xl border border-emerald-800/60 shadow-xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y lg:divide-y-0 lg:divide-x divide-slate-800">
+        {/* Big Numbers Banner - Light Theme */}
+        <div className="bg-white p-8 sm:p-10 rounded-3xl border border-emerald-200/80 shadow-md">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
             
             <div className="pt-4 lg:pt-0">
-              <p className="text-3xl sm:text-5xl font-extrabold text-emerald-400 font-heading">
+              <p className="text-3xl sm:text-5xl font-extrabold text-emerald-700 font-heading">
                 450 t/m²
               </p>
-              <p className="text-xs sm:text-sm text-slate-300 font-semibold mt-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
                 Maksymalna nośność z wypełnieniem
               </p>
             </div>
 
             <div className="pt-4 lg:pt-0">
-              <p className="text-3xl sm:text-5xl font-extrabold text-white font-heading">
+              <p className="text-3xl sm:text-5xl font-extrabold text-slate-900 font-heading">
                 88%
               </p>
-              <p className="text-xs sm:text-sm text-slate-300 font-semibold mt-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
                 Powierzchni biologicznie czynnej
               </p>
             </div>
 
             <div className="pt-4 lg:pt-0">
-              <p className="text-3xl sm:text-5xl font-extrabold text-emerald-400 font-heading">
+              <p className="text-3xl sm:text-5xl font-extrabold text-emerald-700 font-heading">
                 1500 t
               </p>
-              <p className="text-xs sm:text-sm text-slate-300 font-semibold mt-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
                 Miesięczne moce przerobowe tworzyw
               </p>
             </div>
 
             <div className="pt-4 lg:pt-0">
-              <p className="text-3xl sm:text-5xl font-extrabold text-white font-heading">
+              <p className="text-3xl sm:text-5xl font-extrabold text-slate-900 font-heading">
                 25+ lat
               </p>
-              <p className="text-xs sm:text-sm text-slate-300 font-semibold mt-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-bold mt-1">
                 Gwarantowanej trwałości w gruncie
               </p>
             </div>

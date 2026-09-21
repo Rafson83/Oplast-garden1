@@ -31,17 +31,17 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-      {/* Top Banner */}
-      <div className="bg-slate-900 text-slate-200 text-xs py-1.5 px-4">
+      {/* Top Banner - Light & Fresh */}
+      <div className="bg-emerald-50/90 border-b border-emerald-100 text-emerald-950 text-xs py-1.5 px-4">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
-          <div className="flex items-center gap-4 text-xs font-medium">
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <ShieldCheck className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-4 text-xs font-semibold">
+            <span className="flex items-center gap-1.5 text-emerald-800">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
               Polski Producent • Zakład Winduga (woj. kujawsko-pomorskie)
             </span>
-            <span className="hidden md:inline text-slate-500">•</span>
-            <span className="hidden md:flex items-center gap-1 text-slate-300">
-              <Truck className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="hidden md:inline text-emerald-300">•</span>
+            <span className="hidden md:flex items-center gap-1 text-emerald-800">
+              <Truck className="w-3.5 h-3.5 text-emerald-600" />
               Wysyłka paletowa 24-48h | Dostawy całopojazdowe FTL
             </span>
           </div>
@@ -49,15 +49,15 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-4 ml-auto">
             <a 
               href="tel:+48537200630" 
-              className="flex items-center gap-1.5 text-slate-300 hover:text-emerald-400 transition-colors"
+              className="flex items-center gap-1.5 text-emerald-900 hover:text-emerald-700 transition-colors"
             >
-              <Phone className="w-3.5 h-3.5 text-emerald-400" />
+              <Phone className="w-3.5 h-3.5 text-emerald-600" />
               <span>Dział Handlowy: <strong>+48 537 200 630</strong></span>
             </a>
-            <span className="text-slate-700">|</span>
+            <span className="text-emerald-200">|</span>
             <button
               onClick={() => setIsSampleBoxOpen(true)}
-              className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
+              className="flex items-center gap-1 text-emerald-700 hover:text-emerald-800 font-bold cursor-pointer"
             >
               <Box className="w-3.5 h-3.5" />
               <span>Zamów Box Próbek (dla firm)</span>
@@ -153,9 +153,9 @@ export const Navbar: React.FC = () => {
               onClick={() => {
                 setIsInquiryOpen(true);
               }}
-              className="hidden xl:flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+              className="hidden xl:flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-xs"
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+              <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
               <span>Wycena Inwestycji</span>
             </button>
 
@@ -287,9 +287,9 @@ export const Navbar: React.FC = () => {
                 setMobileMenuOpen(false);
                 setIsInquiryOpen(true);
               }}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold"
+              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-700 text-white text-xs font-bold"
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+              <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
               Wycena B2B
             </button>
           </div>

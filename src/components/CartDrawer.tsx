@@ -86,17 +86,17 @@ export const CartDrawer: React.FC = () => {
     <div className="fixed inset-0 z-50 overflow-hidden bg-slate-900/60 backdrop-blur-xs flex justify-end">
       <div className="w-full max-w-xl bg-white h-full shadow-2xl flex flex-col justify-between overflow-hidden animate-in slide-in-from-right duration-300">
         
-        {/* Top Header */}
-        <div className="bg-slate-900 text-white p-4 sm:p-5 flex items-center justify-between border-b border-slate-800">
+        {/* Top Header - Fresh Emerald Theme */}
+        <div className="bg-gradient-to-r from-emerald-800 to-green-900 text-white p-4 sm:p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-emerald-600 text-white">
+            <div className="p-2 rounded-xl bg-white/15 text-white border border-white/20">
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-lg font-bold font-heading text-white">
                 {checkoutStep === 'checkout' ? 'Dane do zamówienia' : 'Koszyk Zakupowy'}
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-emerald-100">
                 {cart.length} {cart.length === 1 ? 'pozycja' : 'pozycji'} w zamówieniu
               </p>
             </div>
@@ -106,13 +106,13 @@ export const CartDrawer: React.FC = () => {
             {/* Quick B2B / B2C toggle */}
             <button
               onClick={() => setIsB2BMode(!isB2BMode)}
-              className="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 transition-colors"
+              className="text-xs font-bold px-2.5 py-1 rounded-lg bg-white/15 hover:bg-white/25 text-white border border-white/25 transition-colors cursor-pointer"
             >
               Widok: {isB2BMode ? 'HURT NETTO' : 'DETAL BRUTTO'}
             </button>
             <button
               onClick={handleClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>

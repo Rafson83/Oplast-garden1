@@ -71,24 +71,24 @@ export const B2BInquiryModal: React.FC = () => {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
       <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
-        {/* Header */}
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white p-5 sm:p-6 flex items-center justify-between">
+        {/* Header - Fresh Green Theme */}
+        <div className="bg-gradient-to-r from-emerald-800 to-green-900 text-white p-5 sm:p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <div className="p-2.5 rounded-xl bg-white/15 text-white border border-white/20">
               <FileSpreadsheet className="w-6 h-6" />
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold font-heading">
                 Zapytanie Ofertowe B2B / Przetargi / FTL 24t
               </h2>
-              <p className="text-slate-300 text-xs sm:text-sm">
+              <p className="text-emerald-100 text-xs sm:text-sm">
                 Indywidualna kalkulacja kosztów z dostawą całopojazdową bezpośrednio na plac budowy
               </p>
             </div>
           </div>
           <button
             onClick={handleClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-emerald-100 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-6 h-6" />
           </button>
@@ -121,7 +121,7 @@ export const B2BInquiryModal: React.FC = () => {
             <div className="pt-3">
               <button
                 onClick={handleClose}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-colors cursor-pointer"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-colors cursor-pointer"
               >
                 Zamknij okno
               </button>
@@ -329,9 +329,9 @@ export const B2BInquiryModal: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors cursor-pointer text-xs flex items-center gap-2"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors cursor-pointer text-xs flex items-center gap-2"
                 >
-                  <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
                   <span>Wyślij zapytanie ofertowe</span>
                 </button>
               </div>
