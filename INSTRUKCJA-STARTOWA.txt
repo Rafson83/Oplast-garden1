@@ -1,0 +1,70 @@
+================================================================================
+  🌿 OPLAST GARDEN - PAKIET STARTOWY (URUCHOMIENIE LOKALNE)
+================================================================================
+
+Projekt:    Oplast Garden (Kratki Parkingowe & Obrzeża Eko-Bord z opcją B2B)
+Lokalizacja: /Users/rafalwielgus/Documents/Projekty/oplast-garden
+GitHub:     https://github.com/Rafson83/Oplast-garden1
+
+--------------------------------------------------------------------------------
+SPOSÓB 1: URUCHOMIENIE JEDNYM KLIKNIĘCIEM (ZALECANE NA macOS)
+--------------------------------------------------------------------------------
+1. Otwórz w Finderze katalog projektu:
+   /Users/rafalwielgus/Documents/Projekty/oplast-garden
+2. Kliknij dwukrotnie plik:
+   👉 1-Uruchom-Lokalnie.command
+3. Otworzy się okno Terminala, a po chwili Twoja przeglądarka automatycznie 
+   wyświetli stronę pod adresem:
+   🌐 http://localhost:5174
+
+Aby zatrzymać działanie serwera:
+Wciśnij kombinację klawiszy [CTRL] + [C] w otwartym oknie Terminala.
+
+--------------------------------------------------------------------------------
+SPOSÓB 2: URUCHOMIENIE Z TERMINALA
+--------------------------------------------------------------------------------
+1. Otwórz Terminal i wejdź do katalogu projektu:
+   cd /Users/rafalwielgus/Documents/Projekty/oplast-garden
+
+2. Uruchom serwer developerski:
+   npm run dev
+
+3. Otwórz w przeglądarce adres:
+   http://localhost:5174
+
+--------------------------------------------------------------------------------
+POZOSTAŁE SKRYPTY W KATALOGU:
+--------------------------------------------------------------------------------
+- 2-Zbuduj-Wersje-Produkcyjna.command
+  -> Kompiluje projekt i tworzy zoptymalizowaną paczkę w folderze dist/
+
+- 3-Wyslij-Na-GitHub.command
+  -> Pobiera nowe zmiany, tworzy commit i automatycznie wysyła do repozytorium GitHub
+
+--------------------------------------------------------------------------------
+GŁÓWNE FUNKCJONALNOŚCI SERWISU:
+--------------------------------------------------------------------------------
+1. 🌐 Trzy wersje językowe:
+   - Polski 🇵🇱 (PL)
+   - English 🇬🇧 (EN)
+   - Deutsch 🇩🇪 (DE)
+   Przełącznik flag znajduje się w prawym górnym rogu strony.
+
+2. 💼 Przełącznik trybu cen:
+   - Detal (Brutto z 23% VAT) dla klientów indywidualnych
+   - Hurt B2B (Netto z rabatami ilościowymi na palety do -24%)
+
+3. 🧮 Interaktywny Kalkulator Powierzchni m²:
+   - Wprowadzanie powierzchni w m² lub wymiarów: Długość × Szerokość
+   - Dobór podbudowy dla aut osobowych (H40), ciężarowych/TIR/straż (H50) lub ścieżek (H30)
+   - Wyliczenie obrzeży, kotew i geowłókniny oraz dodanie całego kompletu do koszyka
+
+4. 📦 Strefa B2B:
+   - Formularz darmowego boxu próbek fizycznych "Oplast Box" dla wykonawców i architektów
+   - Formularz wyceny przetargowej i dostaw całopojazdowych FTL 24t
+
+5. 🛒 Koszyk i składanie zamówienia:
+   - Śledzenie wagi zamówienia i liczby palet
+   - Wybór dostawy paletowej z windą, transportu FTL lub odbioru w Windudze
+   - Formularz zamówienia z możliwością wydruku specyfikacji / proformy
+================================================================================

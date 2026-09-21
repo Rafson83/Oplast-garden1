@@ -1,8 +1,31 @@
 # 🌿 Oplast Garden – Sprzedaż Kratek Trawnikowo-Parkingowych & Platforma B2B
 
-Oficjalny, nowoczesny sklep internetowy i platforma kontraktacji B2B dla polskiego producenta kratek trawnikowych, parkingowych i obrzeży ogrodowych **Oplast Garden** (część przedsiębiorstwa **Oplast-Recykling Sp. z o.o.** z siedzibą w Windudze 6, 87-617 Bobrowniki).
+Oficjalny sklep internetowy i platforma kontraktacji B2B dla polskiego producenta kratek trawnikowych, parkingowych i elastycznych obrzeży ogrodowych **Oplast Garden** (część przedsiębiorstwa **Oplast-Recykling Sp. z o.o.** z siedzibą w Windudze 6, 87-617 Bobrowniki).
 
-Platforma łączy szybkie zakupy detaliczne (B2C) z zaawansowaną strefą hurtową (B2B) dla generalnych wykonawców, hurtowni, brukarzy i architektów krajobrazu.
+Platforma łączy szybkie zakupy detaliczne (B2C) z zaawansowaną strefą hurtową (B2B) dla generalnych wykonawców, składów budowlanych, brukarzy i architektów krajobrazu w Polsce i Europie.
+
+---
+
+## 🌍 Wielojęzyczność (Trzy Języki)
+
+Projekt wspiera pełną obsługę 3 wersji językowych:
+- 🇵🇱 **Polski (PL)** – natywny język rynku krajowego
+- 🇬🇧 **English (EN)** – obsługa partnerów i inwestycji międzynarodowych w UE
+- 🇩🇪 **Deutsch (DE)** – rynek DACH (Niemcy, Austria, Szwajcaria)
+
+Przełącznik z flagami dostępny jest w prawym górnym rogu nagłówka oraz w menu mobilnym. Wybór języka jest trwale zapamiętywany w pamięci przeglądarki (`localStorage`).
+
+---
+
+## 🎨 Design i Kolorystyka
+
+- **Nowoczesna, jasna kolorystyka**: biel, mięta, szmaragdowa zieleń (`emerald-600`) i subtelne szarości.
+- **Uproszczone menu główne (5 pozycji)**:
+  1. **Produkty** (`#produkty`)
+  2. **Kalkulator m²**
+  3. **Dla Firm & B2B** (`#b2b`)
+  4. **Montaż** (`#montaz`)
+  5. **Kontakt** (`#kontakt`)
 
 ---
 
@@ -12,7 +35,8 @@ Platforma łączy szybkie zakupy detaliczne (B2C) z zaawansowaną strefą hurtow
 - **Bundler & Tooling**: [Vite 6](https://vitejs.dev/)
 - **Stylowanie**: [Tailwind CSS v4](https://tailwindcss.com/) (`@tailwindcss/vite`)
 - **Ikony**: [Lucide React](https://lucide.dev/)
-- **Zarządzanie stanem**: React Context API (`ShopContext`) + synchronizacja z `localStorage`
+- **Zarządzanie stanem**: Context API (`ShopContext`, `LanguageContext`) + `localStorage`
+- **Repozytorium GitHub**: [https://github.com/Rafson83/Oplast-garden1](https://github.com/Rafson83/Oplast-garden1)
 
 ---
 
@@ -20,59 +44,45 @@ Platforma łączy szybkie zakupy detaliczne (B2C) z zaawansowaną strefą hurtow
 
 ### 1. 🔄 Przełącznik Trybów: Detal (B2C) ⇄ Hurt (B2B)
 - **Detal (Brutto)**: Ceny z 23% VAT, zakupy na sztuki i metry kwadratowe, kalkulator przydomowy, szybka dostawa paletowa z windą rozładunkową.
-- **Hurt B2B (Netto)**: Prezentacja cen hurtowych netto, dynamiczne progi rabatowe zależne od liczby palet (do -25%), obsługa dostaw całopojazdowych FTL 24t oraz opcja fakturowania z odroczonym terminem 14 dni.
+- **Hurt B2B (Netto)**: Prezentacja cen hurtowych netto, dynamiczne progi rabatowe na palety (do -24%), obsługa dostaw całopojazdowych FTL 24t oraz odroczone terminy płatności 14 dni.
 
 ### 2. 🧮 Interaktywny Kalkulator Powierzchni i Podbudowy
-- Podanie powierzchni bezpośrednio w m² lub poprzez wymiary (Długość × Szerokość).
-- Wybór obciążenia: Ruch pieszy/ogród, Podjazdy osobowe, Transport ciężki/TIR/Drogi pożarowe, Skarpy.
-- Automatyczny dobór modelu kratki (**Oplast H30**, **H40** lub **H50 Heavy**).
-- Dokładne wyliczenie:
-  - Liczby kratek z uwzględnieniem 5% naddatku montażowego,
-  - Liczby palet przemysłowych i wagi całkowitej,
-  - Objętości kruszywa lub ziemi w m³ (i tonach),
-  - Długości obrzeży Eko-Bord i liczby kotew mocujących,
-  - Ilości rolek geowłókniny 150g/m².
+- Podanie powierzchni w m² lub wymiarów: **Długość × Szerokość**.
+- Wybór obciążenia: *Ogród/ścieżki (H30)*, *Podjazdy osobowe (H40)*, *Transport ciężki / TIR / Drogi pożarowe (H50 Heavy)*, *Skarpy*.
+- Automatyczne wyliczenie liczby kratek z naddatkiem 5%, objętości grysu/ziemi w m³ i tonach, obrzeży Eko-Bord, kotew mocujących i geowłókniny 150g/m².
 - Możliwość dodania całego zestawu do koszyka jednym kliknięciem.
 
 ### 3. 📦 Bezpłatny „Oplast Box” (Wzornik Próbek dla Firm)
-- Formularz zamówienia darmowego zestawu próbek kratek H30/H40/H50, obrzeży i katalogu z badaniami ITB dla biur projektowych, wykonawców i deweloperów.
-- Zapis zgłoszeń w pamięci podręcznej i potwierdzenie natychmiastowej wysyłki kurierem 24h.
+- Formularz zamówienia darmowego zestawu próbek kratek H30/H40/H50, obrzeży i katalogu technicznego z badaniami ITB z wysyłką 24h na koszt fabryki.
 
-### 4. 🚚 Moduł Zapytań Ofertowych FTL & Przetargi
-- Formularz do kalkulacji dostaw całopojazdowych 24t (do 24 palet / 4 800 szt. kratek) prosto na plac budowy.
-- Obsługa NIP, specyfikacji inwestycji, rozładunków HDS i wymogów technicznych KDWU/ITB.
+### 4. 🚚 Zapytania Ofertowe FTL 24t & Przetargi
+- Dedykowany formularz dla zamówień inwestycyjnych z obsługą NIP, rozładunków HDS i dostaw całopojazdowych.
 
-### 5. 🛒 Koszyk Zakupowy i Dynamiczny Wybór Dostawy
+### 5. 🛒 Koszyk Zakupowy i Logistyka
 - Obsługa zamówień na sztuki, m² i pełne palety.
 - Licznik łącznej wagi zamówienia i liczby palet.
-- Kalkulacja kosztu przesyłki (kurier, paleta z windą, transport dedykowany FTL, darmowy odbiór w Windudze).
+- Kalkulacja kosztu przesyłki (paleta z windą, transport dedykowany FTL, odbiór w Windudze).
 - Opcja wydruku specyfikacji / oferty proforma.
-
-### 6. 📐 Przewodnik Montażu i Przekrój Warstw Inżynieryjnych
-- Wizualny przekrój warstw: Grunt rodzimy &rarr; Geowłóknina &rarr; Podbudowa tłuczniowa &rarr; Podsypka &rarr; Kratka Oplast &rarr; Wypełnienie.
-- Instrukcja krok po kroku oraz omówienie najczęstszych błędów wykonawczych.
 
 ---
 
-## 🏁 Szybkie Uruchomienie
+## 🏁 Szybkie Uruchomienie (Pakiet Startowy)
 
-### Sposób 1: Skrót na macOS (Zalecany)
-Dwuklik na plik:
-```bash
-Uruchom-Oplast-Garden.command
-```
-Skrypt automatycznie uruchamia serwer i otwiera przeglądarkę pod adresem `http://localhost:5174`.
+W głównym folderze projektu znajdują się gotowe skrypty startowe dla systemu macOS:
 
-### Sposób 2: Przez Terminal
+| Plik | Opis działania |
+|------|----------------|
+| **`1-Uruchom-Lokalnie.command`** | **Podstawowy start (1 kliknięcie)** – uruchamia serwer deweloperski i automatycznie otwiera przeglądarkę pod adresem `http://localhost:5174`. |
+| **`2-Zbuduj-Wersje-Produkcyjna.command`** | Kompiluje projekt i weryfikuje poprawność typów TypeScript (`npm run build`), generując paczkę do folderu `dist/`. |
+| **`3-Wyslij-Na-GitHub.command`** | Automatycznie pobiera zmiany, tworzy commit i wypycha kod do repozytorium GitHub (`main`). |
+
+### Uruchomienie z poziomu Terminala:
 ```bash
 cd /Users/rafalwielgus/Documents/Projekty/oplast-garden
-npm run dev -- --port 5174
+npm run dev -- --host --port 5174
 ```
-
-### Budowanie Wersji Produkcyjnej
-```bash
-npm run build
-```
+Aplikacja będzie dostępna pod adresem:
+👉 **http://localhost:5174**
 
 ---
 
