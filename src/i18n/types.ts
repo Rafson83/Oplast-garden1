@@ -13,11 +13,13 @@ export interface TranslationDictionary {
     topBannerShipping: string;
     technicalSupport: string;
     orderSampleBox: string;
+    products: string;
     lawnGrids: string;
     gardenBorders: string;
     accessories: string;
     m2Calculator: string;
     installGuide: string;
+    installGuideShort: string;
     forB2B: string;
     contact: string;
     b2cMode: string;
