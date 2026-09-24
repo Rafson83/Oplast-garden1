@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  ShoppingBag, 
   Calculator, 
   Layers, 
   Phone, 
@@ -8,9 +7,11 @@ import {
   X, 
   Building2, 
   ShieldCheck, 
-  Truck,
   Box,
-  MapPin
+  MapPin,
+  LogIn,
+  LogOut,
+  UserCheck
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -22,12 +23,11 @@ export const Navbar: React.FC = () => {
     setCurrentView,
     isB2BMode, 
     setIsB2BMode, 
-    cartCount, 
-    setIsCartOpen, 
     setIsCalculatorOpen,
     setIsSampleBoxOpen,
-    totalCartBrutto,
-    totalCartNetto
+    partnerUser,
+    logoutPartner,
+    setIsLoginModalOpen
   } = useShop();
 
   const { t } = useLanguage();
@@ -35,44 +35,42 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-      {/* Top Banner - Subtle & Clean */}
-      <div className="bg-emerald-50/90 border-b border-emerald-100 text-emerald-950 text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
-          <div className="flex items-center gap-3 text-xs font-semibold">
-            <span className="flex items-center gap-1.5 text-emerald-800">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              {t.nav.topBannerProducer}
-            </span>
-            <span className="hidden md:inline text-emerald-300">•</span>
-            <span className="hidden md:flex items-center gap-1 text-emerald-800">
-              <Truck className="w-3.5 h-3.5 text-emerald-600" />
-              {t.nav.topBannerShipping}
-            </span>
+      
+      {/* Sleek Single-Line Top Bar (Hidden on tiny screens to prevent multi-line clutter) */}
+      <div className="hidden sm:block bg-emerald-50/80 border-b border-emerald-100/80 text-emerald-950 text-xs py-1.5 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          
+          {/* Left: Concise Factory Info */}
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-900 truncate">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span className="truncate">Polski Producent • Zakład Produkcyjny Winduga (kujawsko-pomorskie)</span>
           </div>
 
-          <div className="flex items-center gap-4 ml-auto">
+          {/* Right: Hotline & Sample Box */}
+          <div className="flex items-center gap-4 shrink-0 text-xs font-semibold">
             <a 
               href="tel:+48537200630" 
               className="flex items-center gap-1.5 text-emerald-900 hover:text-emerald-700 transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-emerald-600" />
-              <span><strong>+48 537 200 630</strong></span>
+              <span>Infolinia: <strong>+48 537 200 630</strong></span>
             </a>
-            <span className="text-emerald-200">|</span>
+            <span className="text-emerald-300">|</span>
             <button
               onClick={() => setIsSampleBoxOpen(true)}
-              className="flex items-center gap-1 text-emerald-700 hover:text-emerald-800 font-bold cursor-pointer"
+              className="flex items-center gap-1.5 text-emerald-700 hover:text-emerald-900 font-bold cursor-pointer transition-colors"
             >
-              <Box className="w-3.5 h-3.5" />
+              <Box className="w-3.5 h-3.5 text-emerald-600" />
               <span>{t.nav.orderSampleBox}</span>
             </button>
           </div>
+
         </div>
       </div>
 
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-18 gap-4">
+        <div className="flex items-center justify-between h-16 sm:h-18 gap-3">
           
           {/* Logo */}
           <a 
@@ -83,26 +81,26 @@ export const Navbar: React.FC = () => {
             }}
             className="flex items-center gap-2.5 group shrink-0 cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
               <Layers className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-1">
-                <span className="font-extrabold text-xl tracking-tight text-slate-900 font-heading">
+                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 font-heading">
                   OPLAST
                 </span>
-                <span className="font-bold text-xl text-emerald-600 font-heading">
+                <span className="font-bold text-lg sm:text-xl text-emerald-600 font-heading">
                   GARDEN
                 </span>
               </div>
-              <p className="text-[9px] font-semibold tracking-wider uppercase text-slate-500">
-                Kratki & Obrzeża
+              <p className="text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                Fabryka Kratek i Obrzeży
               </p>
             </div>
           </a>
 
-          {/* Desktop Links: Clean, Spacious Navigation Items */}
-          <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-semibold text-slate-700">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-semibold text-slate-700">
             <a 
               href="#produkty" 
               onClick={() => {
@@ -165,19 +163,19 @@ export const Navbar: React.FC = () => {
             </a>
           </nav>
 
-          {/* Action Area: Language Switcher, Price Mode Toggle & Cart */}
+          {/* Right Action Area */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
-            {/* Language Switcher (Desktop) */}
+            {/* Language Switcher */}
             <div className="hidden sm:block">
               <LanguageSwitcher />
             </div>
 
-            {/* Clean Price Mode Toggle (B2C / B2B) */}
-            <div className="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center shadow-inner">
+            {/* Price Mode Toggle (B2C / B2B) */}
+            <div className="bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 flex items-center shadow-inner">
               <button
                 onClick={() => setIsB2BMode(false)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   !isB2BMode
                     ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
                     : 'text-slate-500 hover:text-slate-800'
@@ -187,54 +185,76 @@ export const Navbar: React.FC = () => {
               </button>
               <button
                 onClick={() => setIsB2BMode(true)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer ${
                   isB2BMode
                     ? 'bg-emerald-700 text-white shadow-xs'
                     : 'text-slate-600 hover:text-emerald-800'
                 }`}
               >
-                <Building2 className="w-3.5 h-3.5" />
+                <Building2 className="w-3 h-3" />
                 {t.nav.b2bMode}
               </button>
             </div>
 
-            {/* Cart Button */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 transition-all flex items-center gap-2 cursor-pointer group"
-              title={t.nav.cart}
-            >
-              <ShoppingBag className="w-5 h-5 text-emerald-700 group-hover:scale-110 transition-transform" />
-              {cartCount > 0 && (
-                <>
-                  <span className="absolute -top-1.5 -right-1.5 bg-emerald-600 text-white text-[11px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">
-                    {cartCount}
-                  </span>
-                  <span className="hidden lg:inline text-xs font-bold text-emerald-900">
-                    {(isB2BMode ? totalCartNetto : totalCartBrutto).toFixed(2)} zł
-                  </span>
-                </>
-              )}
-            </button>
+            {/* Partner Login / CRM Button (Replaces Cart) */}
+            {partnerUser ? (
+              /* User Logged In: CRM Badge + Actions */
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setCurrentView('admin')}
+                  className={`flex items-center gap-1.5 py-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
+                    currentView === 'admin'
+                      ? 'bg-slate-900 text-white ring-2 ring-emerald-500/50'
+                      : 'bg-emerald-700 hover:bg-emerald-800 text-white'
+                  }`}
+                  title="Otwórz panel zarządzania siecią i CRM"
+                >
+                  <UserCheck className="w-3.5 h-3.5" />
+                  <span className="hidden lg:inline">{partnerUser.role === 'admin' ? 'Panel CRM (Admin)' : 'Panel Partnera'}</span>
+                  <span className="lg:hidden">CRM</span>
+                </button>
 
-            {/* Mobile Hamburger Button */}
+                <button
+                  onClick={logoutPartner}
+                  className="p-1.5 sm:p-2 rounded-xl text-slate-500 hover:text-red-700 hover:bg-red-50 border border-slate-200 transition-colors cursor-pointer"
+                  title="Wyloguj się"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              /* User Logged Out: Partner Login Button */
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-xl bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+                title="Logowanie do Strefy Partnera i CRM"
+              >
+                <LogIn className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden sm:inline">{t.nav.partnerZone}</span>
+                <span className="sm:hidden">{t.nav.partnerLogin}</span>
+              </button>
+            )}
+
+            {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              className="md:hidden p-2 rounded-xl text-slate-700 hover:text-slate-950 hover:bg-slate-100 transition-colors"
+              aria-label="Otwórz menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
+
           </div>
 
         </div>
       </div>
 
-      {/* Mobile Drawer Menu - Simplified & Clean */}
+      {/* Mobile Drawer Menu - Clean, Concise & Direct */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-4 animate-in slide-in-from-top duration-200 shadow-xl">
           
           {/* Controls Bar: Language + Mode Switcher */}
-          <div className="space-y-2.5 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+          <div className="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-700">Język / Language:</span>
               <LanguageSwitcher compact />
@@ -272,7 +292,7 @@ export const Navbar: React.FC = () => {
               }}
               className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
             >
-              {t.nav.products} (H30, H40, H50, Eko-Bord)
+              {t.nav.products}
             </a>
 
             <button
@@ -299,7 +319,10 @@ export const Navbar: React.FC = () => {
 
             <a 
               href="#b2b" 
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-between"
             >
               <span>{t.nav.forB2B}</span>
@@ -308,29 +331,70 @@ export const Navbar: React.FC = () => {
 
             <a 
               href="#montaz" 
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
             >
-              {t.nav.installGuide}
+              {t.nav.installGuideShort}
             </a>
 
             <a 
               href="#kontakt" 
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
             >
               {t.nav.contact}
             </a>
           </div>
 
-          {/* Quick Sample Box CTA */}
-          <div className="pt-2 border-t border-slate-200">
+          {/* Partner Zone / CRM CTA in Mobile Drawer */}
+          <div className="pt-2 border-t border-slate-200 space-y-2">
+            {partnerUser ? (
+              <div className="space-y-1.5">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setCurrentView('admin');
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-md cursor-pointer"
+                >
+                  <UserCheck className="w-4 h-4 text-emerald-400" />
+                  <span>Otwórz Panel CRM ({partnerUser.name})</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    logoutPartner();
+                  }}
+                  className="w-full text-center text-xs font-semibold text-red-600 py-1.5 hover:underline"
+                >
+                  Wyloguj się
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsLoginModalOpen(true);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-md cursor-pointer"
+              >
+                <LogIn className="w-4 h-4 text-emerald-400" />
+                <span>Strefa Partnera (Zaloguj się do CRM)</span>
+              </button>
+            )}
+
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 setIsSampleBoxOpen(true);
               }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-emerald-600 text-emerald-800 text-xs font-bold bg-white hover:bg-emerald-50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-emerald-600 text-emerald-800 text-xs font-bold bg-white hover:bg-emerald-50 transition-colors cursor-pointer"
             >
               <Box className="w-4 h-4 text-emerald-600" />
               <span>{t.nav.orderSampleBox}</span>

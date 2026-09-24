@@ -22,6 +22,7 @@ export interface Partner {
   services: string[];
   googleMapsQuery: string;
   featured?: boolean;
+  status?: 'active' | 'pending' | 'inactive';
 }
 
 export interface PartnerInquiry {
@@ -35,4 +36,13 @@ export interface PartnerInquiry {
   estimatedQuantity: string;
   message: string;
   createdAt: string;
+  status?: 'new' | 'in_progress' | 'completed';
+  notes?: string;
+}
+
+export interface PartnerUser {
+  email: string;
+  name: string;
+  role: 'admin' | 'partner';
+  partnerId?: string;
 }

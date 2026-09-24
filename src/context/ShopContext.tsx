@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, ProductColor, UnitType, CartItem, B2BInquiry, SampleBoxOrder } from '../types/shop';
-import { Partner, PartnerInquiry } from '../types/partners';
+import { Partner, PartnerInquiry, PartnerUser } from '../types/partners';
+import { PARTNERS } from '../data/partners';
 
-export type AppView = 'home' | 'partners';
+export type AppView = 'home' | 'partners' | 'admin';
 
 interface ShopContextType {
   currentView: AppView;
@@ -34,6 +35,11 @@ interface ShopContextType {
   sampleOrders: SampleBoxOrder[];
   addSampleBoxOrder: (order: Omit<SampleBoxOrder, 'id' | 'createdAt'>) => void;
   // Partner Directory & Retail Store Finder
+  partnersList: Partner[];
+  addPartner: (partner: Omit<Partner, 'id'>) => void;
+  updatePartner: (id: string, updatedData: Partial<Partner>) => void;
+  deletePartner: (id: string) => void;
+  resetPartnersToDefault: () => void;
   partnerProductFilter?: string;
   setPartnerProductFilter: (productId?: string) => void;
   selectedPartner?: Partner;
@@ -42,15 +48,28 @@ interface ShopContextType {
   setIsPartnerInquiryOpen: (open: boolean) => void;
   partnerInquiries: PartnerInquiry[];
   addPartnerInquiry: (inquiry: Omit<PartnerInquiry, 'id' | 'createdAt'>) => void;
+  updateInquiryStatus: (id: string, status: 'new' | 'in_progress' | 'completed', notes?: string) => void;
+  deleteInquiry: (id: string) => void;
+  // Partner / Admin Portal Authentication
+  partnerUser: PartnerUser | null;
+  loginPartner: (email: string, role?: 'admin' | 'partner', name?: string, partnerId?: string) => void;
+  logoutPartner: () => void;
+  isLoginModalOpen: boolean;
+  setIsLoginModalOpen: (open: boolean) => void;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // View state: 'home' | 'partners'
+  // View state: 'home' | 'partners' | 'admin'
   const [currentView, setCurrentViewState] = useState<AppView>(() => {
-    if (typeof window !== 'undefined' && (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic')) {
-      return 'partners';
+    if (typeof window !== 'undefined') {
+      if (window.location.hash === '#admin' || window.location.hash === '#crm') {
+        return 'admin';
+      }
+      if (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic') {
+        return 'partners';
+      }
     }
     return 'home';
   });
@@ -58,9 +77,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const setCurrentView = (view: AppView) => {
     setCurrentViewState(view);
     if (typeof window !== 'undefined') {
-      if (view === 'partners') {
+      if (view === 'admin') {
+        window.location.hash = 'admin';
+      } else if (view === 'partners') {
         window.location.hash = 'partnerzy';
-      } else if (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic') {
+      } else {
         window.history.pushState(null, '', window.location.pathname);
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -69,15 +90,60 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const handleHashChange = () => {
-      if (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic') {
+      if (window.location.hash === '#admin' || window.location.hash === '#crm') {
+        setCurrentViewState('admin');
+      } else if (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic') {
         setCurrentViewState('partners');
-      } else if (currentView === 'partners' && (window.location.hash === '' || window.location.hash === '#produkty' || window.location.hash === '#kratki' || window.location.hash === '#obrzeza')) {
+      } else if (
+        (currentView === 'partners' || currentView === 'admin') &&
+        (window.location.hash === '' || window.location.hash === '#produkty' || window.location.hash === '#kratki' || window.location.hash === '#obrzeza')
+      ) {
         setCurrentViewState('home');
       }
     };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [currentView]);
+
+  // Partners List (persisted in localStorage for live CRM edits)
+  const [partnersList, setPartnersList] = useState<Partner[]>(() => {
+    try {
+      const saved = localStorage.getItem('oplast_garden_partners_data');
+      return saved ? JSON.parse(saved) : PARTNERS;
+    } catch {
+      return PARTNERS;
+    }
+  });
+
+  const savePartnersList = (list: Partner[]) => {
+    setPartnersList(list);
+    localStorage.setItem('oplast_garden_partners_data', JSON.stringify(list));
+  };
+
+  const addPartner = (newPartnerData: Omit<Partner, 'id'>) => {
+    const id = `partner-${Date.now()}`;
+    const newPartner: Partner = {
+      ...newPartnerData,
+      id,
+      status: newPartnerData.status || 'active',
+    };
+    const updated = [newPartner, ...partnersList];
+    savePartnersList(updated);
+  };
+
+  const updatePartner = (id: string, updatedData: Partial<Partner>) => {
+    const updated = partnersList.map(p => p.id === id ? { ...p, ...updatedData } : p);
+    savePartnersList(updated);
+  };
+
+  const deletePartner = (id: string) => {
+    const updated = partnersList.filter(p => p.id !== id);
+    savePartnersList(updated);
+  };
+
+  const resetPartnersToDefault = () => {
+    savePartnersList(PARTNERS);
+  };
 
   // Partner filter and modal states
   const [partnerProductFilter, setPartnerProductFilter] = useState<string | undefined>();
@@ -99,10 +165,57 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...inquiry,
       id: `PINQ-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       createdAt: new Date().toISOString(),
+      status: 'new',
     };
     const updated = [newInquiry, ...partnerInquiries];
     setPartnerInquiries(updated);
     localStorage.setItem('oplast_garden_partner_inquiries', JSON.stringify(updated));
+  };
+
+  const updateInquiryStatus = (id: string, status: 'new' | 'in_progress' | 'completed', notes?: string) => {
+    const updated = partnerInquiries.map(inq => 
+      inq.id === id ? { ...inq, status, ...(notes !== undefined ? { notes } : {}) } : inq
+    );
+    setPartnerInquiries(updated);
+    localStorage.setItem('oplast_garden_partner_inquiries', JSON.stringify(updated));
+  };
+
+  const deleteInquiry = (id: string) => {
+    const updated = partnerInquiries.filter(inq => inq.id !== id);
+    setPartnerInquiries(updated);
+    localStorage.setItem('oplast_garden_partner_inquiries', JSON.stringify(updated));
+  };
+
+  // Partner / Admin Portal Authentication
+  const [partnerUser, setPartnerUser] = useState<PartnerUser | null>(() => {
+    try {
+      const saved = localStorage.getItem('oplast_partner_auth');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const loginPartner = (email: string, role: 'admin' | 'partner' = 'admin', name?: string, partnerId?: string) => {
+    const user: PartnerUser = {
+      email,
+      role,
+      name: name || (role === 'admin' ? 'Administrator Oplast' : 'Partner Handlowy'),
+      partnerId,
+    };
+    setPartnerUser(user);
+    localStorage.setItem('oplast_partner_auth', JSON.stringify(user));
+    setIsLoginModalOpen(false);
+  };
+
+  const logoutPartner = () => {
+    setPartnerUser(null);
+    localStorage.removeItem('oplast_partner_auth');
+    if (currentView === 'admin') {
+      setCurrentView('home');
+    }
   };
 
   // B2B Mode: Persisted in localStorage
@@ -330,6 +443,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addB2BInquiry,
         sampleOrders,
         addSampleBoxOrder,
+        partnersList,
+        addPartner,
+        updatePartner,
+        deletePartner,
+        resetPartnersToDefault,
         partnerProductFilter,
         setPartnerProductFilter,
         selectedPartner,
@@ -338,6 +456,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsPartnerInquiryOpen,
         partnerInquiries,
         addPartnerInquiry,
+        updateInquiryStatus,
+        deleteInquiry,
+        partnerUser,
+        loginPartner,
+        logoutPartner,
+        isLoginModalOpen,
+        setIsLoginModalOpen,
       }}
     >
       {children}

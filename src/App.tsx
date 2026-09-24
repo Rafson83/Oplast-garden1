@@ -9,12 +9,13 @@ import { InstallationGuide } from './components/InstallationGuide';
 import { WhyOplast } from './components/WhyOplast';
 import { ContactSection } from './components/ContactSection';
 import { PartnersDirectory } from './components/PartnersDirectory';
+import { AdminCrm } from './components/AdminCrm';
 import { Footer } from './components/Footer';
-import { CartDrawer } from './components/CartDrawer';
 import { CalculatorModal } from './components/CalculatorModal';
 import { SampleBoxModal } from './components/SampleBoxModal';
 import { B2BInquiryModal } from './components/B2BInquiryModal';
 import { PartnerInquiryModal } from './components/PartnerInquiryModal';
+import { PartnerLoginModal } from './components/PartnerLoginModal';
 
 export const AppContent: React.FC = () => {
   const { currentView } = useShop();
@@ -24,10 +25,12 @@ export const AppContent: React.FC = () => {
       {/* Navigation Header */}
       <Navbar />
 
-      {/* Main Content */}
+      {/* Main Content View Switcher */}
       <main className="flex-1">
         {currentView === 'partners' ? (
           <PartnersDirectory />
+        ) : currentView === 'admin' ? (
+          <AdminCrm />
         ) : (
           <>
             <Hero />
@@ -41,14 +44,14 @@ export const AppContent: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <Footer />
+      {currentView !== 'admin' && <Footer />}
 
-      {/* Global Modals & Drawers */}
-      <CartDrawer />
+      {/* Global Modals */}
       <CalculatorModal />
       <SampleBoxModal />
       <B2BInquiryModal />
       <PartnerInquiryModal />
+      <PartnerLoginModal />
     </div>
   );
 };

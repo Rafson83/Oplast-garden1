@@ -27,6 +27,10 @@ export interface TranslationDictionary {
     b2bMode: string;
     investmentQuote: string;
     cart: string;
+    partnerZone: string;
+    partnerLogin: string;
+    adminPanel: string;
+    logout: string;
   };
   // Hero
   hero: {

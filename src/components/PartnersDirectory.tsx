@@ -18,12 +18,15 @@ import {
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
-import { PARTNERS, VOIVODESHIPS } from '../data/partners';
+import { VOIVODESHIPS } from '../data/partners';
 import { PRODUCTS } from '../data/products';
 import { Partner, PartnerType } from '../types/partners';
 
 export const PartnersDirectory: React.FC = () => {
   const { 
+    partnersList,
+    partnerUser,
+    setIsLoginModalOpen,
     setCurrentView, 
     setSelectedPartner, 
     setIsPartnerInquiryOpen, 
@@ -37,9 +40,13 @@ export const PartnersDirectory: React.FC = () => {
   const [selectedVoivodeship, setSelectedVoivodeship] = useState('all');
   const [selectedType, setSelectedType] = useState<string>('all');
 
-  // Filtered partners
+  // Filtered partners from dynamic ShopContext list
   const filteredPartners = useMemo(() => {
-    return PARTNERS.filter((partner) => {
+    return partnersList.filter((partner) => {
+      // Hide inactive partners in public directory
+      if (partner.status === 'inactive') {
+        return false;
+      }
       // Voivodeship match
       if (selectedVoivodeship !== 'all' && partner.address.voivodeship !== selectedVoivodeship) {
         return false;
@@ -539,12 +546,24 @@ export const PartnersDirectory: React.FC = () => {
               {t.partners.becomePartnerDesc}
             </p>
 
-            <div className="pt-2">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <button
                 onClick={() => setIsInquiryOpen(true)}
                 className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-7 rounded-xl text-sm transition-all shadow-lg shadow-emerald-900/40 cursor-pointer"
               >
                 {t.partners.becomePartnerBtn}
+              </button>
+              <button
+                onClick={() => {
+                  if (partnerUser) {
+                    setCurrentView('admin');
+                  } else {
+                    setIsLoginModalOpen(true);
+                  }
+                }}
+                className="border border-emerald-400/40 hover:bg-white/10 text-white font-bold py-3 px-6 rounded-xl text-sm transition-all cursor-pointer"
+              >
+                {partnerUser ? 'Przejdź do Panelu CRM' : 'Strefa Partnera / Zaloguj'}
               </button>
             </div>
 

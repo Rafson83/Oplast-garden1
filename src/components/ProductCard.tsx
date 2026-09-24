@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { 
-  ShoppingBag, 
   Layers, 
-  Check, 
   Percent, 
   ChevronDown, 
   ChevronUp, 
   Package, 
-  FileText,
-  Building2,
-  MapPin
+  FileText, 
+  Building2, 
+  MapPin,
+  Send
 } from 'lucide-react';
 import { Product, ProductColor, UnitType } from '../types/shop';
 import { useShop } from '../context/ShopContext';
@@ -23,7 +22,6 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { 
     isB2BMode, 
-    addToCart, 
     setIsInquiryOpen, 
     setInquiryPreselectedProduct,
     setCurrentView,
@@ -37,7 +35,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [unitType, setUnitType] = useState<UnitType>(isB2BMode && product.priceNettoPallet ? 'pallet' : 'piece');
   const [quantity, setQuantity] = useState<number>(1);
   const [showSpecs, setShowSpecs] = useState<boolean>(false);
-  const [isAddedAnimation, setIsAddedAnimation] = useState<boolean>(false);
 
   // Price calculations
   let basePriceNetto = product.priceNettoUnit;
@@ -68,14 +65,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const effectivePriceNetto = basePriceNetto * (1 - activeDiscountPct / 100);
   const effectivePriceBrutto = basePriceBrutto * (1 - activeDiscountPct / 100);
 
-  const handleAddToCart = () => {
-    addToCart(product, selectedColor, unitType, quantity);
-    setIsAddedAnimation(true);
-    setTimeout(() => setIsAddedAnimation(false), 1200);
+  const handleOrderInquiry = () => {
+    setInquiryPreselectedProduct(`${localized.name} (${selectedColor.name}) - ${quantity} ${unitLabel}`);
+    setIsInquiryOpen(true);
   };
 
   const handleB2BInquiry = () => {
-    setInquiryPreselectedProduct(`${localized.name} - ${quantity} ${unitLabel}`);
+    setInquiryPreselectedProduct(`${localized.name} (FTL / Całopojazdowe) - ${quantity} ${unitLabel}`);
     setIsInquiryOpen(true);
   };
 
@@ -327,50 +323,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <span>{t.catalog.buyFromPartner}</span>
             </button>
 
-            {/* Direct Factory Order Secondary Option */}
-            <div className="flex items-center gap-2 pt-1">
-              <div className="flex items-center border border-slate-300 rounded-xl bg-slate-50 p-0.5">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors text-xs"
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-10 text-center text-xs font-bold bg-transparent focus:outline-hidden"
-                />
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors text-xs"
-                >
-                  +
-                </button>
-              </div>
-
-              <button
-                onClick={handleAddToCart}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-slate-200 hover:border-emerald-600 text-slate-600 hover:text-emerald-800 bg-slate-50 hover:bg-white text-xs font-bold transition-all cursor-pointer ${
-                  isAddedAnimation ? 'bg-emerald-50 border-emerald-600 text-emerald-800' : ''
-                }`}
-                title="Zamów prosto z fabryki (wysyłka paletowa)"
-              >
-                {isAddedAnimation ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>{t.catalog.addedToCart}</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingBag className="w-3.5 h-3.5 text-slate-500" />
-                    <span>{t.catalog.addToCart}</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              onClick={handleOrderInquiry}
+              className="w-full py-2 px-3 rounded-xl border border-slate-200 hover:border-emerald-600 text-slate-600 hover:text-emerald-800 bg-slate-50 hover:bg-white text-xs font-semibold transition-all cursor-pointer text-center"
+            >
+              Dostawa prosto z fabryki (od 1 palety) → <span className="font-bold underline">Wycena fabryczna</span>
+            </button>
 
             <p className="text-[10px] text-slate-400 text-center leading-tight">
               {t.catalog.retailNotice}
@@ -403,24 +361,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </div>
 
               <button
-                onClick={handleAddToCart}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all cursor-pointer shadow-sm ${
-                  isAddedAnimation
-                    ? 'bg-emerald-600 text-white scale-[1.02]'
-                    : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                }`}
+                onClick={handleOrderInquiry}
+                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all cursor-pointer shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white"
               >
-                {isAddedAnimation ? (
-                  <>
-                    <Check className="w-4 h-4" />
-                    <span>{t.catalog.addedToCart}</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingBag className="w-4 h-4" />
-                    <span>{t.catalog.addToCart}</span>
-                  </>
-                )}
+                <Send className="w-4 h-4" />
+                <span>Zapytaj o ofertę hurtową</span>
               </button>
             </div>
 

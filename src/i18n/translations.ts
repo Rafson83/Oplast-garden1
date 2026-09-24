@@ -27,6 +27,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       b2bMode: 'Hurt B2B (Netto)',
       investmentQuote: 'Wycena Inwestycji',
       cart: 'Koszyk',
+      partnerZone: 'Strefa Partnera',
+      partnerLogin: 'Zaloguj się',
+      adminPanel: 'Panel CRM (Admin)',
+      logout: 'Wyloguj',
     },
     hero: {
       badge: 'Polska Produkcja • Zakład Oplast Winduga k. Włocławka',
@@ -417,6 +421,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       b2bMode: 'B2B Wholesale (Net)',
       investmentQuote: 'Investment Quote',
       cart: 'Cart',
+      partnerZone: 'Partner Portal',
+      partnerLogin: 'Partner Login',
+      adminPanel: 'Admin CRM',
+      logout: 'Logout',
     },
     hero: {
       badge: 'Made in Poland • Oplast Factory in Winduga near Wloclawek',
@@ -807,6 +815,10 @@ export const translations: Record<Language, TranslationDictionary> = {
       b2bMode: 'Großhandel B2B (Netto)',
       investmentQuote: 'Objektanfrage',
       cart: 'Warenkorb',
+      partnerZone: 'Partner-Bereich',
+      partnerLogin: 'Partner-Login',
+      adminPanel: 'Admin-CRM',
+      logout: 'Abmelden',
     },
     hero: {
       badge: 'Herstellung in Polen • Werk Oplast Winduga bei Włocławek',
