@@ -3,7 +3,8 @@ import {
   X, 
   Calculator, 
   ShoppingBag, 
-  Building2 
+  Building2,
+  MapPin 
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -19,7 +20,9 @@ export const CalculatorModal: React.FC = () => {
     addToCart,
     setIsCartOpen,
     setIsInquiryOpen,
-    setInquiryPreselectedProduct 
+    setInquiryPreselectedProduct,
+    setCurrentView,
+    setPartnerProductFilter
   } = useShop();
   const { language, t } = useLanguage();
 
@@ -523,21 +526,47 @@ export const CalculatorModal: React.FC = () => {
 
             {/* Actions */}
             <div className="space-y-2 pt-4">
-              <button
-                onClick={handleAddAllToCart}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
-              >
-                <ShoppingBag className="w-4 h-4" />
-                <span>{t.calculator.addAllToCart}</span>
-              </button>
+              {!isB2BMode ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setPartnerProductFilter(recommendedProduct.id);
+                      setIsCalculatorOpen(false);
+                      setCurrentView('partners');
+                    }}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
+                  >
+                    <MapPin className="w-4 h-4 text-emerald-200" />
+                    <span>Znajdź partnera z tym asortymentem w okolicy</span>
+                  </button>
 
-              <button
-                onClick={handleOpenB2BQuote}
-                className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold py-2.5 px-4 rounded-xl border border-slate-300 transition-colors cursor-pointer text-xs shadow-xs"
-              >
-                <Building2 className="w-4 h-4 text-emerald-700" />
-                <span>{t.calculator.requestB2BQuote}</span>
-              </button>
+                  <button
+                    onClick={handleAddAllToCart}
+                    className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold py-2.5 px-4 rounded-xl border border-slate-300 transition-colors cursor-pointer text-xs shadow-xs"
+                  >
+                    <ShoppingBag className="w-4 h-4 text-slate-500" />
+                    <span>{t.calculator.addAllToCart} (wysyłka paletowa z fabryki)</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleAddAllToCart}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>{t.calculator.addAllToCart}</span>
+                  </button>
+
+                  <button
+                    onClick={handleOpenB2BQuote}
+                    className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold py-2.5 px-4 rounded-xl border border-slate-300 transition-colors cursor-pointer text-xs shadow-xs"
+                  >
+                    <Building2 className="w-4 h-4 text-emerald-700" />
+                    <span>{t.calculator.requestB2BQuote}</span>
+                  </button>
+                </>
+              )}
             </div>
 
           </div>

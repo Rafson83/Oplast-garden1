@@ -8,7 +8,8 @@ import {
   ChevronUp, 
   Package, 
   FileText,
-  Building2
+  Building2,
+  MapPin
 } from 'lucide-react';
 import { Product, ProductColor, UnitType } from '../types/shop';
 import { useShop } from '../context/ShopContext';
@@ -20,7 +21,14 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { isB2BMode, addToCart, setIsInquiryOpen, setInquiryPreselectedProduct } = useShop();
+  const { 
+    isB2BMode, 
+    addToCart, 
+    setIsInquiryOpen, 
+    setInquiryPreselectedProduct,
+    setCurrentView,
+    setPartnerProductFilter 
+  } = useShop();
   const { language, t } = useLanguage();
 
   const localized = getLocalizedProduct(product, language);
@@ -303,65 +311,126 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       </div>
 
-      {/* Card Footer: Quantity Stepper & Add to Cart */}
-      <div className="p-5 pt-0 space-y-2">
-        <div className="flex items-center gap-2">
-          
-          {/* Quantity Stepper */}
-          <div className="flex items-center border border-slate-300 rounded-xl bg-slate-50 p-1">
+      {/* Card Footer: B2C Partner Purchasing vs B2B Pallet Direct */}
+      <div className="p-5 pt-0 space-y-2.5">
+        {!isB2BMode ? (
+          /* B2C Retail Mode - Partner First */
+          <div className="space-y-2">
             <button
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
+              onClick={() => {
+                setPartnerProductFilter(product.id);
+                setCurrentView('partners');
+              }}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-700/15 hover:shadow-emerald-700/25 transition-all cursor-pointer group"
             >
-              -
+              <MapPin className="w-4 h-4 text-emerald-200 group-hover:scale-110 transition-transform" />
+              <span>{t.catalog.buyFromPartner}</span>
             </button>
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-12 text-center text-sm font-bold bg-transparent focus:outline-hidden"
-            />
+
+            {/* Direct Factory Order Secondary Option */}
+            <div className="flex items-center gap-2 pt-1">
+              <div className="flex items-center border border-slate-300 rounded-xl bg-slate-50 p-0.5">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors text-xs"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-10 text-center text-xs font-bold bg-transparent focus:outline-hidden"
+                />
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors text-xs"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                onClick={handleAddToCart}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-slate-200 hover:border-emerald-600 text-slate-600 hover:text-emerald-800 bg-slate-50 hover:bg-white text-xs font-bold transition-all cursor-pointer ${
+                  isAddedAnimation ? 'bg-emerald-50 border-emerald-600 text-emerald-800' : ''
+                }`}
+                title="Zamów prosto z fabryki (wysyłka paletowa)"
+              >
+                {isAddedAnimation ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>{t.catalog.addedToCart}</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="w-3.5 h-3.5 text-slate-500" />
+                    <span>{t.catalog.addToCart}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <p className="text-[10px] text-slate-400 text-center leading-tight">
+              {t.catalog.retailNotice}
+            </p>
+          </div>
+        ) : (
+          /* B2B Wholesale Mode - Direct Pallet / Bulk Purchasing */
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-slate-300 rounded-xl bg-slate-50 p-1">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-12 text-center text-sm font-bold bg-transparent focus:outline-hidden"
+                />
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                onClick={handleAddToCart}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all cursor-pointer shadow-sm ${
+                  isAddedAnimation
+                    ? 'bg-emerald-600 text-white scale-[1.02]'
+                    : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                }`}
+              >
+                {isAddedAnimation ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>{t.catalog.addedToCart}</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>{t.catalog.addToCart}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
             <button
-              onClick={() => setQuantity(quantity + 1)}
-              className="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition-colors"
+              onClick={handleB2BInquiry}
+              className="w-full text-center text-xs text-slate-600 hover:text-emerald-700 font-semibold py-1 transition-colors cursor-pointer"
             >
-              +
+              {t.catalog.ftlPrompt}
             </button>
           </div>
-
-          {/* Add to Cart Button */}
-          <button
-            onClick={handleAddToCart}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all cursor-pointer shadow-sm ${
-              isAddedAnimation
-                ? 'bg-emerald-600 text-white scale-[1.02]'
-                : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-            }`}
-          >
-            {isAddedAnimation ? (
-              <>
-                <Check className="w-4 h-4" />
-                <span>{t.catalog.addedToCart}</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="w-4 h-4" />
-                <span>{t.catalog.addToCart}</span>
-              </>
-            )}
-          </button>
-
-        </div>
-
-        {/* B2B Inquire CTA for large volume */}
-        {isB2BMode && (
-          <button
-            onClick={handleB2BInquiry}
-            className="w-full text-center text-xs text-slate-600 hover:text-emerald-700 font-semibold py-1 transition-colors cursor-pointer"
-          >
-            {t.catalog.ftlPrompt}
-          </button>
         )}
       </div>
 

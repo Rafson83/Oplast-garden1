@@ -21,6 +21,7 @@ export interface TranslationDictionary {
     installGuide: string;
     installGuideShort: string;
     forB2B: string;
+    partners: string;
     contact: string;
     b2cMode: string;
     b2bMode: string;
@@ -58,6 +59,7 @@ export interface TranslationDictionary {
     b2cDescTitle: string;
     b2cDescText: string;
     b2cCta: string;
+    b2cCtaPartner: string;
     advisoryHotline: string;
   };
   // Catalog
@@ -82,6 +84,10 @@ export interface TranslationDictionary {
     colorLabel: string;
     addToCart: string;
     addedToCart: string;
+    buyFromPartner: string;
+    buyFromPartnerShort: string;
+    orOrderFactoryPallet: string;
+    retailNotice: string;
     viewSpecs: string;
     ftlPrompt: string;
     tierHeading: string;
@@ -347,4 +353,60 @@ export interface TranslationDictionary {
     salesDept: string;
     tagline: string;
   };
+  // Partners Directory & Retail Store Finder
+  partners: {
+    navLink: string;
+    badge: string;
+    title: string;
+    subtitle: string;
+    searchPlaceholder: string;
+    filterVoivodeship: string;
+    allVoivodeships: string;
+    filterType: string;
+    allTypes: string;
+    filterProduct: string;
+    allProducts: string;
+    resultsCount: string;
+    noResults: string;
+    resetFilters: string;
+    callBtn: string;
+    directionsBtn: string;
+    inquireBtn: string;
+    stockedLabel: string;
+    servicesLabel: string;
+    hoursLabel: string;
+    weekdays: string;
+    saturday: string;
+    typeBuildingDepot: string;
+    typePavingDepot: string;
+    typeGardenCenter: string;
+    typeRegionalDistributor: string;
+    authorizedBadge: string;
+    whyBuyLocalTitle: string;
+    whyBuyLocalSubtitle: string;
+    whyBuyLocalPoint1Title: string;
+    whyBuyLocalPoint1Desc: string;
+    whyBuyLocalPoint2Title: string;
+    whyBuyLocalPoint2Desc: string;
+    whyBuyLocalPoint3Title: string;
+    whyBuyLocalPoint3Desc: string;
+    becomePartnerBadge: string;
+    becomePartnerTitle: string;
+    becomePartnerDesc: string;
+    becomePartnerBtn: string;
+    backToHome: string;
+    inquiryModalTitle: string;
+    inquiryModalSubtitle: string;
+    inquiryName: string;
+    inquiryPhone: string;
+    inquiryEmail: string;
+    inquiryProduct: string;
+    inquiryQuantity: string;
+    inquiryMessage: string;
+    inquirySend: string;
+    inquirySentSuccess: string;
+    inquirySentDesc: string;
+    inquiryClose: string;
+  };
 }
+

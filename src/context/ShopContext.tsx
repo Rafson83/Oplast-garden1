@@ -1,7 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, ProductColor, UnitType, CartItem, B2BInquiry, SampleBoxOrder } from '../types/shop';
+import { Partner, PartnerInquiry } from '../types/partners';
+
+export type AppView = 'home' | 'partners';
 
 interface ShopContextType {
+  currentView: AppView;
+  setCurrentView: (view: AppView) => void;
   isB2BMode: boolean;
   setIsB2BMode: (val: boolean) => void;
   cart: CartItem[];
@@ -28,11 +33,78 @@ interface ShopContextType {
   addB2BInquiry: (inquiry: Omit<B2BInquiry, 'id' | 'createdAt'>) => void;
   sampleOrders: SampleBoxOrder[];
   addSampleBoxOrder: (order: Omit<SampleBoxOrder, 'id' | 'createdAt'>) => void;
+  // Partner Directory & Retail Store Finder
+  partnerProductFilter?: string;
+  setPartnerProductFilter: (productId?: string) => void;
+  selectedPartner?: Partner;
+  setSelectedPartner: (partner?: Partner) => void;
+  isPartnerInquiryOpen: boolean;
+  setIsPartnerInquiryOpen: (open: boolean) => void;
+  partnerInquiries: PartnerInquiry[];
+  addPartnerInquiry: (inquiry: Omit<PartnerInquiry, 'id' | 'createdAt'>) => void;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // View state: 'home' | 'partners'
+  const [currentView, setCurrentViewState] = useState<AppView>(() => {
+    if (typeof window !== 'undefined' && (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic')) {
+      return 'partners';
+    }
+    return 'home';
+  });
+
+  const setCurrentView = (view: AppView) => {
+    setCurrentViewState(view);
+    if (typeof window !== 'undefined') {
+      if (view === 'partners') {
+        window.location.hash = 'partnerzy';
+      } else if (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic') {
+        window.history.pushState(null, '', window.location.pathname);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#partnerzy' || window.location.hash === '#gdzie-kupic') {
+        setCurrentViewState('partners');
+      } else if (currentView === 'partners' && (window.location.hash === '' || window.location.hash === '#produkty' || window.location.hash === '#kratki' || window.location.hash === '#obrzeza')) {
+        setCurrentViewState('home');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [currentView]);
+
+  // Partner filter and modal states
+  const [partnerProductFilter, setPartnerProductFilter] = useState<string | undefined>();
+  const [selectedPartner, setSelectedPartner] = useState<Partner | undefined>();
+  const [isPartnerInquiryOpen, setIsPartnerInquiryOpen] = useState(false);
+
+  // Stored Partner Inquiries
+  const [partnerInquiries, setPartnerInquiries] = useState<PartnerInquiry[]>(() => {
+    try {
+      const saved = localStorage.getItem('oplast_garden_partner_inquiries');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const addPartnerInquiry = (inquiry: Omit<PartnerInquiry, 'id' | 'createdAt'>) => {
+    const newInquiry: PartnerInquiry = {
+      ...inquiry,
+      id: `PINQ-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      createdAt: new Date().toISOString(),
+    };
+    const updated = [newInquiry, ...partnerInquiries];
+    setPartnerInquiries(updated);
+    localStorage.setItem('oplast_garden_partner_inquiries', JSON.stringify(updated));
+  };
+
   // B2B Mode: Persisted in localStorage
   const [isB2BMode, setIsB2BModeState] = useState<boolean>(() => {
     const saved = localStorage.getItem('oplast_garden_b2b_mode');
@@ -230,6 +302,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <ShopContext.Provider
       value={{
+        currentView,
+        setCurrentView,
         isB2BMode,
         setIsB2BMode,
         cart,
@@ -256,6 +330,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addB2BInquiry,
         sampleOrders,
         addSampleBoxOrder,
+        partnerProductFilter,
+        setPartnerProductFilter,
+        selectedPartner,
+        setSelectedPartner,
+        isPartnerInquiryOpen,
+        setIsPartnerInquiryOpen,
+        partnerInquiries,
+        addPartnerInquiry,
       }}
     >
       {children}

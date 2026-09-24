@@ -9,7 +9,8 @@ import {
   Building2, 
   ShieldCheck, 
   Truck,
-  Box
+  Box,
+  MapPin
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -17,6 +18,8 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 
 export const Navbar: React.FC = () => {
   const { 
+    currentView,
+    setCurrentView,
     isB2BMode, 
     setIsB2BMode, 
     cartCount, 
@@ -72,7 +75,14 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-18 gap-4">
           
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5 group shrink-0">
+          <a 
+            href="#" 
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentView('home');
+            }}
+            className="flex items-center gap-2.5 group shrink-0 cursor-pointer"
+          >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
               <Layers className="w-5 h-5" />
             </div>
@@ -91,14 +101,29 @@ export const Navbar: React.FC = () => {
             </div>
           </a>
 
-          {/* Desktop Links: 5 Clean, Spacious Navigation Items */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-semibold text-slate-700">
+          {/* Desktop Links: Clean, Spacious Navigation Items */}
+          <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-semibold text-slate-700">
             <a 
               href="#produkty" 
+              onClick={() => {
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="hover:text-emerald-600 transition-colors py-1 hover:underline underline-offset-4"
             >
               {t.nav.products}
             </a>
+
+            <button 
+              onClick={() => setCurrentView('partners')}
+              className={`flex items-center gap-1.5 py-1 transition-colors cursor-pointer font-bold ${
+                currentView === 'partners'
+                  ? 'text-emerald-700 underline underline-offset-4 decoration-2'
+                  : 'text-slate-700 hover:text-emerald-600'
+              }`}
+            >
+              <MapPin className="w-4 h-4 text-emerald-600" />
+              <span>{t.partners.navLink}</span>
+            </button>
 
             <button 
               onClick={() => setIsCalculatorOpen(true)}
@@ -110,6 +135,9 @@ export const Navbar: React.FC = () => {
 
             <a 
               href="#b2b" 
+              onClick={() => {
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="hover:text-emerald-600 transition-colors py-1 flex items-center gap-1"
             >
               <Building2 className="w-3.5 h-3.5 text-slate-400" />
@@ -118,6 +146,9 @@ export const Navbar: React.FC = () => {
 
             <a 
               href="#montaz" 
+              onClick={() => {
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="hover:text-emerald-600 transition-colors py-1"
             >
               {t.nav.installGuideShort}
@@ -125,6 +156,9 @@ export const Navbar: React.FC = () => {
 
             <a 
               href="#kontakt" 
+              onClick={() => {
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="hover:text-emerald-600 transition-colors py-1"
             >
               {t.nav.contact}
@@ -232,7 +266,10 @@ export const Navbar: React.FC = () => {
           <div className="flex flex-col space-y-1 text-sm font-semibold text-slate-800">
             <a 
               href="#produkty" 
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (currentView !== 'home') setCurrentView('home');
+              }}
               className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
             >
               {t.nav.products} (H30, H40, H50, Eko-Bord)
@@ -241,11 +278,22 @@ export const Navbar: React.FC = () => {
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
+                setCurrentView('partners');
+              }}
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 font-bold hover:bg-emerald-100 transition-colors text-left cursor-pointer"
+            >
+              <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{t.partners.navLink}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
                 setIsCalculatorOpen(true);
               }}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 font-bold hover:bg-emerald-100 transition-colors text-left"
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold transition-colors text-left cursor-pointer"
             >
-              <Calculator className="w-4 h-4 text-emerald-600 shrink-0" />
+              <Calculator className="w-4 h-4 text-slate-500 shrink-0" />
               <span>{t.nav.m2Calculator}</span>
             </button>
 

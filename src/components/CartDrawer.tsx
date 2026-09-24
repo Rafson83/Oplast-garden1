@@ -6,7 +6,8 @@ import {
   ArrowRight, 
   Truck, 
   Check, 
-  Printer 
+  Printer,
+  MapPin 
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -26,7 +27,8 @@ export const CartDrawer: React.FC = () => {
     totalCartNetto,
     totalCartBrutto,
     totalWeightKg,
-    totalPallets
+    totalPallets,
+    setCurrentView
   } = useShop();
   const { language, t } = useLanguage();
 
@@ -405,6 +407,29 @@ export const CartDrawer: React.FC = () => {
                       ~{totalWeightKg} kg ({totalPallets} {t.catalog.pallet.toLowerCase()})
                     </span>
                   </div>
+
+                  {/* Local Partner Pickup Advice for Small Retail Quantities */}
+                  {!isB2BMode && totalPallets < 1 && (
+                    <div className="p-3 bg-emerald-50/90 rounded-xl border border-emerald-200 text-xs text-slate-700 flex items-start gap-2.5">
+                      <MapPin className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="font-bold text-emerald-950">Kupujesz małą ilość do ogrodu lub na podjazd?</p>
+                        <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                          Koszt wysyłki paletowej z fabryki kurierem wynosi 280 zł. Możesz kupić te same kratki od ręki w pobliskim składzie budowlanym lub centrum brukarskim bez kosztów transportu!
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsCartOpen(false);
+                            setCurrentView('partners');
+                          }}
+                          className="mt-1.5 text-[11px] font-bold text-emerald-700 hover:text-emerald-900 underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Znajdź najbliższego partnera w okolicy →</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Delivery Selection */}
                   <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">

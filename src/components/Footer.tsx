@@ -1,10 +1,10 @@
 import React from 'react';
-import { Layers, ArrowUp } from 'lucide-react';
+import { Layers, ArrowUp, MapPin } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const Footer: React.FC = () => {
-  const { setIsCalculatorOpen, setIsSampleBoxOpen, setIsInquiryOpen, setIsB2BMode } = useShop();
+  const { setIsCalculatorOpen, setIsSampleBoxOpen, setIsInquiryOpen, setIsB2BMode, setCurrentView } = useShop();
   const { t } = useLanguage();
 
   const scrollToTop = () => {
@@ -131,6 +131,15 @@ export const Footer: React.FC = () => {
                 <a href="#b2b" className="hover:text-emerald-700 transition-colors">
                   {t.nav.forB2B}
                 </a>
+              </li>
+              <li>
+                <button
+                  onClick={() => setCurrentView('partners')}
+                  className="text-emerald-800 font-bold hover:underline cursor-pointer flex items-center gap-1"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>{t.partners.navLink}</span>
+                </button>
               </li>
               <li>
                 <button

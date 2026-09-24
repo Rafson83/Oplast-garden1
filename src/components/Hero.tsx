@@ -4,13 +4,14 @@ import {
   Building2, 
   ArrowRight, 
   Sparkles, 
-  CheckCircle2 
+  CheckCircle2,
+  MapPin
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const Hero: React.FC = () => {
-  const { isB2BMode, setIsB2BMode, setIsCalculatorOpen, setIsInquiryOpen } = useShop();
+  const { isB2BMode, setIsB2BMode, setIsCalculatorOpen, setIsInquiryOpen, setCurrentView } = useShop();
   const { t } = useLanguage();
 
   return (
@@ -182,12 +183,22 @@ export const Hero: React.FC = () => {
                   </div>
 
                   <button
-                    onClick={() => setIsCalculatorOpen(true)}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all cursor-pointer text-sm shadow-md"
+                    onClick={() => setCurrentView('partners')}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all cursor-pointer text-sm shadow-md shadow-emerald-700/20 hover:scale-[1.01]"
                   >
-                    <Calculator className="w-4 h-4" />
-                    <span>{t.hero.b2cCta}</span>
+                    <MapPin className="w-4 h-4 text-emerald-200" />
+                    <span>{t.hero.b2cCtaPartner}</span>
                   </button>
+
+                  <div className="flex items-center justify-center pt-0.5">
+                    <button
+                      onClick={() => setIsCalculatorOpen(true)}
+                      className="text-xs text-slate-500 hover:text-emerald-700 font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Calculator className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>{t.hero.b2cCta}</span>
+                    </button>
+                  </div>
                 </div>
               )}
 
