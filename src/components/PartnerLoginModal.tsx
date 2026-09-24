@@ -32,19 +32,33 @@ export const PartnerLoginModal: React.FC = () => {
       return;
     }
 
-    // Simple auth logic: if contains 'admin' -> admin, else -> partner
-    const isAdmin = email.toLowerCase().includes('admin') || email.toLowerCase().includes('oplast');
-    loginPartner(
-      email.trim(), 
-      isAdmin ? 'admin' : 'partner',
-      isAdmin ? 'Administrator Oplast' : 'Partner Handlowy'
-    );
+    // Simple auth logic: if contains 'admin' -> admin, rep -> sales_rep, else -> partner
+    const lower = email.toLowerCase();
+    const isAdmin = lower.includes('admin') || lower.includes('dyrektor');
+    const isRep = lower.includes('rep') || lower.includes('handlow') || lower.includes('kaczmarek') || lower.includes('wisniewsk');
+    
+    if (isAdmin) {
+      loginPartner(email.trim(), 'admin', 'Administrator Oplast (Fabryka Winduga)');
+    } else if (isRep) {
+      loginPartner(email.trim(), 'sales_rep', 'Michał Kaczmarek (Przedstawiciel Północ)', undefined, 'rep-1', 'Region Północ & Kujawy');
+    } else {
+      loginPartner(email.trim(), 'partner', 'Partner Handlowy (Dystrybutor)', 'partner-1');
+    }
     setCurrentView('admin');
   };
 
-  const handleQuickLogin = (role: 'admin' | 'partner') => {
+  const handleQuickLogin = (role: 'admin' | 'sales_rep' | 'partner') => {
     if (role === 'admin') {
-      loginPartner('biuro@oplast.pl', 'admin', 'Administrator Oplast (Fabryka Winduga)');
+      loginPartner('biuro@oplast.pl', 'admin', 'Administrator Oplast (Dyrektor Sprzedaży)');
+    } else if (role === 'sales_rep') {
+      loginPartner(
+        'm.kaczmarek@oplast.pl', 
+        'sales_rep', 
+        'Michał Kaczmarek', 
+        undefined, 
+        'rep-1', 
+        'Region Północ & Kujawy'
+      );
     } else {
       loginPartner('sklad@probud.torun.pl', 'partner', 'PRO-BUD Toruń (Punkt Handlowy)', 'partner-1');
     }
@@ -54,7 +68,7 @@ export const PartnerLoginModal: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div 
-        className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 border border-slate-200 animate-in fade-in zoom-in-95 duration-200"
+        className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 border border-slate-200 animate-in fade-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
       >
@@ -76,35 +90,54 @@ export const PartnerLoginModal: React.FC = () => {
             <Lock className="w-7 h-7" />
           </div>
           <h2 className="text-2xl font-black text-slate-900 font-heading">
-            Strefa Partnera & CRM
+            Strefa B2B, Handlowców & CRM
           </h2>
-          <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-xs mx-auto">
-            Logowanie dla punktów dystrybucyjnych oraz działu zarządzania siecią Oplast Garden.
+          <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-sm mx-auto">
+            Dostęp dla Przedstawicieli Handlowych, Administratorów Fabryki Oplast oraz Partnerów Dystrybucyjnych.
           </p>
         </div>
 
         {/* Quick Demo Access Buttons */}
-        <div className="mb-6 p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 space-y-2.5">
-          <p className="text-[11px] font-bold text-emerald-900 flex items-center gap-1.5 uppercase tracking-wider">
-            <KeyRound className="w-3.5 h-3.5 text-emerald-700" />
-            Szybkie logowanie testowe (1-klik):
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="mb-6 p-4 bg-emerald-50/80 rounded-2xl border border-emerald-200/90 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] font-bold text-emerald-950 flex items-center gap-1.5 uppercase tracking-wider">
+              <KeyRound className="w-3.5 h-3.5 text-emerald-700" />
+              Szybkie logowanie testowe (1-klik):
+            </p>
+            <span className="text-[10px] font-bold bg-emerald-200/70 text-emerald-800 px-2 py-0.5 rounded-full">
+              Demo CRM
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => handleQuickLogin('sales_rep')}
+              className="flex flex-col items-center justify-center text-center p-3 rounded-xl bg-gradient-to-b from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold text-xs shadow-sm transition-all cursor-pointer group"
+            >
+              <UserCheck className="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" />
+              <span>Handlowiec</span>
+              <span className="text-[9px] font-normal text-emerald-100 opacity-90">M. Kaczmarek</span>
+            </button>
+
             <button
               type="button"
               onClick={() => handleQuickLogin('admin')}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
+              className="flex flex-col items-center justify-center text-center p-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-sm transition-all cursor-pointer group"
             >
-              <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span>Admin Oplast (CRM)</span>
+              <ShieldCheck className="w-5 h-5 mb-1 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <span>Dyrektor / Admin</span>
+              <span className="text-[9px] font-normal text-slate-300 opacity-90">Wszystkie regiony</span>
             </button>
+
             <button
               type="button"
               onClick={() => handleQuickLogin('partner')}
-              className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white hover:bg-emerald-100 border border-emerald-300 text-emerald-900 font-bold text-xs shadow-2xs transition-all cursor-pointer"
+              className="flex flex-col items-center justify-center text-center p-3 rounded-xl bg-white hover:bg-emerald-100 border border-emerald-300 text-emerald-900 font-bold text-xs shadow-2xs transition-all cursor-pointer group"
             >
-              <Building2 className="w-4 h-4 shrink-0 text-emerald-700" />
-              <span>Partner (Skład)</span>
+              <Building2 className="w-5 h-5 mb-1 text-emerald-700 group-hover:scale-110 transition-transform" />
+              <span>Partner Dystr.</span>
+              <span className="text-[9px] font-normal text-slate-500">Skład PRO-BUD</span>
             </button>
           </div>
         </div>
@@ -112,7 +145,7 @@ export const PartnerLoginModal: React.FC = () => {
         <div className="relative flex items-center justify-center mb-5">
           <div className="border-t border-slate-200 w-full" />
           <span className="bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Lub wpisz dane
+            Lub zaloguj e-mailem
           </span>
         </div>
 

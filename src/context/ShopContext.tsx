@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, ProductColor, UnitType, CartItem, B2BInquiry, SampleBoxOrder } from '../types/shop';
-import { Partner, PartnerInquiry, PartnerUser } from '../types/partners';
+import { Partner, PartnerInquiry, PartnerUser, SalesRep, SalesClient, ClientContactLog, ClientImportantDate } from '../types/partners';
 import { PARTNERS } from '../data/partners';
+import { SALES_REPS, INITIAL_SALES_CLIENTS } from '../data/salesReps';
 
 export type AppView = 'home' | 'partners' | 'admin';
 
@@ -52,10 +53,31 @@ interface ShopContextType {
   deleteInquiry: (id: string) => void;
   // Partner / Admin Portal Authentication
   partnerUser: PartnerUser | null;
-  loginPartner: (email: string, role?: 'admin' | 'partner', name?: string, partnerId?: string) => void;
+  loginPartner: (
+    email: string, 
+    role?: 'admin' | 'sales_rep' | 'partner', 
+    name?: string, 
+    partnerId?: string,
+    repId?: string,
+    region?: string
+  ) => void;
   logoutPartner: () => void;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
+  // Sales Rep & CRM Clients Portfolio
+  salesReps: SalesRep[];
+  salesClients: SalesClient[];
+  activeRepFilter: string;
+  setActiveRepFilter: (repId: string) => void;
+  addSalesClient: (client: Omit<SalesClient, 'id' | 'contactLogs' | 'importantDates'>) => void;
+  updateSalesClient: (id: string, updatedData: Partial<SalesClient>) => void;
+  deleteSalesClient: (id: string) => void;
+  addClientContactLog: (clientId: string, log: Omit<ClientContactLog, 'id'>) => void;
+  addClientImportantDate: (clientId: string, importantDate: Omit<ClientImportantDate, 'id'>) => void;
+  deleteClientImportantDate: (clientId: string, dateId: string) => void;
+  updateSalesRep: (id: string, updated: Partial<SalesRep>) => void;
+  addSalesRep: (rep: Omit<SalesRep, 'id'>) => void;
+  resetSalesDataToDefault: () => void;
   // Privacy Policy & Cookies
   isPrivacyPolicyOpen: boolean;
   setIsPrivacyPolicyOpen: (open: boolean) => void;
@@ -203,14 +225,174 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const loginPartner = (email: string, role: 'admin' | 'partner' = 'admin', name?: string, partnerId?: string) => {
+  // Sales Representatives State
+  const [salesReps, setSalesReps] = useState<SalesRep[]>(() => {
+    try {
+      const saved = localStorage.getItem('oplast_garden_sales_reps');
+      return saved ? JSON.parse(saved) : SALES_REPS;
+    } catch {
+      return SALES_REPS;
+    }
+  });
+
+  const saveSalesReps = (reps: SalesRep[]) => {
+    setSalesReps(reps);
+    localStorage.setItem('oplast_garden_sales_reps', JSON.stringify(reps));
+  };
+
+  const updateSalesRep = (id: string, updated: Partial<SalesRep>) => {
+    const updatedList = salesReps.map(r => r.id === id ? { ...r, ...updated } : r);
+    saveSalesReps(updatedList);
+  };
+
+  const addSalesRep = (repData: Omit<SalesRep, 'id'>) => {
+    const newRep: SalesRep = {
+      ...repData,
+      id: `rep-${Date.now()}`,
+    };
+    saveSalesReps([...salesReps, newRep]);
+  };
+
+  // Sales Clients State
+  const [salesClients, setSalesClients] = useState<SalesClient[]>(() => {
+    try {
+      const saved = localStorage.getItem('oplast_garden_sales_clients');
+      return saved ? JSON.parse(saved) : INITIAL_SALES_CLIENTS;
+    } catch {
+      return INITIAL_SALES_CLIENTS;
+    }
+  });
+
+  const saveSalesClients = (clients: SalesClient[]) => {
+    setSalesClients(clients);
+    localStorage.setItem('oplast_garden_sales_clients', JSON.stringify(clients));
+  };
+
+  // Active filter by Sales Rep ('all' or specific repId)
+  const [activeRepFilter, setActiveRepFilter] = useState<string>(() => {
+    if (partnerUser?.role === 'sales_rep' && partnerUser.repId) {
+      return partnerUser.repId;
+    }
+    return 'all';
+  });
+
+  const addSalesClient = (clientData: Omit<SalesClient, 'id' | 'contactLogs' | 'importantDates'>) => {
+    const newClient: SalesClient = {
+      ...clientData,
+      id: `sclient-${Date.now()}`,
+      contactLogs: [
+        {
+          id: `log-init-${Date.now()}`,
+          clientId: `sclient-${Date.now()}`,
+          date: new Date().toISOString().split('T')[0],
+          type: 'note',
+          title: 'Utworzenie profilu klienta w systemie Oplast CRM',
+          summary: 'Kontrahent dodany do bazy handlowej Oplast Garden.',
+          repName: partnerUser?.name || 'Przedstawiciel Handlowy',
+        }
+      ],
+      importantDates: clientData.birthdayMonthDay ? [
+        {
+          id: `date-init-${Date.now()}`,
+          clientId: `sclient-${Date.now()}`,
+          type: 'birthday',
+          title: `Urodziny: ${clientData.contactPerson}`,
+          date: clientData.birthdayMonthDay,
+          isRecurringYearly: true,
+          notes: 'Przypomnienie o życzeniach i kontakcie relacyjnym.',
+        }
+      ] : [],
+    };
+    const updated = [newClient, ...salesClients];
+    saveSalesClients(updated);
+  };
+
+  const updateSalesClient = (id: string, updatedData: Partial<SalesClient>) => {
+    const updated = salesClients.map(c => c.id === id ? { ...c, ...updatedData } : c);
+    saveSalesClients(updated);
+  };
+
+  const deleteSalesClient = (id: string) => {
+    const updated = salesClients.filter(c => c.id !== id);
+    saveSalesClients(updated);
+  };
+
+  const addClientContactLog = (clientId: string, logData: Omit<ClientContactLog, 'id'>) => {
+    const newLog: ClientContactLog = {
+      ...logData,
+      id: `log-${Date.now()}`,
+    };
+    const updated = salesClients.map(client => {
+      if (client.id === clientId) {
+        return {
+          ...client,
+          lastContactDate: newLog.date,
+          ...(newLog.nextFollowUpDate ? { nextPlannedContact: newLog.nextFollowUpDate } : {}),
+          contactLogs: [newLog, ...(client.contactLogs || [])],
+        };
+      }
+      return client;
+    });
+    saveSalesClients(updated);
+  };
+
+  const addClientImportantDate = (clientId: string, dateData: Omit<ClientImportantDate, 'id'>) => {
+    const newDate: ClientImportantDate = {
+      ...dateData,
+      id: `date-${Date.now()}`,
+    };
+    const updated = salesClients.map(client => {
+      if (client.id === clientId) {
+        return {
+          ...client,
+          importantDates: [...(client.importantDates || []), newDate],
+        };
+      }
+      return client;
+    });
+    saveSalesClients(updated);
+  };
+
+  const deleteClientImportantDate = (clientId: string, dateId: string) => {
+    const updated = salesClients.map(client => {
+      if (client.id === clientId) {
+        return {
+          ...client,
+          importantDates: (client.importantDates || []).filter(d => d.id !== dateId),
+        };
+      }
+      return client;
+    });
+    saveSalesClients(updated);
+  };
+
+  const resetSalesDataToDefault = () => {
+    saveSalesReps(SALES_REPS);
+    saveSalesClients(INITIAL_SALES_CLIENTS);
+  };
+
+  const loginPartner = (
+    email: string, 
+    role: 'admin' | 'sales_rep' | 'partner' = 'admin', 
+    name?: string, 
+    partnerId?: string,
+    repId?: string,
+    region?: string
+  ) => {
     const user: PartnerUser = {
       email,
       role,
-      name: name || (role === 'admin' ? 'Administrator Oplast' : 'Partner Handlowy'),
+      name: name || (role === 'admin' ? 'Administrator Oplast' : role === 'sales_rep' ? 'Przedstawiciel Handlowy' : 'Partner Handlowy'),
       partnerId,
+      repId,
+      region,
     };
     setPartnerUser(user);
+    if (role === 'sales_rep' && repId) {
+      setActiveRepFilter(repId);
+    } else if (role === 'admin') {
+      setActiveRepFilter('all');
+    }
     localStorage.setItem('oplast_partner_auth', JSON.stringify(user));
     setIsLoginModalOpen(false);
   };
@@ -470,6 +652,20 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logoutPartner,
         isLoginModalOpen,
         setIsLoginModalOpen,
+        // Sales Rep & CRM
+        salesReps,
+        salesClients,
+        activeRepFilter,
+        setActiveRepFilter,
+        addSalesClient,
+        updateSalesClient,
+        deleteSalesClient,
+        addClientContactLog,
+        addClientImportantDate,
+        deleteClientImportantDate,
+        updateSalesRep,
+        addSalesRep,
+        resetSalesDataToDefault,
         isPrivacyPolicyOpen,
         setIsPrivacyPolicyOpen,
         isCookieSettingsOpen,

@@ -226,11 +226,19 @@ export const Navbar: React.FC = () => {
                       ? 'bg-slate-900 text-white ring-2 ring-emerald-500/50'
                       : 'bg-emerald-700 hover:bg-emerald-800 text-white'
                   }`}
-                  title="Otwórz panel zarządzania siecią i CRM"
+                  title="Otwórz panel handlowy i CRM"
                 >
                   <UserCheck className="w-3.5 h-3.5" />
-                  <span className="hidden lg:inline">{partnerUser.role === 'admin' ? 'Panel CRM (Admin)' : 'Panel Partnera'}</span>
-                  <span className="lg:hidden">CRM</span>
+                  <span className="hidden lg:inline">
+                    {partnerUser.role === 'admin' 
+                      ? 'Panel CRM (Admin)' 
+                      : partnerUser.role === 'sales_rep' 
+                      ? `Strefa Handlowca (${partnerUser.name.split(' ')[0]})` 
+                      : 'Panel Partnera'}
+                  </span>
+                  <span className="lg:hidden">
+                    {partnerUser.role === 'sales_rep' ? 'Handlowiec' : 'CRM'}
+                  </span>
                 </button>
 
                 <button
@@ -242,15 +250,15 @@ export const Navbar: React.FC = () => {
                 </button>
               </div>
             ) : (
-              /* User Logged Out: Partner Login Button */
+              /* User Logged Out: Partner / Sales Rep Login Button */
               <button
                 onClick={() => setIsLoginModalOpen(true)}
                 className="flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-xl bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-                title="Logowanie do Strefy Partnera i CRM"
+                title="Logowanie dla Handlowców, Adminów i Partnerów B2B"
               >
                 <LogIn className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="hidden sm:inline">{t.nav.partnerZone}</span>
-                <span className="sm:hidden">{t.nav.partnerLogin}</span>
+                <span className="hidden sm:inline">Strefa Handlowca & B2B</span>
+                <span className="sm:hidden">Handlowiec</span>
               </button>
             )}
 
@@ -410,42 +418,46 @@ export const Navbar: React.FC = () => {
             </button>
           </div>
 
-          {/* Partner Zone / CRM CTA in Mobile Drawer */}
-          <div className="pt-2 border-t border-slate-200 space-y-2">
-            {partnerUser ? (
-              <div className="space-y-1.5">
+            {/* Partner Zone / Sales Rep CTA in Mobile Drawer */}
+            <div className="pt-2 border-t border-slate-200 space-y-2">
+              {partnerUser ? (
+                <div className="space-y-1.5">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setCurrentView('admin');
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-md cursor-pointer"
+                  >
+                    <UserCheck className="w-4 h-4 text-emerald-400" />
+                    <span>
+                      {partnerUser.role === 'sales_rep' 
+                        ? `Strefa Handlowca (${partnerUser.name})` 
+                        : `Panel CRM (${partnerUser.name})`}
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      logoutPartner();
+                    }}
+                    className="w-full text-center text-xs font-semibold text-red-600 py-1.5 hover:underline"
+                  >
+                    Wyloguj się
+                  </button>
+                </div>
+              ) : (
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    setCurrentView('admin');
+                    setIsLoginModalOpen(true);
                   }}
                   className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-md cursor-pointer"
                 >
-                  <UserCheck className="w-4 h-4 text-emerald-400" />
-                  <span>Otwórz Panel CRM ({partnerUser.name})</span>
+                  <LogIn className="w-4 h-4 text-emerald-400" />
+                  <span>Strefa Handlowca & Partnera B2B</span>
                 </button>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    logoutPartner();
-                  }}
-                  className="w-full text-center text-xs font-semibold text-red-600 py-1.5 hover:underline"
-                >
-                  Wyloguj się
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsLoginModalOpen(true);
-                }}
-                className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-md cursor-pointer"
-              >
-                <LogIn className="w-4 h-4 text-emerald-400" />
-                <span>Strefa Partnera (Zaloguj się do CRM)</span>
-              </button>
-            )}
+              )}
 
             <button
               onClick={() => {

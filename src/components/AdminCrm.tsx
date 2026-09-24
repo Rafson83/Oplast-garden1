@@ -18,14 +18,16 @@ import {
   Eye, 
   Save, 
   X, 
-  Users
+  Users,
+  Briefcase
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { Partner, PartnerType } from '../types/partners';
 import { VOIVODESHIPS } from '../data/partners';
 import { PRODUCTS } from '../data/products';
+import { SalesRepWorkspace } from './SalesRepWorkspace';
 
-type AdminTab = 'partners' | 'inquiries' | 'factory_b2b';
+type AdminTab = 'sales_rep' | 'partners' | 'inquiries' | 'factory_b2b';
 
 export const AdminCrm: React.FC = () => {
   const { 
@@ -43,7 +45,7 @@ export const AdminCrm: React.FC = () => {
     setCurrentView
   } = useShop();
 
-  const [activeTab, setActiveTab] = useState<AdminTab>('partners');
+  const [activeTab, setActiveTab] = useState<AdminTab>('sales_rep');
 
   // Search & Filter state for Partners
   const [partnerSearch, setPartnerSearch] = useState('');
@@ -308,8 +310,20 @@ export const AdminCrm: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800">
           <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto py-2">
             <button
+              onClick={() => setActiveTab('sales_rep')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 ${
+                activeTab === 'sales_rep'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              <Briefcase className="w-4 h-4" />
+              <span>Strefa Handlowca & Klienci</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('partners')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 ${
                 activeTab === 'partners'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
@@ -321,7 +335,7 @@ export const AdminCrm: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('inquiries')}
-              className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 ${
                 activeTab === 'inquiries'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
@@ -338,7 +352,7 @@ export const AdminCrm: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('factory_b2b')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 ${
                 activeTab === 'factory_b2b'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
@@ -353,6 +367,13 @@ export const AdminCrm: React.FC = () => {
 
       {/* Main CRM Body */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+        {/* ========================================================================= */}
+        {/* TAB 0: SALES REPRESENTATIVE WORKSPACE & CLIENT PORTFOLIO                  */}
+        {/* ========================================================================= */}
+        {activeTab === 'sales_rep' && (
+          <SalesRepWorkspace />
+        )}
 
         {/* ========================================================================= */}
         {/* TAB 1: PARTNER MANAGEMENT & BUSINESS CARDS                                */}
