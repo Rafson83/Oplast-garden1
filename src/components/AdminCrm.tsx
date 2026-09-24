@@ -18,8 +18,7 @@ import {
   Eye, 
   Save, 
   X, 
-  Users, 
-  Package
+  Users
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { Partner, PartnerType } from '../types/partners';
@@ -39,7 +38,6 @@ export const AdminCrm: React.FC = () => {
     updateInquiryStatus,
     deleteInquiry,
     b2bInquiries,
-    sampleOrders,
     partnerUser,
     logoutPartner,
     setCurrentView
@@ -347,7 +345,7 @@ export const AdminCrm: React.FC = () => {
               }`}
             >
               <Layers className="w-4 h-4" />
-              <span>Zapytania Fabryczne B2B ({b2bInquiries.length + sampleOrders.length})</span>
+              <span>Zapytania Fabryczne B2B ({b2bInquiries.length})</span>
             </button>
           </div>
         </div>
@@ -851,16 +849,16 @@ export const AdminCrm: React.FC = () => {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 3: DIRECT FACTORY B2B INQUIRIES & SAMPLES                             */}
+        {/* TAB 3: DIRECT FACTORY B2B INQUIRIES                                       */}
         {/* ========================================================================= */}
         {activeTab === 'factory_b2b' && (
           <div className="space-y-6">
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
               <h2 className="text-xl font-black text-slate-900 font-heading">
-                Zapytania Ofertowe B2B & Zamówienia Wzorników
+                Zapytania Ofertowe B2B & Wyceny Inwestycyjne
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Bezpośrednie zapytania inwestycyjne, hurtowe zamówienia paletowe FTL oraz zamówione bezpłatne wzorniki (Sample Box).
+                Bezpośrednie zapytania ofertowe, zamówienia paletowe FTL oraz kalkulacje inwestycji dla generalnych wykonawców.
               </p>
             </div>
 
@@ -893,31 +891,6 @@ export const AdminCrm: React.FC = () => {
               {b2bInquiries.length === 0 && (
                 <p className="text-xs text-slate-400 bg-white p-6 rounded-xl text-center border border-slate-200">
                   Brak bezpośrednich zapytań B2B.
-                </p>
-              )}
-            </div>
-
-            {/* Sample Box Orders */}
-            <div className="space-y-3 pt-4">
-              <h3 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-                <Package className="w-4 h-4 text-emerald-600" />
-                Wysłane Wzorniki / Sample Box ({sampleOrders.length})
-              </h3>
-
-              {sampleOrders.map((smp) => (
-                <div key={smp.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1 text-xs">
-                  <div className="flex justify-between items-start">
-                    <span className="font-extrabold text-slate-900">{smp.companyName} (NIP: {smp.nip})</span>
-                    <span className="text-slate-400">{new Date(smp.createdAt).toLocaleDateString('pl-PL')}</span>
-                  </div>
-                  <p className="text-slate-600">Adres wysyłki: {smp.street}, {smp.postalCode} {smp.city}</p>
-                  <p className="text-slate-600">Odbiorca: {smp.recipientName} • tel: {smp.phone}</p>
-                </div>
-              ))}
-
-              {sampleOrders.length === 0 && (
-                <p className="text-xs text-slate-400 bg-white p-6 rounded-xl text-center border border-slate-200">
-                  Brak zamówień wzorników.
                 </p>
               )}
             </div>

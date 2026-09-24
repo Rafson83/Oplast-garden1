@@ -6,7 +6,6 @@ import { useLanguage } from '../context/LanguageContext';
 export const Footer: React.FC = () => {
   const { 
     setIsCalculatorOpen, 
-    setIsSampleBoxOpen, 
     setIsInquiryOpen, 
     setIsB2BMode, 
     setCurrentView,
@@ -116,14 +115,6 @@ export const Footer: React.FC = () => {
                   className="hover:text-emerald-700 transition-colors text-left cursor-pointer"
                 >
                   {t.nav.m2Calculator}
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setIsSampleBoxOpen(true)}
-                  className="hover:text-emerald-700 transition-colors text-left cursor-pointer"
-                >
-                  {t.nav.orderSampleBox}
                 </button>
               </li>
               <li>

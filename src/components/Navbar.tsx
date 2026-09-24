@@ -7,10 +7,9 @@ import {
   X, 
   Building2, 
   ShieldCheck, 
-  Box,
-  MapPin,
-  LogIn,
-  LogOut,
+  MapPin, 
+  LogIn, 
+  LogOut, 
   UserCheck,
   Download,
   Shield,
@@ -27,7 +26,7 @@ export const Navbar: React.FC = () => {
     isB2BMode, 
     setIsB2BMode, 
     setIsCalculatorOpen,
-    setIsSampleBoxOpen,
+    setIsInquiryOpen,
     partnerUser,
     logoutPartner,
     setIsLoginModalOpen,
@@ -74,11 +73,14 @@ export const Navbar: React.FC = () => {
             </a>
             <span className="text-emerald-300">|</span>
             <button
-              onClick={() => setIsSampleBoxOpen(true)}
+              onClick={() => {
+                setIsB2BMode(true);
+                setIsInquiryOpen(true);
+              }}
               className="flex items-center gap-1.5 text-emerald-700 hover:text-emerald-900 font-bold cursor-pointer transition-colors"
             >
-              <Box className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{t.nav.orderSampleBox}</span>
+              <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>{t.nav.investmentQuote}</span>
             </button>
           </div>
 
@@ -448,12 +450,13 @@ export const Navbar: React.FC = () => {
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
-                setIsSampleBoxOpen(true);
+                setIsB2BMode(true);
+                setIsInquiryOpen(true);
               }}
               className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-emerald-600 text-emerald-800 text-xs font-bold bg-white hover:bg-emerald-50 transition-colors cursor-pointer"
             >
-              <Box className="w-4 h-4 text-emerald-600" />
-              <span>{t.nav.orderSampleBox}</span>
+              <Building2 className="w-4 h-4 text-emerald-600" />
+              <span>{t.nav.investmentQuote}</span>
             </button>
           </div>
 

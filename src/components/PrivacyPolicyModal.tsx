@@ -85,7 +85,7 @@ export const PrivacyPolicyModal: React.FC = () => {
               <span>Najważniejsze informacje w pigułce:</span>
             </div>
             <p className="text-xs leading-relaxed text-slate-700">
-              Szanujemy Twoją prywatność. Twoje dane osobowe przekazywane w formularzach (zapytania ofertowe B2B, kontakt z partnerem handlowym, zamówienie wzornika Sample Box) są chronione zgodnie z <strong>Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 (RODO)</strong> oraz polską Ustawą o ochronie danych osobowych. Nie handlujemy danymi ani nie przekazujemy ich osobom nieuprawnionym.
+              Szanujemy Twoją prywatność. Twoje dane osobowe przekazywane w formularzach (zapytania ofertowe B2B, bezpośredni kontakt z partnerem handlowym, zapytania o kalkulację nawierzchni) są chronione zgodnie z <strong>Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 (RODO)</strong> oraz polską Ustawą o ochronie danych osobowych. Nie handlujemy danymi ani nie przekazujemy ich osobom nieuprawnionym.
             </p>
           </div>
 
@@ -131,9 +131,9 @@ export const PrivacyPolicyModal: React.FC = () => {
                 </p>
               </div>
               <div className="p-3.5 rounded-xl border border-slate-200 bg-white shadow-xs space-y-1">
-                <p className="font-bold text-emerald-800">B. Realizacja wysyłki bezpłatnych wzorników (Sample Box)</p>
+                <p className="font-bold text-emerald-800">B. Realizacja zamówień hurtowych i dostaw FTL 24t</p>
                 <p className="text-slate-600">
-                  Podstawa: <strong>art. 6 ust. 1 lit. b RODO</strong> (doręczenie próbek kratek i obrzeży pod wskazany adres inwestora/projektanta).
+                  Podstawa: <strong>art. 6 ust. 1 lit. b RODO</strong> (realizacja dostaw paletowych i całopojazdowych kratek oraz obrzeży na plac budowy lub do magazynu).
                 </p>
               </div>
               <div className="p-3.5 rounded-xl border border-slate-200 bg-white shadow-xs space-y-1">
@@ -162,7 +162,7 @@ export const PrivacyPolicyModal: React.FC = () => {
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600">
               <li>
-                <strong>Operatorom logistycznym, kurierom i spedycji paletowej:</strong> w celu doręczenia paczek z wzornikami lub dostaw pełnosamochodowych (FTL 24t / paletowych).
+                <strong>Operatorom logistycznym, kurierom i spedycji paletowej:</strong> w celu doręczenia zamówień hurtowych, transportów paletowych lub dostaw pełnosamochodowych (FTL 24t).
               </li>
               <li>
                 <strong>Autoryzowanym punktom partnerskim:</strong> w przypadku wysłania zapytania do konkretnego lokalnego składu lub centrum brukarskiego.

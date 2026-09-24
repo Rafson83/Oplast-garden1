@@ -12,7 +12,6 @@ import { PartnersDirectory } from './components/PartnersDirectory';
 import { AdminCrm } from './components/AdminCrm';
 import { Footer } from './components/Footer';
 import { CalculatorModal } from './components/CalculatorModal';
-import { SampleBoxModal } from './components/SampleBoxModal';
 import { B2BInquiryModal } from './components/B2BInquiryModal';
 import { PartnerInquiryModal } from './components/PartnerInquiryModal';
 import { PartnerLoginModal } from './components/PartnerLoginModal';
@@ -51,7 +50,6 @@ export const AppContent: React.FC = () => {
 
       {/* Global Modals */}
       <CalculatorModal />
-      <SampleBoxModal />
       <B2BInquiryModal />
       <PartnerInquiryModal />
       <PartnerLoginModal />

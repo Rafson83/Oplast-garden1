@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   Building2, 
   Truck, 
-  Box, 
+  MapPin, 
   CheckCircle2, 
   ArrowRight, 
   FileSpreadsheet,
@@ -14,7 +14,7 @@ import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const B2BSection: React.FC = () => {
-  const { setIsSampleBoxOpen, setIsInquiryOpen, setIsB2BMode } = useShop();
+  const { setIsInquiryOpen, setIsB2BMode, setCurrentView } = useShop();
   const { t } = useLanguage();
 
   return (
@@ -178,47 +178,53 @@ export const B2BSection: React.FC = () => {
               </ul>
             </div>
             <button
-              onClick={() => setIsSampleBoxOpen(true)}
+              onClick={() => {
+                setIsB2BMode(true);
+                setIsInquiryOpen(true);
+              }}
               className="mt-6 w-full text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer"
             >
-              <span>{t.b2b.architectCta}</span>
+              <span>Zapytaj o specyfikację projektową</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
         </div>
 
-        {/* Free Sample Box Promo CTA Banner - Vivid Emerald on Light Background */}
-        <div className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-green-600 rounded-3xl p-8 sm:p-10 shadow-xl border border-emerald-500/40 relative overflow-hidden text-white">
+        {/* B2B Direct Factory Wholesale & FTL Investment Banner */}
+        <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-700 rounded-3xl p-8 sm:p-10 shadow-xl border border-emerald-500/40 relative overflow-hidden text-white">
           <div className="grid lg:grid-cols-12 gap-8 items-center">
             
             <div className="lg:col-span-8 space-y-4">
               <span className="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider border border-white/30 backdrop-blur-xs">
-                {t.b2b.sampleBoxBadge}
+                Dla Generalnych Wykonawców i Inwestorów
               </span>
               <h3 className="text-2xl sm:text-4xl font-extrabold font-heading text-white">
-                {t.b2b.sampleBoxTitle}
+                Bezpośrednie Dostawy Pełnosamochodowe z Fabryki (FTL 24t)
               </h3>
               <p className="text-emerald-50 text-sm sm:text-base leading-relaxed max-w-2xl font-normal">
-                {t.b2b.sampleBoxDesc}
+                Gwarantujemy ciągłość dostaw na wielkopowierzchniowe inwestycje, parkingi i drogi dojazdowe. Zapewniamy komplet dokumentacji odbiorowej: deklaracje KDWU, atesty PZH oraz badania wytrzymałościowe ITB do 450 t/m².
               </p>
             </div>
 
             <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-center">
               <button
-                onClick={() => setIsSampleBoxOpen(true)}
-                className="flex items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-emerald-900 font-extrabold py-4 px-6 rounded-xl shadow-lg transition-all hover:scale-105 cursor-pointer text-sm"
+                onClick={() => {
+                  setIsB2BMode(true);
+                  setIsInquiryOpen(true);
+                }}
+                className="flex items-center justify-center gap-2 bg-white hover:bg-emerald-50 text-emerald-950 font-extrabold py-4 px-6 rounded-xl shadow-lg transition-all hover:scale-105 cursor-pointer text-sm"
               >
-                <Box className="w-5 h-5 text-emerald-700" />
-                <span>{t.b2b.sampleBoxCta}</span>
+                <FileSpreadsheet className="w-5 h-5 text-emerald-700" />
+                <span>Wyceń Inwestycję Hurtową</span>
               </button>
 
               <button
-                onClick={() => setIsInquiryOpen(true)}
-                className="flex items-center justify-center gap-2 bg-emerald-800/80 hover:bg-emerald-900 text-white font-bold py-4 px-6 rounded-xl border border-emerald-400/40 transition-colors cursor-pointer text-sm"
+                onClick={() => setCurrentView('partners')}
+                className="flex items-center justify-center gap-2 bg-emerald-900/80 hover:bg-emerald-900 text-white font-bold py-4 px-6 rounded-xl border border-emerald-400/40 transition-colors cursor-pointer text-sm"
               >
-                <FileSpreadsheet className="w-5 h-5 text-emerald-200" />
-                <span>{t.b2b.quoteCta}</span>
+                <MapPin className="w-5 h-5 text-emerald-300" />
+                <span>{t.partners.navLink}</span>
               </button>
             </div>
 
