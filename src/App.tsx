@@ -16,6 +16,9 @@ import { SampleBoxModal } from './components/SampleBoxModal';
 import { B2BInquiryModal } from './components/B2BInquiryModal';
 import { PartnerInquiryModal } from './components/PartnerInquiryModal';
 import { PartnerLoginModal } from './components/PartnerLoginModal';
+import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
+import { CookieBanner } from './components/CookieBanner';
+import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 
 export const AppContent: React.FC = () => {
   const { currentView } = useShop();
@@ -52,6 +55,13 @@ export const AppContent: React.FC = () => {
       <B2BInquiryModal />
       <PartnerInquiryModal />
       <PartnerLoginModal />
+      <PrivacyPolicyModal />
+
+      {/* RODO / GDPR Cookie Banner */}
+      <CookieBanner />
+
+      {/* PWA Progressive Web App Install Banner */}
+      <PwaInstallPrompt />
     </div>
   );
 };

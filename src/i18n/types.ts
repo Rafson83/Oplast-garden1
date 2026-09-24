@@ -356,6 +356,9 @@ export interface TranslationDictionary {
     clientZone: string;
     salesDept: string;
     tagline: string;
+    privacyPolicy: string;
+    cookieSettings: string;
+    rodoClauses: string;
   };
   // Partners Directory & Retail Store Finder
   partners: {
@@ -411,6 +414,41 @@ export interface TranslationDictionary {
     inquirySentSuccess: string;
     inquirySentDesc: string;
     inquiryClose: string;
+  };
+  // RODO / Privacy Policy
+  rodo: {
+    consentNotice: string;
+    consentCheckbox: string;
+    policyLink: string;
+    adminNotice: string;
+    policyTitle: string;
+    policySubtitle: string;
+    lastUpdated: string;
+    close: string;
+  };
+  // Cookie Consent Banner
+  cookieBanner: {
+    title: string;
+    desc: string;
+    acceptAll: string;
+    rejectNonEssential: string;
+    manage: string;
+    settingsTitle: string;
+    essentialTitle: string;
+    essentialDesc: string;
+    analyticsTitle: string;
+    analyticsDesc: string;
+    savePreferences: string;
+  };
+  // PWA (Progressive Web App)
+  pwa: {
+    installTitle: string;
+    installDesc: string;
+    installBtn: string;
+    installed: string;
+    dismiss: string;
+    iosShareHint: string;
+    iosAddHint: string;
   };
 }
 

@@ -13,7 +13,7 @@ import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const ContactSection: React.FC = () => {
-  const { addB2BInquiry } = useShop();
+  const { addB2BInquiry, setIsPrivacyPolicyOpen } = useShop();
   const { t } = useLanguage();
 
   const [name, setName] = useState('');
@@ -21,6 +21,7 @@ export const ContactSection: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [rodoConsent, setRodoConsent] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,6 +51,7 @@ export const ContactSection: React.FC = () => {
       setPhone('');
       setSubject('');
       setMessage('');
+      setRodoConsent(false);
     }, 5000);
   };
 
@@ -236,10 +238,39 @@ export const ContactSection: React.FC = () => {
                     />
                   </div>
 
+                  {/* RODO Consent Checkbox */}
+                  <div className="pt-1">
+                    <label className="flex items-start gap-2.5 text-[11px] text-slate-600 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={rodoConsent}
+                        onChange={e => setRodoConsent(e.target.checked)}
+                        className="mt-0.5 rounded-sm border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer shrink-0"
+                      />
+                      <span>
+                        {t.rodo.consentCheckbox}{' '}
+                        <button
+                          type="button"
+                          onClick={() => setIsPrivacyPolicyOpen(true)}
+                          className="text-emerald-700 font-bold hover:underline cursor-pointer inline-flex items-center gap-0.5"
+                        >
+                          {t.rodo.policyLink}
+                        </button>
+                        .
+                      </span>
+                    </label>
+                  </div>
+
                   <div className="flex justify-end pt-2">
                     <button
                       type="submit"
-                      className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer text-xs"
+                      disabled={!rodoConsent}
+                      className={`flex items-center gap-2 font-bold py-3 px-6 rounded-xl shadow-md transition-colors text-xs ${
+                        rodoConsent 
+                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer' 
+                          : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                      }`}
                     >
                       <Send className="w-4 h-4" />
                       <span>{t.contact.formSend}</span>

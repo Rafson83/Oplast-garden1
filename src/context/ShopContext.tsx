@@ -56,6 +56,11 @@ interface ShopContextType {
   logoutPartner: () => void;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
+  // Privacy Policy & Cookies
+  isPrivacyPolicyOpen: boolean;
+  setIsPrivacyPolicyOpen: (open: boolean) => void;
+  isCookieSettingsOpen: boolean;
+  setIsCookieSettingsOpen: (open: boolean) => void;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -249,6 +254,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSampleBoxOpen, setIsSampleBoxOpen] = useState(false);
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const [inquiryPreselectedProduct, setInquiryPreselectedProduct] = useState<string | undefined>();
+  const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
+  const [isCookieSettingsOpen, setIsCookieSettingsOpen] = useState(false);
 
   // Stored Inquiries & Samples
   const [b2bInquiries, setB2BInquiries] = useState<B2BInquiry[]>(() => {
@@ -463,6 +470,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logoutPartner,
         isLoginModalOpen,
         setIsLoginModalOpen,
+        isPrivacyPolicyOpen,
+        setIsPrivacyPolicyOpen,
+        isCookieSettingsOpen,
+        setIsCookieSettingsOpen,
       }}
     >
       {children}

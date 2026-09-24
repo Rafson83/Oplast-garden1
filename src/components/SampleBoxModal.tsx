@@ -4,7 +4,7 @@ import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const SampleBoxModal: React.FC = () => {
-  const { isSampleBoxOpen, setIsSampleBoxOpen, addSampleBoxOrder } = useShop();
+  const { isSampleBoxOpen, setIsSampleBoxOpen, addSampleBoxOrder, setIsPrivacyPolicyOpen } = useShop();
   const { t } = useLanguage();
 
   const [companyName, setCompanyName] = useState('');
@@ -23,6 +23,7 @@ export const SampleBoxModal: React.FC = () => {
     'Katalog z KDWU'
   ]);
   const [comments, setComments] = useState('');
+  const [rodoConsent, setRodoConsent] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   if (!isSampleBoxOpen) return null;
@@ -37,6 +38,10 @@ export const SampleBoxModal: React.FC = () => {
     e.preventDefault();
     if (!companyName || !phone || !email || !street || !city) {
       alert('Proszę wypełnić wymagane pola formularza.');
+      return;
+    }
+    if (!rodoConsent) {
+      alert('Proszę zaakceptować zgodę RODO, aby zamówić pakiet próbek.');
       return;
     }
 
@@ -274,17 +279,46 @@ export const SampleBoxModal: React.FC = () => {
               />
             </div>
 
+            {/* RODO Consent Checkbox */}
+            <div className="pt-2 border-t border-slate-200">
+              <label className="flex items-start gap-2.5 text-[11px] text-slate-600 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  required
+                  checked={rodoConsent}
+                  onChange={e => setRodoConsent(e.target.checked)}
+                  className="mt-0.5 rounded-sm border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer shrink-0"
+                />
+                <span>
+                  {t.rodo.consentCheckbox}{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIsPrivacyPolicyOpen(true)}
+                    className="text-emerald-700 font-bold hover:underline cursor-pointer inline-flex items-center gap-0.5"
+                  >
+                    {t.rodo.policyLink}
+                  </button>
+                  .
+                </span>
+              </label>
+            </div>
+
             <div className="pt-3 border-t border-slate-200 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={handleClose}
-                className="px-4 py-2 text-slate-600 hover:text-slate-900 font-semibold"
+                className="px-4 py-2 text-slate-600 hover:text-slate-900 font-semibold cursor-pointer"
               >
                 {t.sampleBox.cancel}
               </button>
               <button
                 type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors cursor-pointer text-xs flex items-center gap-2"
+                disabled={!rodoConsent}
+                className={`font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors text-xs flex items-center gap-2 ${
+                  rodoConsent
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer'
+                    : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                }`}
               >
                 <Truck className="w-4 h-4" />
                 <span>{t.sampleBox.submit}</span>

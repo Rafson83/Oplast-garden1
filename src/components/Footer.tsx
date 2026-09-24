@@ -1,21 +1,33 @@
 import React from 'react';
-import { Layers, ArrowUp, MapPin } from 'lucide-react';
+import { Layers, ArrowUp, MapPin, ShieldCheck, Cookie, Download } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const Footer: React.FC = () => {
-  const { setIsCalculatorOpen, setIsSampleBoxOpen, setIsInquiryOpen, setIsB2BMode, setCurrentView } = useShop();
+  const { 
+    setIsCalculatorOpen, 
+    setIsSampleBoxOpen, 
+    setIsInquiryOpen, 
+    setIsB2BMode, 
+    setCurrentView,
+    setIsPrivacyPolicyOpen,
+    setIsCookieSettingsOpen
+  } = useShop();
   const { t } = useLanguage();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handlePwaInstall = () => {
+    window.dispatchEvent(new Event('trigger-pwa-install'));
+  };
+
   return (
     <footer className="bg-slate-100 text-slate-600 pt-16 pb-12 border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Main 4 Columns */}
+        {/* Main Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           
           {/* Col 1 & 2: Brand & Legal */}
@@ -143,10 +155,11 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <button
-                  onClick={() => setIsB2BMode(true)}
-                  className="text-emerald-700 font-bold hover:underline cursor-pointer"
+                  onClick={handlePwaInstall}
+                  className="text-emerald-700 font-bold hover:underline cursor-pointer flex items-center gap-1"
                 >
-                  {t.nav.b2bMode}
+                  <Download className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Zainstaluj aplikację PWA</span>
                 </button>
               </li>
             </ul>
@@ -184,8 +197,35 @@ export const Footer: React.FC = () => {
 
         </div>
 
+        {/* Legal & Compliance Strip */}
+        <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+          <div className="flex flex-wrap items-center gap-4">
+            <button
+              onClick={() => setIsPrivacyPolicyOpen(true)}
+              className="text-slate-700 hover:text-emerald-700 font-medium transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>{t.footer.privacyPolicy}</span>
+            </button>
+            <span className="text-slate-300">•</span>
+            <button
+              onClick={() => setIsCookieSettingsOpen(true)}
+              className="text-slate-700 hover:text-emerald-700 font-medium transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <Cookie className="w-4 h-4 text-slate-400" />
+              <span>{t.footer.cookieSettings}</span>
+            </button>
+            <span className="text-slate-300">•</span>
+            <span className="text-slate-500">{t.rodo.adminNotice}</span>
+          </div>
+
+          <div className="text-[11px] text-slate-400">
+            Certyfikaty ITB • Zakład Przetwórstwa Tworzyw Sztucznych Winduga
+          </div>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-4 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
             &copy; {new Date().getFullYear()} <strong>Oplast-Recykling Sp. z o.o.</strong> {t.footer.allRights}. Marka <strong>Oplast Garden</strong>.
           </div>
@@ -196,6 +236,7 @@ export const Footer: React.FC = () => {
               onClick={scrollToTop}
               className="p-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-700 border border-slate-300 transition-colors cursor-pointer shadow-xs"
               title="Top"
+              aria-label="Przewiń do góry"
             >
               <ArrowUp className="w-4 h-4" />
             </button>

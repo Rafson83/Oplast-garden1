@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Calculator, 
   Layers, 
@@ -11,7 +11,10 @@ import {
   MapPin,
   LogIn,
   LogOut,
-  UserCheck
+  UserCheck,
+  Download,
+  Shield,
+  Cookie
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -27,11 +30,25 @@ export const Navbar: React.FC = () => {
     setIsSampleBoxOpen,
     partnerUser,
     logoutPartner,
-    setIsLoginModalOpen
+    setIsLoginModalOpen,
+    setIsPrivacyPolicyOpen,
+    setIsCookieSettingsOpen
   } = useShop();
 
   const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
@@ -238,10 +255,11 @@ export const Navbar: React.FC = () => {
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-700 hover:text-slate-950 hover:bg-slate-100 transition-colors"
-              aria-label="Otwórz menu"
+              className="md:hidden p-2 rounded-xl text-slate-700 hover:text-slate-950 hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label={mobileMenuOpen ? "Zamknij menu" : "Otwórz menu"}
+              aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-6 h-6 text-emerald-700" /> : <Menu className="w-6 h-6" />}
             </button>
 
           </div>
@@ -249,9 +267,18 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer Menu - Clean, Concise & Direct */}
+      {/* Mobile Drawer Overlay Backdrop */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-4 animate-in slide-in-from-top duration-200 shadow-xl">
+        <div 
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-30 md:hidden animate-in fade-in duration-200"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Drawer Menu - Clean, Modern, Scrollable */}
+      {mobileMenuOpen && (
+        <div className="relative z-40 md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-xl px-4 pt-3 pb-8 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-2xl max-h-[calc(100vh-4rem)] overflow-y-auto">
           
           {/* Controls Bar: Language + Mode Switcher */}
           <div className="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
@@ -264,7 +291,7 @@ export const Navbar: React.FC = () => {
               <div className="grid grid-cols-2 gap-1.5">
                 <button
                   onClick={() => setIsB2BMode(false)}
-                  className={`py-2 text-xs font-bold rounded-xl border ${
+                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                     !isB2BMode ? 'bg-white border-emerald-600 text-emerald-900 shadow-xs' : 'bg-slate-100 text-slate-600 border-transparent'
                   }`}
                 >
@@ -272,7 +299,7 @@ export const Navbar: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setIsB2BMode(true)}
-                  className={`py-2 text-xs font-bold rounded-xl border ${
+                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                     isB2BMode ? 'bg-emerald-700 border-emerald-700 text-white shadow-xs' : 'bg-slate-100 text-slate-600 border-transparent'
                   }`}
                 >
@@ -290,9 +317,10 @@ export const Navbar: React.FC = () => {
                 setMobileMenuOpen(false);
                 if (currentView !== 'home') setCurrentView('home');
               }}
-              className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
+              className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-between"
             >
-              {t.nav.products}
+              <span>{t.nav.products}</span>
+              <span className="text-xs text-slate-400 font-normal">H30 • H40 • H50</span>
             </a>
 
             <button
@@ -300,10 +328,13 @@ export const Navbar: React.FC = () => {
                 setMobileMenuOpen(false);
                 setCurrentView('partners');
               }}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-800 font-bold hover:bg-emerald-100 transition-colors text-left cursor-pointer"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-900 font-bold hover:bg-emerald-100 transition-colors text-left cursor-pointer border border-emerald-200/60"
             >
-              <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>{t.partners.navLink}</span>
+              <div className="flex items-center gap-2.5">
+                <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{t.partners.navLink}</span>
+              </div>
+              <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">Mapa</span>
             </button>
 
             <button
@@ -313,7 +344,7 @@ export const Navbar: React.FC = () => {
               }}
               className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold transition-colors text-left cursor-pointer"
             >
-              <Calculator className="w-4 h-4 text-slate-500 shrink-0" />
+              <Calculator className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{t.nav.m2Calculator}</span>
             </button>
 
@@ -325,8 +356,11 @@ export const Navbar: React.FC = () => {
               }}
               className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-between"
             >
-              <span>{t.nav.forB2B}</span>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">B2B</span>
+              <div className="flex items-center gap-2.5">
+                <Building2 className="w-4 h-4 text-slate-500" />
+                <span>{t.nav.forB2B}</span>
+              </div>
+              <span className="text-[10px] bg-slate-200 text-slate-800 px-2 py-0.5 rounded-full font-bold">Inwestycje</span>
             </a>
 
             <a 
@@ -350,6 +384,28 @@ export const Navbar: React.FC = () => {
             >
               {t.nav.contact}
             </a>
+          </div>
+
+          {/* PWA Mobile Install CTA in Drawer */}
+          <div className="p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl border border-emerald-200/80 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                <Download className="w-4 h-4" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-bold text-slate-900 leading-tight">Aplikacja Oplast</p>
+                <p className="text-[10px] text-emerald-700 font-medium">Kalkulator m² offline</p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                window.dispatchEvent(new Event('trigger-pwa-install'));
+              }}
+              className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+            >
+              Zainstaluj
+            </button>
           </div>
 
           {/* Partner Zone / CRM CTA in Mobile Drawer */}
@@ -398,6 +454,30 @@ export const Navbar: React.FC = () => {
             >
               <Box className="w-4 h-4 text-emerald-600" />
               <span>{t.nav.orderSampleBox}</span>
+            </button>
+          </div>
+
+          {/* Drawer Privacy & RODO Links */}
+          <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsPrivacyPolicyOpen(true);
+              }}
+              className="hover:text-emerald-700 transition-colors flex items-center gap-1 cursor-pointer"
+            >
+              <Shield className="w-3 h-3 text-emerald-600" />
+              <span>Polityka prywatności (RODO)</span>
+            </button>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsCookieSettingsOpen(true);
+              }}
+              className="hover:text-emerald-700 transition-colors flex items-center gap-1 cursor-pointer"
+            >
+              <Cookie className="w-3 h-3 text-slate-400" />
+              <span>Cookies</span>
             </button>
           </div>
 

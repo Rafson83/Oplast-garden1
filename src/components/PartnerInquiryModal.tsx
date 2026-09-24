@@ -19,7 +19,8 @@ export const PartnerInquiryModal: React.FC = () => {
     setIsPartnerInquiryOpen, 
     selectedPartner, 
     addPartnerInquiry,
-    partnerProductFilter 
+    partnerProductFilter,
+    setIsPrivacyPolicyOpen
   } = useShop();
   const { t } = useLanguage();
 
@@ -29,6 +30,7 @@ export const PartnerInquiryModal: React.FC = () => {
   const [requestedProduct, setRequestedProduct] = useState('');
   const [estimatedQuantity, setEstimatedQuantity] = useState('');
   const [message, setMessage] = useState('');
+  const [rodoConsent, setRodoConsent] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Set default product when opened
@@ -54,6 +56,10 @@ export const PartnerInquiryModal: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName || !phone || !email) return;
+    if (!rodoConsent) {
+      alert('Proszę zaakceptować zgodę RODO przed wysłaniem zapytania.');
+      return;
+    }
 
     addPartnerInquiry({
       partnerId: selectedPartner.id,
@@ -258,6 +264,30 @@ export const PartnerInquiryModal: React.FC = () => {
                 />
               </div>
 
+              {/* RODO Consent Checkbox */}
+              <div className="pt-2 border-t border-slate-200">
+                <label className="flex items-start gap-2.5 text-[11px] text-slate-600 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={rodoConsent}
+                    onChange={e => setRodoConsent(e.target.checked)}
+                    className="mt-0.5 rounded-sm border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer shrink-0"
+                  />
+                  <span>
+                    {t.rodo.consentCheckbox}{' '}
+                    <button
+                      type="button"
+                      onClick={() => setIsPrivacyPolicyOpen(true)}
+                      className="text-emerald-700 font-bold hover:underline cursor-pointer inline-flex items-center gap-0.5"
+                    >
+                      {t.rodo.policyLink}
+                    </button>
+                    .
+                  </span>
+                </label>
+              </div>
+
               {/* Action Buttons */}
               <div className="pt-2 flex items-center justify-between gap-3">
                 <a
@@ -278,7 +308,12 @@ export const PartnerInquiryModal: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl text-xs shadow-md transition-all cursor-pointer"
+                    disabled={!rodoConsent}
+                    className={`flex items-center gap-2 font-bold py-2.5 px-5 rounded-xl text-xs shadow-md transition-all ${
+                      rodoConsent
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer'
+                        : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    }`}
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>{t.partners.inquirySend}</span>

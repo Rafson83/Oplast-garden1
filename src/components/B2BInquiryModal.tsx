@@ -8,7 +8,8 @@ export const B2BInquiryModal: React.FC = () => {
     isInquiryOpen, 
     setIsInquiryOpen, 
     inquiryPreselectedProduct,
-    addB2BInquiry 
+    addB2BInquiry,
+    setIsPrivacyPolicyOpen
   } = useShop();
   const { t } = useLanguage();
 
@@ -25,6 +26,7 @@ export const B2BInquiryModal: React.FC = () => {
   const [requiresTransport] = useState(true);
   const [transportType, setTransportType] = useState('ftl_24t');
   const [notes, setNotes] = useState('');
+  const [rodoConsent, setRodoConsent] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [generatedId, setGeneratedId] = useState('');
 
@@ -40,6 +42,10 @@ export const B2BInquiryModal: React.FC = () => {
     e.preventDefault();
     if (!companyName || !phone || !email || !city) {
       alert('Proszę uzupełnić dane kontaktowe firmy.');
+      return;
+    }
+    if (!rodoConsent) {
+      alert('Proszę zaakceptować zgodę RODO, aby przesłać zapytanie.');
       return;
     }
 
@@ -313,6 +319,30 @@ export const B2BInquiryModal: React.FC = () => {
               />
             </div>
 
+            {/* RODO Consent Checkbox */}
+            <div className="pt-2 border-t border-slate-200">
+              <label className="flex items-start gap-2.5 text-[11px] text-slate-600 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  required
+                  checked={rodoConsent}
+                  onChange={e => setRodoConsent(e.target.checked)}
+                  className="mt-0.5 rounded-sm border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer shrink-0"
+                />
+                <span>
+                  {t.rodo.consentCheckbox}{' '}
+                  <button
+                    type="button"
+                    onClick={() => setIsPrivacyPolicyOpen(true)}
+                    className="text-emerald-700 font-bold hover:underline cursor-pointer inline-flex items-center gap-0.5"
+                  >
+                    {t.rodo.policyLink}
+                  </button>
+                  .
+                </span>
+              </label>
+            </div>
+
             {/* Footer Buttons */}
             <div className="pt-3 border-t border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-2 text-[11px] text-slate-500">
@@ -324,13 +354,18 @@ export const B2BInquiryModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-4 py-2 text-slate-600 hover:text-slate-900 font-semibold"
+                  className="px-4 py-2 text-slate-600 hover:text-slate-900 font-semibold cursor-pointer"
                 >
                   {t.sampleBox.cancel}
                 </button>
                 <button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors cursor-pointer text-xs flex items-center gap-2"
+                  disabled={!rodoConsent}
+                  className={`font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors text-xs flex items-center gap-2 ${
+                    rodoConsent
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer'
+                      : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                  }`}
                 >
                   <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
                   <span>{t.inquiry.submit}</span>

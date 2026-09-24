@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="gridGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#064e3b" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+
+  <!-- Inner border ring -->
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="none" stroke="#6ee7b7" stroke-width="4" stroke-opacity="0.3" />
+
+  <!-- Hexagonal Honeycomb Eco Grid Core -->
+  <g filter="url(#shadow)" transform="translate(256, 230)">
+    
+    <!-- Central Hexagon -->
+    <polygon points="0,-70 60,-35 60,35 0,70 -60,35 -60,-35" fill="url(#gridGrad)" stroke="#ecfdf5" stroke-width="6" />
+
+    <!-- Top Left Hexagon -->
+    <polygon points="-90,-155 -30,-120 -30,-50 -90,-15 -150,-50 -150,-120" fill="url(#gridGrad)" stroke="#ecfdf5" stroke-width="6" opacity="0.9" />
+
+    <!-- Top Right Hexagon -->
+    <polygon points="90,-155 150,-120 150,-50 90,-15 30,-50 30,-120" fill="url(#gridGrad)" stroke="#ecfdf5" stroke-width="6" opacity="0.9" />
+
+    <!-- Left Hexagon -->
+    <polygon points="-120,0 -60,35 -60,105 -120,140 -180,105 -180,35" fill="url(#gridGrad)" stroke="#ecfdf5" stroke-width="6" opacity="0.85" />
+
+    <!-- Right Hexagon -->
+    <polygon points="120,0 180,35 180,105 120,140 60,105 60,35" fill="url(#gridGrad)" stroke="#ecfdf5" stroke-width="6" opacity="0.85" />
+
+    <!-- Bottom Left Hexagon -->
+    <polygon points="-60,105 0,140 0,210 -60,245 -120,210 -120,140" fill="url(#gridGrad)" stroke="#ecfdf5" stroke-width="6" opacity="0.8" />
+
+    <!-- Bottom Right Hexagon -->
+    <polygon points="60,105 120,140 120,210 60,245 0,210 0,140" fill="url(#gridGrad)" stroke="#ecfdf5" stroke-width="6" opacity="0.8" />
+
+    <!-- Central Leaf Accent (Eco Symbol) -->
+    <path d="M-15,-20 C-15,-50 15,-50 25,-10 C25,25 -5,45 -15,45 C-20,45 -25,35 -15,-20 Z" fill="#ffffff" />
+    <path d="M-10,35 C0,10 15,-10 20,-30" stroke="#059669" stroke-width="3" stroke-linecap="round" fill="none" />
+  </g>
+
+  <!-- Typography Label: OPLAST -->
+  <text x="256" y="440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="4">
+    OPLAST
+  </text>
+  <text x="256" y="475" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#a7f3d0" text-anchor="middle" letter-spacing="6">
+    GARDEN
+  </text>
+</svg>
