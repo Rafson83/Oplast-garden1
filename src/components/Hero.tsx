@@ -5,7 +5,8 @@ import {
   ArrowRight, 
   Sparkles, 
   CheckCircle2,
-  MapPin
+  MapPin,
+  Store
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -153,32 +154,33 @@ export const Hero: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                /* B2C Detal Card */
+                /* B2C Detal Card - No Imposed Retail Margins */
                 <div className="space-y-4">
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm space-y-1.5">
-                    <p className="font-bold text-emerald-800">
-                      {t.hero.b2cDescTitle}
+                    <p className="font-bold text-emerald-800 flex items-center gap-1.5">
+                      <Store className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{t.hero.b2cDescTitle}</span>
                     </p>
                     <p className="text-slate-600 text-xs leading-relaxed">
-                      {t.hero.b2cDescText}
+                      Ceny detaliczne ustalane są indywidualnie przez lokalnych partnerów — fabryka Oplast nie narzuca sztywnych marż dystrybutorom. Zakup na sztuki i m² z odbiorem osobistym od ręki bez kosztownej przesyłki paletowej.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                       <p className="text-[10px] text-slate-500 uppercase font-bold">H30 Garden</p>
-                      <p className="text-base font-extrabold text-emerald-700">9,10 zł</p>
-                      <p className="text-[10px] text-slate-500">brutto / {t.catalog.piece.toLowerCase()}</p>
+                      <p className="text-sm font-extrabold text-emerald-700 mt-0.5">160 t/m²</p>
+                      <p className="text-[10px] text-slate-500">Ścieżki & Ogród</p>
                     </div>
                     <div className="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-300 ring-1 ring-emerald-500/30">
                       <p className="text-[10px] text-emerald-800 uppercase font-bold">H40 Auto</p>
-                      <p className="text-base font-extrabold text-slate-900">10,95 zł</p>
-                      <p className="text-[10px] text-slate-600">brutto / {t.catalog.piece.toLowerCase()}</p>
+                      <p className="text-sm font-extrabold text-slate-900 mt-0.5">250 t/m²</p>
+                      <p className="text-[10px] text-slate-600">Podjazdy & Auta</p>
                     </div>
                     <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                       <p className="text-[10px] text-slate-500 uppercase font-bold">H50 Heavy</p>
-                      <p className="text-base font-extrabold text-emerald-700">14,51 zł</p>
-                      <p className="text-[10px] text-slate-500">brutto / {t.catalog.piece.toLowerCase()}</p>
+                      <p className="text-sm font-extrabold text-emerald-700 mt-0.5">450 t/m²</p>
+                      <p className="text-[10px] text-slate-500">TIR & Wozy Straż.</p>
                     </div>
                   </div>
 

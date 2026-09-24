@@ -8,7 +8,8 @@ import {
   FileText, 
   Building2, 
   MapPin,
-  Send
+  Send,
+  Store
 } from 'lucide-react';
 import { Product, ProductColor, UnitType } from '../types/shop';
 import { useShop } from '../context/ShopContext';
@@ -36,19 +37,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [showSpecs, setShowSpecs] = useState<boolean>(false);
 
-  // Price calculations
+  // Price calculations (B2B Wholesale)
   let basePriceNetto = product.priceNettoUnit;
-  let basePriceBrutto = product.priceBruttoUnit;
   let unitLabel = t.catalog.piece;
 
-  if (unitType === 'pallet' && product.priceNettoPallet && product.priceBruttoPallet) {
+  if (unitType === 'pallet' && product.priceNettoPallet) {
     basePriceNetto = product.priceNettoPallet;
-    basePriceBrutto = product.priceBruttoPallet;
     unitLabel = `${t.catalog.pallet} (${product.piecesPerPallet} ${t.catalog.piece.toLowerCase()})`;
   } else if (unitType === 'm2') {
     const mult = product.coveragePerM2 || 4.4;
     basePriceNetto = product.priceNettoUnit * mult;
-    basePriceBrutto = product.priceBruttoUnit * mult;
     unitLabel = 'm²';
   }
 
@@ -63,7 +61,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   }
 
   const effectivePriceNetto = basePriceNetto * (1 - activeDiscountPct / 100);
-  const effectivePriceBrutto = basePriceBrutto * (1 - activeDiscountPct / 100);
 
   const handleOrderInquiry = () => {
     setInquiryPreselectedProduct(`${localized.name} (${selectedColor.name}) - ${quantity} ${unitLabel}`);
@@ -223,42 +220,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             )}
           </div>
 
-          {/* Price Display */}
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-            <div className="flex items-baseline justify-between">
-              <div>
-                <span className="text-2xl font-extrabold text-slate-900 font-heading">
-                  {isB2BMode 
-                    ? `${effectivePriceNetto.toFixed(2)} zł` 
-                    : `${effectivePriceBrutto.toFixed(2)} zł`
-                  }
-                </span>
-                <span className="text-xs text-slate-500 font-semibold ml-1.5">
-                  {isB2BMode ? 'netto' : 'brutto'} / {unitLabel}
-                </span>
+          {/* Price Display: Hidden for Retail (No Imposed Margins), Shown in B2B Mode */}
+          {isB2BMode ? (
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+              <div className="flex items-baseline justify-between">
+                <div>
+                  <span className="text-2xl font-extrabold text-slate-900 font-heading">
+                    {effectivePriceNetto.toFixed(2)} zł
+                  </span>
+                  <span className="text-xs text-slate-500 font-semibold ml-1.5">
+                    netto / {unitLabel}
+                  </span>
+                </div>
+
+                {activeDiscountPct > 0 && (
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center gap-0.5">
+                    <Percent className="w-3 h-3" /> -{activeDiscountPct}%
+                  </span>
+                )}
               </div>
 
-              {activeDiscountPct > 0 && (
-                <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center gap-0.5">
-                  <Percent className="w-3 h-3" /> -{activeDiscountPct}%
-                </span>
-              )}
+              <div className="text-[11px] text-slate-500 mt-1 flex justify-between">
+                <span>Cena hurtowa dla firm i składów</span>
+                {product.piecesPerPallet && unitType === 'pallet' && (
+                  <span className="text-emerald-700 font-medium">
+                    ~{(effectivePriceNetto / product.piecesPerPallet).toFixed(2)} zł netto/{t.catalog.piece.toLowerCase()}
+                  </span>
+                )}
+              </div>
             </div>
-
-            <div className="text-[11px] text-slate-500 mt-1 flex justify-between">
-              <span>
-                {isB2BMode 
-                  ? `Brutto: ${effectivePriceBrutto.toFixed(2)} zł`
-                  : `Netto: ${effectivePriceNetto.toFixed(2)} zł`
-                }
-              </span>
-              {product.piecesPerPallet && unitType === 'pallet' && (
-                <span className="text-emerald-700 font-medium">
-                  ~{(effectivePriceNetto / product.piecesPerPallet).toFixed(2)} zł netto/{t.catalog.piece.toLowerCase()}
+          ) : (
+            <div className="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-200/80 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                  <Store className="w-3.5 h-3.5 text-emerald-700" />
+                  Cena u lokalnego partnera
                 </span>
-              )}
+                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-white text-emerald-800 border border-emerald-200">
+                  Odbiór od ręki
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600 leading-tight">
+                Sprzedaż detaliczna w autoryzowanych składach. Fabryka Oplast nie narzuca sztywnych marż partnerom handlowym.
+              </p>
             </div>
-          </div>
+          )}
 
           {/* B2B Tier Discounts Accordion / Hints */}
           {isB2BMode && product.b2bDiscountTiers.length > 0 && (

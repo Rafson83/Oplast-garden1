@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { 
   X, 
   Calculator, 
-  ShoppingBag, 
-  Building2,
+  Store,
+  Send,
   MapPin 
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
@@ -17,8 +17,6 @@ export const CalculatorModal: React.FC = () => {
     isCalculatorOpen, 
     setIsCalculatorOpen, 
     isB2BMode, 
-    addToCart,
-    setIsCartOpen,
     setIsInquiryOpen,
     setInquiryPreselectedProduct,
     setCurrentView,
@@ -145,34 +143,6 @@ export const CalculatorModal: React.FC = () => {
   }, [totalM2, recommendedProduct, perimeterM, includeBorders, includeAnchors, includeGeotextile, fillerType]);
 
   if (!isCalculatorOpen) return null;
-
-  const handleAddAllToCart = () => {
-    addToCart(recommendedProduct, recommendedProduct.colors[0], 'piece', calculations.piecesWithReserve);
-
-    if (includeBorders && calculations.bordersNeeded > 0) {
-      const borderProd = PRODUCTS.find(p => p.id === 'obrzeze-eko-45');
-      if (borderProd) {
-        addToCart(borderProd, borderProd.colors[0], 'piece', calculations.bordersNeeded);
-      }
-    }
-
-    if (includeAnchors && calculations.anchorPacks > 0) {
-      const anchorProd = PRODUCTS.find(p => p.id === 'kotwy-oplast-18');
-      if (anchorProd) {
-        addToCart(anchorProd, anchorProd.colors[0], 'piece', calculations.anchorPacks);
-      }
-    }
-
-    if (includeGeotextile && calculations.geotextileRolls > 0) {
-      const geoProd = PRODUCTS.find(p => p.id === 'geowłóknina-150');
-      if (geoProd) {
-        addToCart(geoProd, geoProd.colors[0], 'piece', calculations.geotextileRolls);
-      }
-    }
-
-    setIsCalculatorOpen(false);
-    setIsCartOpen(true);
-  };
 
   const handleOpenB2BQuote = () => {
     setInquiryPreselectedProduct(`Zestaw kalkulatora: ${localizedRecProduct.name} - ${totalM2} m² (${calculations.piecesWithReserve} szt.)`);
@@ -503,24 +473,35 @@ export const CalculatorModal: React.FC = () => {
                 )}
               </div>
 
-              {/* Price Estimate */}
-              <div className="p-4 bg-white rounded-xl border border-emerald-300/90 shadow-xs">
-                <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-slate-600 font-medium">{t.calculator.totalCostEst}:</span>
-                  <span className="text-xl font-extrabold text-emerald-700 font-heading">
-                    {isB2BMode 
-                      ? `${calculations.totalEstimateNetto.toFixed(2)} zł netto`
-                      : `${calculations.totalEstimateBrutto.toFixed(2)} zł brutto`
-                    }
-                  </span>
+              {/* Price Estimate: Shown Only in B2B Mode; Hidden in Retail (No Imposed Margins) */}
+              {isB2BMode ? (
+                <div className="p-4 bg-white rounded-xl border border-emerald-300/90 shadow-xs">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-xs text-slate-600 font-medium">{t.calculator.totalCostEst} (Hurt):</span>
+                    <span className="text-xl font-extrabold text-emerald-700 font-heading">
+                      {calculations.totalEstimateNetto.toFixed(2)} zł netto
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    {t.calculator.vatNoticeB2B}
+                  </p>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">
-                  {isB2BMode 
-                    ? t.calculator.vatNoticeB2B 
-                    : t.calculator.vatNoticeB2C
-                  }
-                </p>
-              </div>
+              ) : (
+                <div className="p-4 bg-emerald-50/70 rounded-xl border border-emerald-200/80 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                      <Store className="w-4 h-4 text-emerald-700" />
+                      Wycena zestawu u lokalnego partnera
+                    </span>
+                    <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-white text-emerald-800 border border-emerald-200">
+                      Zakup w punkcie
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Ceny detaliczne ustalane są indywidualnie przez lokalnych partnerów — fabryka Oplast nie narzuca sztywnych marż dystrybutorom. Kup zestaw w najbliższym składzie z odbiorem od ręki.
+                  </p>
+                </div>
+              )}
 
             </div>
 
@@ -534,36 +515,28 @@ export const CalculatorModal: React.FC = () => {
                       setIsCalculatorOpen(false);
                       setCurrentView('partners');
                     }}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md shadow-emerald-700/20 hover:scale-[1.01] transition-all cursor-pointer text-sm"
                   >
                     <MapPin className="w-4 h-4 text-emerald-200" />
-                    <span>Znajdź partnera z tym asortymentem w okolicy</span>
-                  </button>
-
-                  <button
-                    onClick={handleAddAllToCart}
-                    className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold py-2.5 px-4 rounded-xl border border-slate-300 transition-colors cursor-pointer text-xs shadow-xs"
-                  >
-                    <ShoppingBag className="w-4 h-4 text-slate-500" />
-                    <span>{t.calculator.addAllToCart} (wysyłka paletowa z fabryki)</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={handleAddAllToCart}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
-                  >
-                    <ShoppingBag className="w-4 h-4" />
-                    <span>{t.calculator.addAllToCart}</span>
+                    <span>Znajdź partnera i sprawdź cenę w Twojej okolicy</span>
                   </button>
 
                   <button
                     onClick={handleOpenB2BQuote}
                     className="w-full flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold py-2.5 px-4 rounded-xl border border-slate-300 transition-colors cursor-pointer text-xs shadow-xs"
                   >
-                    <Building2 className="w-4 h-4 text-emerald-700" />
-                    <span>{t.calculator.requestB2BQuote}</span>
+                    <Send className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>Dostawa paletowa z fabryki → Poproś o wycenę</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleOpenB2BQuote}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all cursor-pointer text-sm"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>Wyślij zapytanie o wycenę hurtową B2B (zestaw)</span>
                   </button>
                 </>
               )}

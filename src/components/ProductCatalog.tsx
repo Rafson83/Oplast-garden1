@@ -5,7 +5,9 @@ import {
   Box, 
   Search, 
   Building2, 
-  Calculator
+  Calculator,
+  Store,
+  MapPin
 } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 import { ProductCategory } from '../types/shop';
@@ -14,7 +16,7 @@ import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export const ProductCatalog: React.FC = () => {
-  const { isB2BMode, setIsCalculatorOpen } = useShop();
+  const { isB2BMode, setIsCalculatorOpen, setCurrentView } = useShop();
   const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<ProductCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -125,8 +127,8 @@ export const ProductCatalog: React.FC = () => {
 
         </div>
 
-        {/* B2B In-Catalog Advisory Box - Light & High Contrast */}
-        {isB2BMode && (
+        {/* B2B Wholesale Banner */}
+        {isB2BMode ? (
           <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-100/60 text-slate-900 p-4 rounded-2xl border border-emerald-300 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-emerald-600 text-white shadow-xs">
@@ -142,6 +144,28 @@ export const ProductCatalog: React.FC = () => {
             <span className="text-xs font-bold text-emerald-900 bg-white px-3.5 py-1.5 rounded-lg border border-emerald-300 shadow-xs">
               {t.catalog.b2bBannerBadge}
             </span>
+          </div>
+        ) : (
+          /* Retail Partner Network Banner - Explains No Imposed Margins */
+          <div className="bg-gradient-to-r from-emerald-50/90 via-slate-50 to-emerald-50/80 text-slate-900 p-4 rounded-2xl border border-emerald-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-emerald-600 text-white shadow-xs">
+                <Store className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900">Sprzedaż detaliczna w autoryzowanych punktach partnerskich</p>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Ceny detaliczne ustalane są indywidualnie przez lokalne składy — fabryka Oplast nie narzuca sztywnych marż. Kupuj na sztuki i m² z odbiorem osobistym.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setCurrentView('partners')}
+              className="text-xs font-bold text-emerald-900 bg-white hover:bg-emerald-100 px-4 py-2.5 rounded-xl border border-emerald-300 shadow-xs transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            >
+              <MapPin className="w-4 h-4 text-emerald-700" />
+              <span>Gdzie kupić w Twojej okolicy</span>
+            </button>
           </div>
         )}
 
