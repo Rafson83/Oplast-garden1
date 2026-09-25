@@ -23,7 +23,7 @@ export const AppContent: React.FC = () => {
   const { currentView } = useShop();
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-emerald-600 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-emerald-600 selection:text-white w-full max-w-full overflow-x-hidden">
       {/* Navigation Header */}
       <Navbar />
 

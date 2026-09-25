@@ -98,21 +98,21 @@ export const Navbar: React.FC = () => {
               e.preventDefault();
               setCurrentView('home');
             }}
-            className="flex items-center gap-2.5 group shrink-0 cursor-pointer"
+            className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer max-w-[200px] sm:max-w-none"
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
-              <Layers className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform shrink-0">
+              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-1">
-                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 font-heading">
+                <span className="font-extrabold text-base sm:text-xl tracking-tight text-slate-900 font-heading">
                   OPLAST
                 </span>
-                <span className="font-bold text-lg sm:text-xl text-emerald-600 font-heading">
+                <span className="font-bold text-base sm:text-xl text-emerald-600 font-heading">
                   GARDEN
                 </span>
               </div>
-              <p className="text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+              <p className="hidden sm:block text-[9px] font-semibold tracking-wider uppercase text-slate-400 truncate">
                 Fabryka Kratek i Obrzeży
               </p>
             </div>
@@ -182,16 +182,16 @@ export const Navbar: React.FC = () => {
             </a>
           </nav>
 
-          {/* Right Action Area */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Right Action Area (Clean & Responsive) */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             
-            {/* Language Switcher */}
-            <div className="hidden sm:block">
+            {/* Language Switcher (Desktop only) */}
+            <div className="hidden lg:block">
               <LanguageSwitcher />
             </div>
 
-            {/* Price Mode Toggle (B2C / B2B) */}
-            <div className="bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 flex items-center shadow-inner">
+            {/* Price Mode Toggle (B2C / B2B) - Desktop and tablet only; on mobile it's in the hamburger menu */}
+            <div className="hidden sm:flex bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 items-center shadow-inner">
               <button
                 onClick={() => setIsB2BMode(false)}
                 className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
@@ -215,13 +215,13 @@ export const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Partner Login / CRM Button (Replaces Cart) */}
+            {/* Partner Login / CRM Button */}
             {partnerUser ? (
-              /* User Logged In: CRM Badge + Actions */
-              <div className="flex items-center gap-1.5">
+              /* User Logged In: CRM Badge */
+              <div className="flex items-center gap-1">
                 <button
                   onClick={() => setCurrentView('admin')}
-                  className={`flex items-center gap-1.5 py-1.5 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
+                  className={`flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
                     currentView === 'admin'
                       ? 'bg-slate-900 text-white ring-2 ring-emerald-500/50'
                       : 'bg-emerald-700 hover:bg-emerald-800 text-white'
@@ -229,43 +229,40 @@ export const Navbar: React.FC = () => {
                   title="Otwórz panel handlowy i CRM"
                 >
                   <UserCheck className="w-3.5 h-3.5" />
-                  <span className="hidden lg:inline">
+                  <span className="hidden sm:inline">
                     {partnerUser.role === 'admin' 
-                      ? 'Panel CRM (Admin)' 
+                      ? 'CRM Admin' 
                       : partnerUser.role === 'sales_rep' 
-                      ? `Strefa Handlowca (${partnerUser.name.split(' ')[0]})` 
-                      : 'Panel Partnera'}
+                      ? `Handlowiec (${partnerUser.name.split(' ')[0]})` 
+                      : 'Partner'}
                   </span>
-                  <span className="lg:hidden">
-                    {partnerUser.role === 'sales_rep' ? 'Handlowiec' : 'CRM'}
-                  </span>
+                  <span className="sm:hidden">CRM</span>
                 </button>
 
                 <button
                   onClick={logoutPartner}
-                  className="p-1.5 sm:p-2 rounded-xl text-slate-500 hover:text-red-700 hover:bg-red-50 border border-slate-200 transition-colors cursor-pointer"
+                  className="hidden sm:block p-1.5 rounded-xl text-slate-500 hover:text-red-700 hover:bg-red-50 border border-slate-200 transition-colors cursor-pointer"
                   title="Wyloguj się"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
-              /* User Logged Out: Partner / Sales Rep Login Button */
+              /* User Logged Out: Partner / Sales Rep Login Button (Visible on sm+, in drawer for mobile) */
               <button
                 onClick={() => setIsLoginModalOpen(true)}
-                className="flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-xl bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-xl bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
                 title="Logowanie dla Handlowców, Adminów i Partnerów B2B"
               >
                 <LogIn className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="hidden sm:inline">Strefa Handlowca & B2B</span>
-                <span className="sm:hidden">Handlowiec</span>
+                <span>Strefa Handlowca</span>
               </button>
             )}
 
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-700 hover:text-slate-950 hover:bg-slate-100 transition-colors cursor-pointer"
+              className="md:hidden p-2 rounded-xl text-slate-800 hover:text-emerald-700 hover:bg-slate-100 transition-colors cursor-pointer"
               aria-label={mobileMenuOpen ? "Zamknij menu" : "Otwórz menu"}
               aria-expanded={mobileMenuOpen}
             >
@@ -277,18 +274,15 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer Overlay Backdrop */}
+      {/* Mobile Drawer (Strictly confined to viewport, preventing any horizontal scroll) */}
       {mobileMenuOpen && (
         <div 
-          onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-30 md:hidden animate-in fade-in duration-200"
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Mobile Drawer Menu - Clean, Modern, Scrollable */}
-      {mobileMenuOpen && (
-        <div className="relative z-40 md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-xl px-4 pt-3 pb-8 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-2xl max-h-[calc(100vh-4rem)] overflow-y-auto">
+          className="fixed inset-x-0 top-16 sm:top-18 bottom-0 z-50 md:hidden bg-slate-900/50 backdrop-blur-xs flex flex-col justify-start animate-in fade-in duration-150 overflow-hidden w-full max-w-full"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setMobileMenuOpen(false);
+          }}
+        >
+          <div className="bg-white/98 backdrop-blur-xl border-b border-slate-200 shadow-2xl px-4 pt-3 pb-8 space-y-4 max-h-full overflow-y-auto overflow-x-hidden w-full max-w-full animate-in slide-in-from-top-2 duration-200">
           
           {/* Controls Bar: Language + Mode Switcher */}
           <div className="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
@@ -496,6 +490,7 @@ export const Navbar: React.FC = () => {
             </button>
           </div>
 
+        </div>
         </div>
       )}
     </header>

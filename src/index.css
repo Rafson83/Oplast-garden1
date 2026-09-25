@@ -9,11 +9,22 @@
     --color-garden-accent: #22c55e;
   }
 
-  body {
+  html, body {
     font-family: var(--font-sans);
     background-color: #f8fafc;
     color: #0f172a;
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
   }
 
   h1, h2, h3, h4, h5, h6 {
