@@ -33,11 +33,11 @@ export const InstallationGuide: React.FC = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center">
-          <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 border border-slate-200 text-xs sm:text-sm font-bold">
+        <div className="flex justify-center w-full px-2">
+          <div className="bg-slate-100 p-1 rounded-2xl flex flex-wrap sm:flex-nowrap justify-center gap-1 border border-slate-200 text-xs sm:text-sm font-bold w-full max-w-lg">
             <button
               onClick={() => setActiveTab('cross_section')}
-              className={`px-4 sm:px-6 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex-1 min-w-[100px] px-2.5 sm:px-6 py-2 rounded-xl transition-all cursor-pointer text-center ${
                 activeTab === 'cross_section'
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -47,7 +47,7 @@ export const InstallationGuide: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('steps')}
-              className={`px-4 sm:px-6 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex-1 min-w-[100px] px-2.5 sm:px-6 py-2 rounded-xl transition-all cursor-pointer text-center ${
                 activeTab === 'steps'
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -57,7 +57,7 @@ export const InstallationGuide: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('mistakes')}
-              className={`px-4 sm:px-6 py-2 rounded-xl transition-all cursor-pointer ${
+              className={`flex-1 min-w-[100px] px-2.5 sm:px-6 py-2 rounded-xl transition-all cursor-pointer text-center ${
                 activeTab === 'mistakes'
                   ? 'bg-white text-slate-900 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'

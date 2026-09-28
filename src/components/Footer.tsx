@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, ArrowUp, MapPin, ShieldCheck, Cookie, Download } from 'lucide-react';
+import { Layers, ArrowUp, MapPin, ShieldCheck, Cookie, Download, Briefcase, LogIn, LogOut, UserCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -10,7 +10,10 @@ export const Footer: React.FC = () => {
     setIsB2BMode, 
     setCurrentView,
     setIsPrivacyPolicyOpen,
-    setIsCookieSettingsOpen
+    setIsCookieSettingsOpen,
+    partnerUser,
+    logoutPartner,
+    setIsLoginModalOpen
   } = useShop();
   const { t } = useLanguage();
 
@@ -186,6 +189,69 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
+        </div>
+
+        {/* Sales Rep & Partner B2B Zone */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col md:flex-row items-center justify-between gap-5">
+          <div className="flex items-center gap-4 text-left w-full md:w-auto">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center shrink-0 shadow-md">
+              <Briefcase className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="font-extrabold text-sm sm:text-base text-slate-900 font-heading">
+                  Strefa Przedstawiciela Handlowego & Partnera B2B
+                </h4>
+                {partnerUser && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    ZALOGOWANO
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 mt-1 max-w-xl">
+                {partnerUser ? (
+                  <>
+                    Zalogowano jako: <strong className="text-slate-900">{partnerUser.name}</strong> ({partnerUser.role === 'admin' ? 'Dyrektor Handlowy / Admin' : partnerUser.role === 'sales_rep' ? 'Przedstawiciel Handlowy' : 'Partner B2B'}). Dostęp do bazy klientów, historii kontaktów i ofert fabrycznych.
+                  </>
+                ) : (
+                  'Dedykowany panel dla Przedstawicieli Handlowych Oplast Garden, Dyrekcji Sprzedaży oraz Dystrybutorów. CRM, historia relacji, generator wycen fabrycznych.'
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 w-full md:w-auto shrink-0 justify-end">
+            {partnerUser ? (
+              <>
+                <button
+                  onClick={() => {
+                    setCurrentView('admin');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+                >
+                  <UserCheck className="w-4 h-4" />
+                  <span>Otwórz Panel CRM / Ofert</span>
+                </button>
+                <button
+                  onClick={logoutPartner}
+                  className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:text-red-700 hover:bg-red-50 text-xs font-bold transition-colors cursor-pointer"
+                  title="Wyloguj się"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden sm:inline">Wyloguj</span>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+              >
+                <LogIn className="w-4 h-4 text-emerald-400" />
+                <span>Logowanie do Strefy Handlowca</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Legal & Compliance Strip */}

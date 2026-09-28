@@ -13,7 +13,8 @@ import {
   UserCheck,
   Download,
   Shield,
-  Cookie
+  Cookie,
+  Hammer
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -183,7 +184,7 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Right Action Area (Clean & Responsive) */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* Language Switcher (Desktop only) */}
             <div className="hidden lg:block">
@@ -215,50 +216,6 @@ export const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Partner Login / CRM Button */}
-            {partnerUser ? (
-              /* User Logged In: CRM Badge */
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setCurrentView('admin')}
-                  className={`flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
-                    currentView === 'admin'
-                      ? 'bg-slate-900 text-white ring-2 ring-emerald-500/50'
-                      : 'bg-emerald-700 hover:bg-emerald-800 text-white'
-                  }`}
-                  title="Otwórz panel handlowy i CRM"
-                >
-                  <UserCheck className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">
-                    {partnerUser.role === 'admin' 
-                      ? 'CRM Admin' 
-                      : partnerUser.role === 'sales_rep' 
-                      ? `Handlowiec (${partnerUser.name.split(' ')[0]})` 
-                      : 'Partner'}
-                  </span>
-                  <span className="sm:hidden">CRM</span>
-                </button>
-
-                <button
-                  onClick={logoutPartner}
-                  className="hidden sm:block p-1.5 rounded-xl text-slate-500 hover:text-red-700 hover:bg-red-50 border border-slate-200 transition-colors cursor-pointer"
-                  title="Wyloguj się"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ) : (
-              /* User Logged Out: Partner / Sales Rep Login Button (Visible on sm+, in drawer for mobile) */
-              <button
-                onClick={() => setIsLoginModalOpen(true)}
-                className="hidden sm:flex items-center gap-1.5 py-1.5 sm:py-2 px-3 sm:px-3.5 rounded-xl bg-slate-900 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-                title="Logowanie dla Handlowców, Adminów i Partnerów B2B"
-              >
-                <LogIn className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Strefa Handlowca</span>
-              </button>
-            )}
-
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -274,224 +231,283 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer (Strictly confined to viewport, preventing any horizontal scroll) */}
+      {/* Mobile Drawer Backdrop */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-x-0 top-16 sm:top-18 bottom-0 z-50 md:hidden bg-slate-900/50 backdrop-blur-xs flex flex-col justify-start animate-in fade-in duration-150 overflow-hidden w-full max-w-full"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setMobileMenuOpen(false);
-          }}
+          className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs md:hidden animate-in fade-in duration-200"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Drawer (Sliding in from LEFT, Clean, High-Contrast, Legible) */}
+      {mobileMenuOpen && (
+        <aside 
+          className="fixed inset-y-0 left-0 z-50 w-[310px] max-w-[85vw] bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto overflow-x-hidden md:hidden animate-in slide-in-from-left duration-300 border-r border-slate-200"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu nawigacji"
         >
-          <div className="bg-white/98 backdrop-blur-xl border-b border-slate-200 shadow-2xl px-4 pt-3 pb-8 space-y-4 max-h-full overflow-y-auto overflow-x-hidden w-full max-w-full animate-in slide-in-from-top-2 duration-200">
-          
-          {/* Controls Bar: Language + Mode Switcher */}
-          <div className="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-700">Język / Language:</span>
-              <LanguageSwitcher compact />
-            </div>
-
-            <div className="pt-2 border-t border-slate-200/80">
-              <div className="grid grid-cols-2 gap-1.5">
-                <button
-                  onClick={() => setIsB2BMode(false)}
-                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
-                    !isB2BMode ? 'bg-white border-emerald-600 text-emerald-900 shadow-xs' : 'bg-slate-100 text-slate-600 border-transparent'
-                  }`}
-                >
-                  {t.nav.b2cMode}
-                </button>
-                <button
-                  onClick={() => setIsB2BMode(true)}
-                  className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
-                    isB2BMode ? 'bg-emerald-700 border-emerald-700 text-white shadow-xs' : 'bg-slate-100 text-slate-600 border-transparent'
-                  }`}
-                >
-                  {t.nav.b2bMode}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Simple Navigation List */}
-          <div className="flex flex-col space-y-1 text-sm font-semibold text-slate-800">
-            <a 
-              href="#produkty" 
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (currentView !== 'home') setCurrentView('home');
-              }}
-              className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-between"
-            >
-              <span>{t.nav.products}</span>
-              <span className="text-xs text-slate-400 font-normal">H30 • H40 • H50</span>
-            </a>
-
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setCurrentView('partners');
-              }}
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-900 font-bold hover:bg-emerald-100 transition-colors text-left cursor-pointer border border-emerald-200/60"
-            >
-              <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>{t.partners.navLink}</span>
-              </div>
-              <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">Mapa</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setIsCalculatorOpen(true);
-              }}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold transition-colors text-left cursor-pointer"
-            >
-              <Calculator className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>{t.nav.m2Calculator}</span>
-            </button>
-
-            <a 
-              href="#b2b" 
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (currentView !== 'home') setCurrentView('home');
-              }}
-              className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors flex items-center justify-between"
-            >
-              <div className="flex items-center gap-2.5">
-                <Building2 className="w-4 h-4 text-slate-500" />
-                <span>{t.nav.forB2B}</span>
-              </div>
-              <span className="text-[10px] bg-slate-200 text-slate-800 px-2 py-0.5 rounded-full font-bold">Inwestycje</span>
-            </a>
-
-            <a 
-              href="#montaz" 
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (currentView !== 'home') setCurrentView('home');
-              }}
-              className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
-            >
-              {t.nav.installGuideShort}
-            </a>
-
-            <a 
-              href="#kontakt" 
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (currentView !== 'home') setCurrentView('home');
-              }}
-              className="px-3 py-2.5 rounded-xl hover:bg-slate-100 transition-colors"
-            >
-              {t.nav.contact}
-            </a>
-          </div>
-
-          {/* PWA Mobile Install CTA in Drawer */}
-          <div className="p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl border border-emerald-200/80 flex items-center justify-between gap-3">
+          {/* Drawer Header */}
+          <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-                <Download className="w-4 h-4" />
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-sm shrink-0">
+                <Layers className="w-4 h-4" />
               </div>
-              <div className="text-left">
-                <p className="text-xs font-bold text-slate-900 leading-tight">Aplikacja Oplast</p>
-                <p className="text-[10px] text-emerald-700 font-medium">Kalkulator m² offline</p>
+              <div>
+                <span className="font-extrabold text-base tracking-tight text-slate-900 font-heading">
+                  OPLAST <span className="text-emerald-600">GARDEN</span>
+                </span>
+                <p className="text-[9px] font-semibold tracking-wider uppercase text-slate-400">
+                  Fabryka Winduga
+                </p>
               </div>
             </div>
+
             <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                window.dispatchEvent(new Event('trigger-pwa-install'));
-              }}
-              className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition-colors cursor-pointer"
+              aria-label="Zamknij menu"
             >
-              Zainstaluj
+              <X className="w-5 h-5 text-slate-700" />
             </button>
           </div>
 
-            {/* Partner Zone / Sales Rep CTA in Mobile Drawer */}
-            <div className="pt-2 border-t border-slate-200 space-y-2">
-              {partnerUser ? (
-                <div className="space-y-1.5">
+          {/* Drawer Body - Navigation & Controls */}
+          <div className="p-4 space-y-4 flex-1 overflow-y-auto">
+            
+            {/* Quick Controls: Language + Price Mode */}
+            <div className="space-y-2 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-700">Język / Language:</span>
+                <LanguageSwitcher compact />
+              </div>
+
+              <div className="pt-2 border-t border-slate-200/80">
+                <span className="block text-[11px] font-semibold text-slate-500 mb-1.5">Tryb wyświetlania cen:</span>
+                <div className="grid grid-cols-2 gap-1.5">
                   <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setCurrentView('admin');
-                    }}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-md cursor-pointer"
+                    onClick={() => setIsB2BMode(false)}
+                    className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
+                      !isB2BMode 
+                        ? 'bg-white border-emerald-600 text-emerald-900 shadow-xs' 
+                        : 'bg-slate-100 text-slate-600 border-transparent hover:bg-slate-200'
+                    }`}
                   >
-                    <UserCheck className="w-4 h-4 text-emerald-400" />
-                    <span>
-                      {partnerUser.role === 'sales_rep' 
-                        ? `Strefa Handlowca (${partnerUser.name})` 
-                        : `Panel CRM (${partnerUser.name})`}
-                    </span>
+                    {t.nav.b2cMode}
                   </button>
                   <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      logoutPartner();
-                    }}
-                    className="w-full text-center text-xs font-semibold text-red-600 py-1.5 hover:underline"
+                    onClick={() => setIsB2BMode(true)}
+                    className={`py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                      isB2BMode 
+                        ? 'bg-emerald-700 border-emerald-700 text-white shadow-xs' 
+                        : 'bg-slate-100 text-slate-600 border-transparent hover:bg-slate-200'
+                    }`}
                   >
-                    Wyloguj się
+                    <Building2 className="w-3.5 h-3.5" />
+                    <span>{t.nav.b2bMode}</span>
                   </button>
                 </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setIsLoginModalOpen(true);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-md cursor-pointer"
-                >
-                  <LogIn className="w-4 h-4 text-emerald-400" />
-                  <span>Strefa Handlowca & Partnera B2B</span>
-                </button>
-              )}
+              </div>
+            </div>
 
+            {/* Main Navigation Links */}
+            <nav className="flex flex-col space-y-1 text-sm font-semibold text-slate-800">
+              
+              <a 
+                href="#produkty" 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (currentView !== 'home') setCurrentView('home');
+                }}
+                className="px-3 py-2.5 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-3">
+                  <Layers className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+                  <span className="font-bold text-slate-900">{t.nav.products}</span>
+                </div>
+                <span className="text-[11px] text-slate-400 font-normal">H30 • H40 • H50</span>
+              </a>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setCurrentView('partners');
+                }}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-950 font-bold hover:bg-emerald-100 transition-colors text-left cursor-pointer border border-emerald-200/80"
+              >
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{t.partners.navLink}</span>
+                </div>
+                <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">Gdzie kupić</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsCalculatorOpen(true);
+                }}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 active:bg-slate-200 text-slate-800 font-bold transition-colors text-left cursor-pointer"
+              >
+                <Calculator className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{t.nav.m2Calculator}</span>
+              </button>
+
+              <a 
+                href="#b2b" 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (currentView !== 'home') setCurrentView('home');
+                }}
+                className="px-3 py-2.5 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors flex items-center justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <Building2 className="w-4 h-4 text-slate-500" />
+                  <span className="font-bold text-slate-900">{t.nav.forB2B}</span>
+                </div>
+                <span className="text-[10px] bg-slate-200 text-slate-800 px-2 py-0.5 rounded-full font-bold">Inwestycje</span>
+              </a>
+
+              <a 
+                href="#montaz" 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (currentView !== 'home') setCurrentView('home');
+                }}
+                className="px-3 py-2.5 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors flex items-center gap-3"
+              >
+                <Hammer className="w-4 h-4 text-slate-500" />
+                <span className="font-bold text-slate-900">{t.nav.installGuideShort}</span>
+              </a>
+
+              <a 
+                href="#kontakt" 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (currentView !== 'home') setCurrentView('home');
+                }}
+                className="px-3 py-2.5 rounded-xl hover:bg-slate-100 active:bg-slate-200 transition-colors flex items-center gap-3"
+              >
+                <Phone className="w-4 h-4 text-slate-500" />
+                <span className="font-bold text-slate-900">{t.nav.contact}</span>
+              </a>
+
+            </nav>
+
+            {/* Hotline Direct Call Link */}
+            <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-2xl">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-800 block mb-1">
+                Infolinia fabryczna:
+              </span>
+              <a 
+                href="tel:+48537200630"
+                className="flex items-center gap-2 text-emerald-950 font-bold text-sm hover:underline"
+              >
+                <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>+48 537 200 630</span>
+              </a>
+            </div>
+
+            {/* PWA Mobile Install CTA in Drawer */}
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Download className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <p className="text-xs font-bold text-slate-900 leading-tight">Aplikacja Oplast</p>
+                  <p className="text-[10px] text-slate-500 font-medium">Kalkulator m² offline</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.dispatchEvent(new Event('trigger-pwa-install'));
+                }}
+                className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+              >
+                Zainstaluj
+              </button>
+            </div>
+
+            {/* Quick B2B Quote Action */}
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 setIsB2BMode(true);
                 setIsInquiryOpen(true);
               }}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-emerald-600 text-emerald-800 text-xs font-bold bg-white hover:bg-emerald-50 transition-colors cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-3 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-sm"
             >
-              <Building2 className="w-4 h-4 text-emerald-600" />
+              <Building2 className="w-4 h-4" />
               <span>{t.nav.investmentQuote}</span>
             </button>
+
           </div>
 
-          {/* Drawer Privacy & RODO Links */}
-          <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setIsPrivacyPolicyOpen(true);
-              }}
-              className="hover:text-emerald-700 transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <Shield className="w-3 h-3 text-emerald-600" />
-              <span>Polityka prywatności (RODO)</span>
-            </button>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setIsCookieSettingsOpen(true);
-              }}
-              className="hover:text-emerald-700 transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <Cookie className="w-3 h-3 text-slate-400" />
-              <span>Cookies</span>
-            </button>
-          </div>
+          {/* Drawer Footer (Sales Rep Link & RODO) */}
+          <div className="p-4 border-t border-slate-200 bg-slate-50/80 space-y-2.5">
+            {partnerUser ? (
+              <div className="space-y-1.5">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setCurrentView('admin');
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold cursor-pointer"
+                >
+                  <UserCheck className="w-4 h-4 text-emerald-400" />
+                  <span className="truncate">CRM: {partnerUser.name}</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    logoutPartner();
+                  }}
+                  className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-red-600 py-1 hover:underline cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Wyloguj się</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsLoginModalOpen(true);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-xs cursor-pointer"
+              >
+                <LogIn className="w-4 h-4 text-emerald-400" />
+                <span>Strefa Handlowca (Logowanie)</span>
+              </button>
+            )}
 
-        </div>
-        </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200/80">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsPrivacyPolicyOpen(true);
+                }}
+                className="hover:text-emerald-700 transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <Shield className="w-3 h-3 text-emerald-600" />
+                <span>Polityka RODO</span>
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsCookieSettingsOpen(true);
+                }}
+                className="hover:text-emerald-700 transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <Cookie className="w-3 h-3 text-slate-400" />
+                <span>Cookies</span>
+              </button>
+            </div>
+          </div>
+        </aside>
       )}
     </header>
   );
