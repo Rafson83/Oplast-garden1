@@ -115,7 +115,7 @@ export const PartnersDirectory: React.FC = () => {
       
       {/* Top Header & Breadcrumbs */}
       <div className="bg-white border-b border-slate-200/80 sticky top-18 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-3.5 flex items-center justify-between">
           <button
             onClick={() => setCurrentView('home')}
             className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-700 hover:text-emerald-700 transition-colors cursor-pointer group"
@@ -134,7 +134,7 @@ export const PartnersDirectory: React.FC = () => {
 
       {/* Hero Banner Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50/80 via-white to-slate-50 pt-10 pb-12 border-b border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 text-center space-y-4">
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-900 text-xs font-bold shadow-xs">
             <Sparkles className="w-4 h-4 text-emerald-700" />
@@ -168,7 +168,7 @@ export const PartnersDirectory: React.FC = () => {
       </section>
 
       {/* Filter and Search Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mt-8">
         <div className="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-md space-y-4">
           
           {/* Main Search Input */}
@@ -275,7 +275,7 @@ export const PartnersDirectory: React.FC = () => {
       </div>
 
       {/* Partner Cards Directory ("Wizytówki Partnerów") */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mt-8">
         {filteredPartners.length === 0 ? (
           <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center max-w-xl mx-auto space-y-4">
             <div className="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">

@@ -53,8 +53,8 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
       
-      {/* Sleek Single-Line Top Bar (Hidden on tiny screens to prevent multi-line clutter) */}
-      <div className="hidden sm:block bg-emerald-50/80 border-b border-emerald-100/80 text-emerald-950 text-xs py-1.5 px-4 sm:px-6 lg:px-8">
+      {/* Sleek Single-Line Top Bar (Hidden on smaller screens to prevent multi-line clutter) */}
+      <div className="hidden lg:block bg-emerald-50/80 border-b border-emerald-100/80 text-emerald-950 text-xs py-1.5 px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
           {/* Left: Concise Factory Info */}
@@ -89,8 +89,8 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-18 gap-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="flex items-center justify-between min-h-16 sm:min-h-18 py-2.5 gap-3 lg:gap-4">
           
           {/* Logo */}
           <a 
@@ -99,9 +99,9 @@ export const Navbar: React.FC = () => {
               e.preventDefault();
               setCurrentView('home');
             }}
-            className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer max-w-[200px] sm:max-w-none"
+            className="flex items-center gap-2 sm:gap-2.5 group shrink-0 cursor-pointer"
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-green-700 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform shrink-0">
               <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div className="min-w-0">
@@ -119,8 +119,8 @@ export const Navbar: React.FC = () => {
             </div>
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-semibold text-slate-700">
+          {/* Desktop Navigation Links (Visible on xl+ screens with whitespace-nowrap) */}
+          <nav className="hidden xl:flex items-center gap-3 2xl:gap-6 text-sm font-semibold text-slate-700 whitespace-nowrap">
             <a 
               href="#produkty" 
               onClick={() => {
@@ -186,12 +186,12 @@ export const Navbar: React.FC = () => {
           {/* Right Action Area (Clean & Responsive) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
-            {/* Language Switcher (Desktop only) */}
+            {/* Language Switcher */}
             <div className="hidden lg:block">
               <LanguageSwitcher />
             </div>
 
-            {/* Price Mode Toggle (B2C / B2B) - Desktop and tablet only; on mobile it's in the hamburger menu */}
+            {/* Price Mode Toggle (B2C / B2B) */}
             <div className="hidden sm:flex bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 items-center shadow-inner">
               <button
                 onClick={() => setIsB2BMode(false)}
@@ -216,10 +216,10 @@ export const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Mobile Menu Toggle Button */}
+            {/* Mobile / Tablet Menu Toggle Button (Visible below xl) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-800 hover:text-emerald-700 hover:bg-slate-100 transition-colors cursor-pointer"
+              className="xl:hidden p-2 rounded-xl text-slate-800 hover:text-emerald-700 hover:bg-slate-100 transition-colors cursor-pointer"
               aria-label={mobileMenuOpen ? "Zamknij menu" : "Otwórz menu"}
               aria-expanded={mobileMenuOpen}
             >
@@ -234,7 +234,7 @@ export const Navbar: React.FC = () => {
       {/* Mobile Drawer Backdrop */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs md:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs xl:hidden animate-in fade-in duration-200"
           onClick={() => setMobileMenuOpen(false)}
           aria-hidden="true"
         />
@@ -243,7 +243,7 @@ export const Navbar: React.FC = () => {
       {/* Mobile Drawer (Sliding in from LEFT, Clean, High-Contrast, Legible) */}
       {mobileMenuOpen && (
         <aside 
-          className="fixed inset-y-0 left-0 z-50 w-[310px] max-w-[85vw] bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto overflow-x-hidden md:hidden animate-in slide-in-from-left duration-300 border-r border-slate-200"
+          className="fixed inset-y-0 left-0 z-50 w-[310px] max-w-[85vw] bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto overflow-x-hidden xl:hidden animate-in slide-in-from-left duration-300 border-r border-slate-200"
           role="dialog"
           aria-modal="true"
           aria-label="Menu nawigacji"

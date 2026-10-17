@@ -22,8 +22,8 @@ export const Hero: React.FC = () => {
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-emerald-200/40 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 -left-40 w-96 h-96 bg-green-200/30 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 items-center">
           
           {/* Main Hero Text */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
@@ -33,7 +33,7 @@ export const Hero: React.FC = () => {
               <span>{t.hero.badge}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight font-heading leading-tight text-slate-900">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight font-heading leading-tight text-slate-900">
               {t.hero.title1}{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 to-green-600">
                 {t.hero.titleHighlight}

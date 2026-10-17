@@ -254,7 +254,7 @@ export const AdminCrm: React.FC = () => {
       
       {/* Top Admin Navigation Header */}
       <div className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
           <div className="flex flex-wrap items-center justify-between h-16 sm:h-20 gap-3">
             
             {/* Title & Brand */}
@@ -307,7 +307,7 @@ export const AdminCrm: React.FC = () => {
         </div>
 
         {/* Tab Switcher */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 border-t border-slate-800">
           <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto py-2">
             <button
               onClick={() => setActiveTab('sales_rep')}
@@ -366,7 +366,7 @@ export const AdminCrm: React.FC = () => {
       </div>
 
       {/* Main CRM Body */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-8">
 
         {/* ========================================================================= */}
         {/* TAB 0: SALES REPRESENTATIVE WORKSPACE & CLIENT PORTFOLIO                  */}
